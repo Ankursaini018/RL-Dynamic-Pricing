@@ -1,0 +1,94 @@
+MDP DESIGN DOCUMENT
+====================
+Project  : RL Dynamic Pricing
+Domain   : Travel & Hospitality
+Date     : 5th July 2026
+
+PROBLEM STATEMENT:
+==================
+Sell finite inventory (airline tickets
+or hotel rooms) over limited time period
+to maximize total revenue.
+
+Challenge:
+→ Price too high = unsold inventory
+→ Price too low = lost revenue
+→ Need intelligent pricing strategy!
+
+MDP FORMULATION:
+================
+
+STATE SPACE:
+------------
+State = (remaining_inventory,
+         days_until_departure)
+
+Example states:
+→ (50, 30) = 50 tickets, 30 days left
+→ (10, 5)  = 10 tickets, 5 days left
+→ (0, 15)  = sold out, 15 days left
+
+STATE SPACE SIZE:
+-----------------
+Inventory : 0 to 50 (51 values)
+Days      : 0 to 30 (31 values)
+Total     : 51 × 31 = 1,581 states
+
+ACTION SPACE:
+-------------
+Action = price_level
+
+Discrete price levels:
+→ Action 0 = $50   (very cheap)
+→ Action 1 = $100  (cheap)
+→ Action 2 = $150  (moderate)
+→ Action 3 = $200  (expensive)
+→ Action 4 = $250  (premium)
+→ Action 5 = $300  (very premium)
+
+Total: 6 discrete actions
+
+REWARD FUNCTION:
+----------------
+If customer buys:
+  Reward = price_level × quantity_sold
+
+If no customer buys:
+  Reward = 0
+
+If inventory runs out:
+  Reward = 0 (episode ends)
+
+If time runs out with inventory:
+  Reward = -10 × remaining_inventory
+  (penalty for unsold tickets!)
+
+TRANSITION DYNAMICS:
+====================
+After action (set price):
+→ Customer arrives with probability P
+→ P decreases as price increases
+→ P decreases as days decrease
+→ If customer buys: inventory -= 1
+→ Days always decreases by 1
+
+EPISODE:
+========
+Start  : (50 tickets, 30 days)
+End    : inventory=0 OR days=0
+Goal   : Maximize total revenue!
+
+BASELINE STRATEGIES:
+====================
+1. Fixed Price     : Always $150
+2. Time Based      : Increase price
+                     over time
+3. Demand Based    : Lower price
+                     when demand low
+4. RL Agent (DQN)  : Learns optimal
+                     policy! (our goal)
+
+SUCCESS METRIC:
+===============
+Total Revenue per Episode
+RL Agent must beat baselines!
