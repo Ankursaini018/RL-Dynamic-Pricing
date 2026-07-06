@@ -43,10 +43,25 @@ policy through environment interaction!
 ## 📅 Week-wise Progress
 
 ### 🔄 Week 1 — MDP + Gym Environment
-- ✅ MDP formulated
-- ✅ Custom Gymnasium environment built
-- ✅ Stochastic demand function implemented
-- 🔄 Baseline agents (tomorrow)
+| Day | Task | Status |
+|---|---|---|
+| Day 1 | MDP design + Gym environment | ✅ |
+| Day 2 | Baseline agents (5 agents) | ✅ |
+| Day 3 | Q-Learning | 🔄 |
+| Day 4 | Q-Table training | 📅 |
+| Day 5 | Evaluation | 📅 |
+
+### Baseline Agent Results
+| Agent | Strategy | Mean Revenue |
+|---|---|---|
+| Fixed Price | Always $150 | Baseline |
+| Random | Random price | Baseline |
+| Time Based | High early low late | Baseline |
+| Demand Based | Based on inventory | Baseline |
+| Linear Decay | Decreases over time | Baseline |
+
+### RL Target
+Beat the best baseline agent! 🎯
 
 ---
 
