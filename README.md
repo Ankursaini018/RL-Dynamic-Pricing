@@ -40,25 +40,24 @@ policy through environment interaction!
 
 ---
 
-## 📅 Week-wise Progress
-
-### 🔄 Week 1 — MDP + Gym Environment
+### 🔄 Week 1 Progress
 | Day | Task | Status |
 |---|---|---|
-| Day 1 | MDP design + Gym environment | ✅ |
-| Day 2 | Baseline agents (5 agents) | ✅ |
-| Day 3 | Q-Learning | 🔄 |
-| Day 4 | Q-Table training | 📅 |
-| Day 5 | Evaluation | 📅 |
+| Day 1 | MDP + Gym Environment | ✅ |
+| Day 2 | Baseline Agents (5) | ✅ |
+| Day 3 | Q-Learning | ✅ |
+| Day 4 | Q-Table Analysis | 🔄 |
+| Day 5 | Week 1 Wrap up | 📅 |
 
-### Baseline Agent Results
-| Agent | Strategy | Mean Revenue |
-|---|---|---|
-| Fixed Price | Always $150 | Baseline |
-| Random | Random price | Baseline |
-| Time Based | High early low late | Baseline |
-| Demand Based | Based on inventory | Baseline |
-| Linear Decay | Decreases over time | Baseline |
+### Q-Learning Results
+| Component | Detail |
+|---|---|
+| Algorithm | Tabular Q-Learning |
+| Episodes | 5,000 |
+| Learning Rate α | 0.10 |
+| Discount γ | 0.99 |
+| Epsilon Decay | 1.0 → 0.01 |
+| Q-Table Size | 51 × 31 × 6 |
 
 ### RL Target
 Beat the best baseline agent! 🎯
