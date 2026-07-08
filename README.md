@@ -40,24 +40,50 @@ policy through environment interaction!
 
 ---
 
-### 🔄 Week 1 Progress
-| Day | Task | Status |
-|---|---|---|
-| Day 1 | MDP + Gym Environment | ✅ |
-| Day 2 | Baseline Agents (5) | ✅ |
-| Day 3 | Q-Learning | ✅ |
-| Day 4 | Q-Table Analysis | 🔄 |
-| Day 5 | Week 1 Wrap up | 📅 |
+## Week 1 ✅ — MDP + Environment + Q-Learning
 
-### Q-Learning Results
-| Component | Detail |
+### Deliverables Complete
+| Item | Status |
 |---|---|
-| Algorithm | Tabular Q-Learning |
-| Episodes | 5,000 |
-| Learning Rate α | 0.10 |
-| Discount γ | 0.99 |
-| Epsilon Decay | 1.0 → 0.01 |
-| Q-Table Size | 51 × 31 × 6 |
+| MDP Design | ✅ |
+| Custom Gym Environment | ✅ |
+| Stochastic Demand Function | ✅ |
+| 5 Baseline Agents | ✅ |
+| Q-Learning Agent | ✅ |
+| Q-Table Analysis | ✅ |
+| Hyperparameter Sensitivity | ✅ |
+| Policy Extraction | ✅ |
+
+### Baseline vs Q-Learning
+| Agent | Mean Revenue |
+|---|---|
+| Fixed Price | Baseline |
+| Time Based | Baseline |
+| Demand Based | Baseline |
+| Linear Decay | Baseline |
+| **Q-Learning** | **Best so far** |
+
+### Q-Learning Limitation
+Q-table works only for small discrete
+state spaces. Real world pricing needs
+continuous state handling!
+**Solution → DQN next week! 🧠**
+
+### Issues Status
+| Issue | Title | Status |
+|---|---|---|
+| #1 | MDP + Gym environment | ✅ Closed |
+| #2 | Stochastic demand function | ✅ Closed |
+| #3 | Baseline agents | ✅ Closed |
+| #4 | Q-Learning | ✅ Closed |
+| #5 | DQN Agent | 🔄 Starting |
+| #6 | Experience replay | 📅 Todo |
+| #7 | Train DQN | 📅 Todo |
+| #8 | 1000 seasons | 📅 Todo |
+| #9 | Price trajectories | 📅 Todo |
+
+## Week 2 🔄 — Deep Q-Network (DQN)
+Starting 12th July
 
 ### RL Target
 Beat the best baseline agent! 🎯
