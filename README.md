@@ -1,113 +1,72 @@
 # 🎯 RL Dynamic Pricing
 ## Infotact DS/ML Technical Internship 2026
 
-![Status](https://img.shields.io/badge/Status-In%20Progress-blue)
-![Week](https://img.shields.io/badge/Week-1%20of%204-orange)
-![Model](https://img.shields.io/badge/Model-DQN%20%2B%20RL-red)
+![Status](https://img.shields.io/badge/Status-Week%201%20Complete-green)
+![Week](https://img.shields.io/badge/Week-1%20of%204-blue)
+![Model](https://img.shields.io/badge/Model-Q--Learning%20→%20DQN-red)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-yellow)
 
 ---
 
-## 🎯 Project Overview
-**Type:** Reinforcement Learning for Dynamic Pricing
-**Domain:** Travel & Hospitality
-**Mode:** Solo Worker
-**Goal:** Build autonomous pricing agent using RL
-         that maximizes revenue from finite inventory
+## ✅ Week 1 Complete — MDP + Q-Learning
 
----
-
-## 🧠 Problem Statement
-Selling finite inventory (airline tickets/hotel rooms)
-over limited time is a complex optimization problem.
-Static pricing fails to account for:
-- Fluctuating market demand
-- Competitor pricing
-- Time pressure (unsold = lost revenue)
-
-**Solution:** RL agent that learns optimal pricing
-policy through environment interaction!
-
----
-
-## 🏗️ MDP Formulation
-| Component | Description |
+### What We Built
+| Component | Details |
 |---|---|
-| State | (remaining_inventory, days_until_departure) |
-| Action | price_level (6 discrete prices $50-$300) |
-| Reward | Revenue earned per sale |
-| Penalty | -10 per unsold ticket at deadline |
+| Gym Environment | Custom DynamicPricingEnv |
+| State Space | (inventory, days_left) = 1,581 states |
+| Action Space | 6 price levels ($50 - $300) |
+| Demand Function | Stochastic price + time sensitive |
+| Baseline Agents | 5 agents implemented |
+| Q-Learning | 5000 episodes trained |
+| Unit Tests | 8 tests all passing |
 
----
+### Week 1 Results
+| Agent | Type | Mean Revenue |
+|---|---|---|
+| Fixed Price | Baseline | See results/ |
+| Time Based | Baseline | See results/ |
+| Demand Based | Baseline | See results/ |
+| Linear Decay | Baseline | See results/ |
+| **Q-Learning** | **RL** | **Best ✅** |
 
-## Week 1 ✅ — MDP + Environment + Q-Learning
+### Files Structure
+src/
+├── environment/
+│   ├── pricing_env.py    # Custom Gym env
+│   └── init.py
+├── agents/
+│   ├── baseline_agents.py # 5 baselines
+│   ├── q_learning_agent.py # Q-Learning
+│   └── init.py
+├── utils/
+│   ├── evaluator.py
+│   ├── demand_analyzer.py
+│   ├── q_table_analyzer.py
+│   ├── policy_extractor.py
+│   ├── training_visualizer.py
+│   └── results_consolidator.py
+├── training/
+│   └── q_learning_trainer.py
+└── tests/
+└── test_environment.py
 
-### Deliverables Complete
-| Item | Status |
-|---|---|
-| MDP Design | ✅ |
-| Custom Gym Environment | ✅ |
-| Stochastic Demand Function | ✅ |
-| 5 Baseline Agents | ✅ |
-| Q-Learning Agent | ✅ |
-| Q-Table Analysis | ✅ |
-| Hyperparameter Sensitivity | ✅ |
-| Policy Extraction | ✅ |
-
-### Baseline vs Q-Learning
-| Agent | Mean Revenue |
-|---|---|
-| Fixed Price | Baseline |
-| Time Based | Baseline |
-| Demand Based | Baseline |
-| Linear Decay | Baseline |
-| **Q-Learning** | **Best so far** |
-
-### Q-Learning Limitation
-Q-table works only for small discrete
-state spaces. Real world pricing needs
-continuous state handling!
-**Solution → DQN next week! 🧠**
+## 🔄 Week 2 — Deep Q-Network (DQN)
+Starting 12th July
+- Neural Network replaces Q-table
+- Experience replay buffer
+- Epsilon greedy exploration
+- More powerful than tabular Q-Learning!
 
 ### Issues Status
-| Issue | Title | Status |
-|---|---|---|
-| #1 | MDP + Gym environment | ✅ Closed |
-| #2 | Stochastic demand function | ✅ Closed |
-| #3 | Baseline agents | ✅ Closed |
-| #4 | Q-Learning | ✅ Closed |
-| #5 | DQN Agent | 🔄 Starting |
-| #6 | Experience replay | 📅 Todo |
-| #7 | Train DQN | 📅 Todo |
-| #8 | 1000 seasons | 📅 Todo |
-| #9 | Price trajectories | 📅 Todo |
-
-## Week 2 🔄 — Deep Q-Network (DQN)
-Starting 12th July
-
-### RL Target
-Beat the best baseline agent! 🎯
-
----
-
-## 🔬 How to Run
-```bash
-pip install -r requirements.txt
-cd src
-python environment/pricing_env.py
-```
-
----
-
-## 📊 GitHub Issues
-| Issue | Title | Status |
-|---|---|---|
-| #1 | Design MDP + Gym environment | 🔄 In Progress |
-| #2 | Stochastic demand function | 📅 Todo |
-| #3 | Naive baseline agents | 📅 Todo |
-| #4 | Q-Learning implementation | 📅 Todo |
-| #5 | Deep Q-Network (DQN) | 📅 Todo |
-| #6 | Experience replay + epsilon greedy | 📅 Todo |
-| #7 | Train + evaluate DQN | 📅 Todo |
-| #8 | 1000 season simulation | 📅 Todo |
-| #9 | Price trajectories dashboard | 📅 Todo |
+| Issue | Status |
+|---|---|
+| #1 MDP + Gym env | ✅ Closed |
+| #2 Demand function | ✅ Closed |
+| #3 Baseline agents | ✅ Closed |
+| #4 Q-Learning | ✅ Closed |
+| #5 DQN Agent | 🔄 In Progress |
+| #6 Experience replay | 📅 Todo |
+| #7 Train DQN | 📅 Todo |
+| #8 1000 seasons | 📅 Todo |
+| #9 Price trajectories | 📅 Todo |
