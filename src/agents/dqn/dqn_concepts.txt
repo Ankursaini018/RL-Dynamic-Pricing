@@ -1,0 +1,125 @@
+DQN CONCEPT DOCUMENTATION
+==========================
+Project  : RL Dynamic Pricing
+Week     : 2 — Deep Q-Network
+Date     : 11th July 2026
+
+WHY DQN OVER Q-LEARNING?
+=========================
+
+Q-Learning Limitation:
+→ Uses a Q-TABLE to store all Q-values
+→ Table size = states × actions
+→ Our table = 51 × 31 × 6 = 9,486 entries
+→ Works fine for small state spaces!
+
+BUT in real world:
+→ Inventory could be 0 to 10,000
+→ Days could be 0 to 365
+→ Q-table would be MASSIVE!
+→ Cannot handle continuous states!
+
+DQN Solution:
+→ Replace Q-TABLE with NEURAL NETWORK
+→ Network approximates Q-values
+→ Input  = state (inventory, days)
+→ Output = Q-value for each action
+→ Scales to ANY state space size!
+
+DQN ARCHITECTURE:
+=================
+
+Input Layer:
+→ 2 neurons
+→ [normalized_inventory, normalized_days]
+
+Hidden Layer 1:
+→ 128 neurons
+→ ReLU activation
+→ Learns low-level patterns
+
+Hidden Layer 2:
+→ 64 neurons
+→ ReLU activation
+→ Learns high-level patterns
+
+Output Layer:
+→ 6 neurons (one per price level)
+→ Linear activation
+→ Each output = Q-value for that price
+
+DQN KEY INNOVATIONS:
+====================
+
+1. EXPERIENCE REPLAY BUFFER:
+   Problem: Consecutive experiences are correlated!
+   Training on correlated data = unstable learning!
+   
+   Solution: Store experiences in memory buffer.
+   Sample RANDOM mini-batches for training.
+   Breaks correlations → stable training!
+   
+   Buffer stores: (state, action, reward,
+                   next_state, done)
+
+2. TARGET NETWORK:
+   Problem: Q-values keep changing during training!
+   Both prediction AND target use same network!
+   Like chasing a moving target → unstable!
+   
+   Solution: Keep TWO networks:
+   → Online Network  : Updates every step
+   → Target Network  : Updates every N steps
+   
+   Target network provides stable training signal!
+
+3. EPSILON GREEDY:
+   Start: ε = 1.0 (100% random exploration)
+   End  : ε = 0.01 (99% exploitation)
+   
+   Gradually shifts from exploring new prices
+   to exploiting learned optimal prices!
+
+DQN TRAINING LOOP:
+==================
+
+For each episode:
+  1. Reset environment
+  2. Get initial state
+  
+  For each step:
+    3. Select action (epsilon-greedy)
+    4. Execute action in environment
+    5. Get reward and next state
+    6. Store (s, a, r, s', done) in buffer
+    7. Sample random mini-batch from buffer
+    8. Calculate target Q-values using TARGET network
+    9. Calculate current Q-values using ONLINE network
+    10. Compute loss (MSE between current and target)
+    11. Backpropagate and update ONLINE network
+    12. Every N steps: copy online → target network
+    13. Decay epsilon
+
+BELLMAN EQUATION FOR DQN:
+==========================
+Q(s,a) = r + γ · max[Q_target(s', a')]
+
+Where:
+→ Q(s,a)  = Online network prediction
+→ r       = Immediate reward
+→ γ       = Discount factor (0.99)
+→ Q_target= Target network prediction
+→ s'      = Next state
+
+EXPECTED RESULTS:
+=================
+→ DQN should outperform Q-Learning
+→ More stable training curve
+→ Better generalization
+→ Handles complex pricing strategies
+→ Should beat ALL baselines!
+
+TARGET METRIC:
+==============
+DQN Mean Revenue > Best Baseline Revenue
+Improvement: +15% or more over baselines
