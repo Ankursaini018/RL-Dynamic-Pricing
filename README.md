@@ -66,43 +66,51 @@ RL-Dynamic-Pricing/
 
 ---
 
-## ✅ Week 1 Complete
+## ✅ Week 1 Complete — 11th July 2026
 
-### Environment
-| Spec | Value |
+### Day-wise Summary
+| Day | Date | Focus | Status |
+|---|---|---|---|
+| Day 1 | 5 July | MDP + Gym Environment | ✅ |
+| Day 2 | 6 July | Baseline Agents | ✅ |
+| Day 3 | 7 July | Q-Learning | ✅ |
+| Day 4 | 8 July | Q-Table Analysis | ✅ |
+| Day 5 | 9 July | Final Wrap | ✅ |
+| Day 6 | 10 July | Refactoring + Docs | ✅ |
+| Day 7 | 11 July | Cleanup + Week 2 Prep | ✅ |
+
+### Issues Closed This Week
+- ✅ Issue #1 — MDP + Gym Environment
+- ✅ Issue #2 — Stochastic Demand Function
+- ✅ Issue #3 — Baseline Agents (5)
+- ✅ Issue #4 — Q-Learning Implementation
+
+### Files Created This Week
+- 19+ Python source scripts
+- 7 Jupyter notebooks
+- 8 unit tests (all passing)
+- Complete documentation
+
+## 🔄 Week 2 — Deep Q-Network (DQN)
+**Starting: 12th July 2026**
+
+### Why DQN?
+Q-Learning limitation: Q-table only works
+for small discrete state spaces!
+
+DQN Innovation:
+- Neural Network replaces Q-table
+- Experience Replay Buffer
+- Target Network for stability
+- Handles any state space size!
+
+### Week 2 Plan
+| Day | Focus |
 |---|---|
-| Inventory | 50 tickets/rooms |
-| Time Horizon | 30 days |
-| Price Levels | $50, $100, $150, $200, $250, $300 |
-| State Space | 1,581 discrete states |
-| Demand Model | Stochastic (price + time sensitive) |
-
-### Agents Implemented
-| Agent | Strategy |
-|---|---|
-| Fixed Price | Always $150 |
-| Random | Random each day |
-| Time Based | High early → Low late |
-| Demand Based | Based on inventory level |
-| Linear Decay | Decreases linearly |
-| **Q-Learning** | **Learned optimal policy** |
-
-### How to Run
-```bash
-# Run environment test
-cd src
-python environment/pricing_env.py
-
-# Run unit tests
-python tests/test_environment.py
-
-# Run validation
-python environment/env_validator.py
-
-# Run Week 1 comparison
-python utils/results_consolidator.py
-```
-
----
-
-## 🔄 Week 2 — Deep Q-Network Starting 12th July
+| Day 1 | DQN Architecture (PyTorch) |
+| Day 2 | Experience Replay Buffer |
+| Day 3 | Full DQN Training |
+| Day 4 | DQN Evaluation |
+| Day 5 | DQN Analysis |
+| Day 6 | Hyperparameter Tuning |
+| Day 7 | Week 2 Wrap Up |
