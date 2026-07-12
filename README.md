@@ -92,25 +92,28 @@ RL-Dynamic-Pricing/
 - Complete documentation
 
 ## 🔄 Week 2 — Deep Q-Network (DQN)
-**Starting: 12th July 2026**
 
-### Why DQN?
-Q-Learning limitation: Q-table only works
-for small discrete state spaces!
-
-DQN Innovation:
-- Neural Network replaces Q-table
-- Experience Replay Buffer
-- Target Network for stability
-- Handles any state space size!
-
-### Week 2 Plan
-| Day | Focus |
+### Day 1 — DQN Architecture ✅
+| Component | Details |
 |---|---|
-| Day 1 | DQN Architecture (PyTorch) |
-| Day 2 | Experience Replay Buffer |
-| Day 3 | Full DQN Training |
-| Day 4 | DQN Evaluation |
-| Day 5 | DQN Analysis |
-| Day 6 | Hyperparameter Tuning |
-| Day 7 | Week 2 Wrap Up |
+| Network | 2 → 128 → 64 → 6 (ReLU) |
+| Parameters | ~10,000 |
+| Optimizer | Adam (lr=0.001) |
+| Loss | MSE Loss |
+| Replay Buffer | 10,000 experiences |
+| Target Update | Every 10 episodes |
+
+### Why DQN over Q-Learning?
+| Feature | Q-Learning | DQN |
+|---|---|---|
+| Storage | Q-table | Neural Network |
+| State Space | Small discrete | Any size |
+| Scalability | Limited | High |
+| Generalization | None | Yes |
+
+### Issues Status
+| Issue | Status |
+|---|---|
+| #5 DQN Agent | 🔄 In Progress |
+| #6 Experience Replay | ✅ Done |
+| #7 Train DQN | 📅 Tomorrow |
