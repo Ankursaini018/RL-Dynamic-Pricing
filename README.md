@@ -117,3 +117,26 @@ RL-Dynamic-Pricing/
 | #5 DQN Agent | 🔄 In Progress |
 | #6 Experience Replay | ✅ Done |
 | #7 Train DQN | 📅 Tomorrow |
+
+### Week 2 Day 2 — DQN Training ✅
+| Metric | Value |
+|---|---|
+| Training Episodes | 2,000 |
+| Batch Size | 64 |
+| Replay Buffer | 10,000 |
+| Target Update | Every 10 eps |
+| DQN Revenue | See results/ |
+| vs Best Baseline | Improvement! |
+
+### Key DQN Behaviors Learned
+- ✅ Discounts prices near deadline
+- ✅ Premium pricing for low inventory
+- ✅ Beats all baseline agents
+
+### Issues Updated
+| Issue | Status |
+|---|---|
+| #5 DQN Agent | ✅ Closed |
+| #6 Experience Replay | ✅ Closed |
+| #7 Train + Evaluate | 🔄 In Progress |
+| #8 1000 Seasons | 📅 Tomorrow |
