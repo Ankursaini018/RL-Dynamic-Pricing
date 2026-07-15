@@ -91,81 +91,27 @@ RL-Dynamic-Pricing/
 - 8 unit tests (all passing)
 - Complete documentation
 
-## 🔄 Week 2 — Deep Q-Network (DQN)
+## ✅ Week 2 Complete — Deep Q-Network
 
-### Day 1 — DQN Architecture ✅
-| Component | Details |
-|---|---|
-| Network | 2 → 128 → 64 → 6 (ReLU) |
-| Parameters | ~10,000 |
-| Optimizer | Adam (lr=0.001) |
-| Loss | MSE Loss |
-| Replay Buffer | 10,000 experiences |
-| Target Update | Every 10 episodes |
-
-### Why DQN over Q-Learning?
-| Feature | Q-Learning | DQN |
+### DQN vs All Agents (1000 Seasons)
+| Rank | Agent | Type |
 |---|---|---|
-| Storage | Q-table | Neural Network |
-| State Space | Small discrete | Any size |
-| Scalability | Limited | High |
-| Generalization | None | Yes |
+| 🥇 | DQN | RL Agent |
+| 🥈 | Q-Learning | RL Agent |
+| 🥉 | Time Based | Baseline |
+| 4 | Demand Based | Baseline |
+| 5 | Linear Decay | Baseline |
+| 6 | Fixed Price | Baseline |
 
-### Issues Status
+### Proven DQN Behaviors
+- ✅ Drops prices near deadline
+- ✅ Premium pricing when inventory low
+- ✅ Beats ALL baselines statistically
+
+### All Issues Closed! 🎉
 | Issue | Status |
 |---|---|
-| #5 DQN Agent | 🔄 In Progress |
-| #6 Experience Replay | ✅ Done |
-| #7 Train DQN | 📅 Tomorrow |
+| #1-#9 | ✅ ALL CLOSED |
 
-### Week 2 Day 2 — DQN Training ✅
-| Metric | Value |
-|---|---|
-| Training Episodes | 2,000 |
-| Batch Size | 64 |
-| Replay Buffer | 10,000 |
-| Target Update | Every 10 eps |
-| DQN Revenue | See results/ |
-| vs Best Baseline | Improvement! |
-
-### Key DQN Behaviors Learned
-- ✅ Discounts prices near deadline
-- ✅ Premium pricing for low inventory
-- ✅ Beats all baseline agents
-
-### Issues Updated
-| Issue | Status |
-|---|---|
-| #5 DQN Agent | ✅ Closed |
-| #6 Experience Replay | ✅ Closed |
-| #7 Train + Evaluate | 🔄 In Progress |
-| #8 1000 Seasons | 📅 Tomorrow |
-
-### Week 2 Day 3 — 1000 Season Simulation ✅
-
-#### Simulation Results
-| Agent | Mean Revenue | Rank |
-|---|---|---|
-| DQN 🤖 | Best | 🥇 |
-| Q-Learning | 2nd | 🥈 |
-| Time Based | 3rd | 🥉 |
-| Demand Based | 4th | 4 |
-| Linear Decay | 5th | 5 |
-| Fixed Price | 6th | 6 |
-
-#### Statistical Proof
-- ✅ t-test confirms DQN superiority
-- ✅ p-value < 0.05 for all baselines
-- ✅ 1000 seasons = statistically significant
-
-#### Business Value
-- Revenue uplift vs best baseline
-- Annual projected improvement
-- Sell-through rate improvement
-
-### Issues Updated
-| Issue | Status |
-|---|---|
-| #7 Train + Evaluate | ✅ Closed |
-| #8 1000 Seasons | ✅ Closed |
-| #9 Price Trajectories | 🔄 Tomorrow |
+## 🔄 Week 3 — PPO + Final Polish
+Starting 19th July
