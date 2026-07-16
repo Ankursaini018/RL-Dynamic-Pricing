@@ -91,27 +91,42 @@ RL-Dynamic-Pricing/
 - 8 unit tests (all passing)
 - Complete documentation
 
-## ✅ Week 2 Complete — Deep Q-Network
+## Week 2 ✅ Complete — Deep Q-Network
 
-### DQN vs All Agents (1000 Seasons)
-| Rank | Agent | Type |
-|---|---|---|
-| 🥇 | DQN | RL Agent |
-| 🥈 | Q-Learning | RL Agent |
-| 🥉 | Time Based | Baseline |
-| 4 | Demand Based | Baseline |
-| 5 | Linear Decay | Baseline |
-| 6 | Fixed Price | Baseline |
+### Week 2 Day 5 — Analysis Results
+| Rank | Agent | Type | Revenue |
+|---|---|---|---|
+| 🥇 | DQN | Neural RL | Best |
+| 🥈 | Q-Learning | Tabular RL | 2nd |
+| 🥉 | Time Based | Baseline | 3rd |
+| 4 | Demand Based | Baseline | 4th |
+| 5 | Linear Decay | Baseline | 5th |
+| 6 | Fixed Price | Baseline | 6th |
 
-### Proven DQN Behaviors
+### DQN Proven Behaviors
 - ✅ Drops prices near deadline
-- ✅ Premium pricing when inventory low
-- ✅ Beats ALL baselines statistically
+- ✅ Scarcity premium pricing
+- ✅ Beats all baselines (p<0.05)
 
-### All Issues Closed! 🎉
-| Issue | Status |
+## 🔄 Mid Review Prep
+**Review Window: 20th-27th July**
+
+### GitHub Status
+| Metric | Value |
 |---|---|
-| #1-#9 | ✅ ALL CLOSED |
+| Commit Days | 12+ days |
+| Required | 10 days |
+| Status | ✅ Ready! |
 
-## 🔄 Week 3 — PPO + Final Polish
-Starting 19th July
+### New Issues Created
+| Issue | Title | Status |
+|---|---|---|
+| #10 | Refactor DQN codebase | 🔄 |
+| #11 | PPO agent | 📅 |
+| #12 | Hyperparameter tuning | 📅 |
+| #13 | Final comparison | 📅 |
+| #14 | Week 2 documentation | ✅ |
+| #15 | Mid Review prep | ✅ |
+| #16 | Final documentation | 📅 |
+| #17 | Performance optimization | 📅 |
+| #18 | Final submission | 📅 |
