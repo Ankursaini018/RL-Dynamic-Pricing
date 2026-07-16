@@ -1,0 +1,114 @@
+MID REVIEW PREPARATION — PROJECT 2
+=====================================
+Project  : RL Dynamic Pricing
+Program  : Infotact DS/ML Internship 2026
+Review   : 20th-27th July 2026
+Date     : 16th July 2026
+
+════════════════════════════════════
+OPENING STATEMENT
+════════════════════════════════════
+"I completed Week 1 and Week 2 of
+Project 2 — RL Dynamic Pricing.
+
+In Week 1, I formulated the pricing
+problem as an MDP and built a custom
+Gymnasium environment. I implemented
+5 baseline agents and Q-Learning.
+
+In Week 2, I built a Deep Q-Network
+using PyTorch that replaces the Q-table
+with a neural network. I implemented
+experience replay buffer and target
+network for stable training. DQN was
+evaluated over 1000 simulated seasons
+and proved to beat all baselines with
+statistical significance."
+
+════════════════════════════════════
+LIKELY QUESTIONS
+════════════════════════════════════
+
+Q: What is Reinforcement Learning?
+A: RL is a type of ML where an agent
+   learns by interacting with environment.
+   It takes actions, gets rewards, and
+   learns to maximize cumulative reward.
+   No labeled data needed!
+
+Q: What is MDP?
+A: Markov Decision Process.
+   Has 4 components:
+   S = State (inventory, days_left)
+   A = Action (price level)
+   R = Reward (revenue from sale)
+   T = Transition (how state changes)
+
+Q: Why DQN over Q-Learning?
+A: Q-Learning uses a table to store
+   Q-values. Table size grows with
+   state space. DQN uses neural network
+   instead which scales to any state
+   space and can generalize!
+
+Q: What is Experience Replay?
+A: Stores experiences in a buffer.
+   Samples random mini-batches for
+   training. Breaks correlations
+   between consecutive experiences
+   making training more stable!
+
+Q: What is Target Network?
+A: Two networks kept simultaneously:
+   Online  → Updated every step
+   Target  → Updated every N steps
+   Target provides stable training
+   signal preventing oscillations!
+
+Q: What did DQN learn?
+A: Two key behaviors:
+   1. Drops prices near deadline
+      to clear remaining inventory
+   2. Premium pricing when inventory
+      is low (scarcity effect)
+   Both proven with charts!
+
+Q: What is Epsilon Greedy?
+A: Exploration vs exploitation balance.
+   Epsilon = probability of random action.
+   Start: ε=1.0 (100% explore)
+   End  : ε=0.01 (99% exploit)
+   Gradually shifts from random to
+   using learned optimal policy!
+
+════════════════════════════════════
+SHOW DURING REVIEW
+════════════════════════════════════
+Tab 1: GitHub repo + commit history
+Tab 2: Kanban board (issues closed)
+Tab 3: week2_day5_analysis notebook
+Tab 4: price_dashboard.png
+Tab 5: deadline_proof.png
+
+════════════════════════════════════
+KEY NUMBERS TO REMEMBER
+════════════════════════════════════
+Max Inventory  : 50 tickets
+Max Days       : 30 days
+Price Levels   : $50 to $300 (6 levels)
+State Space    : 1,581 states
+DQN Network    : 2→128→64→6
+Parameters     : ~10,000
+Training Eps   : 2,000
+Replay Buffer  : 10,000
+Batch Size     : 64
+Target Update  : Every 10 episodes
+Seasons Sim    : 1,000
+
+════════════════════════════════════
+COMMIT DAYS STATUS
+════════════════════════════════════
+Required  : 10 days minimum
+Achieved  : 12+ days ✅
+Status    : MID REVIEW READY! 🎉
+════════════════════════════════════
