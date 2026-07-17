@@ -130,3 +130,36 @@ RL-Dynamic-Pricing/
 | #16 | Final documentation | 📅 |
 | #17 | Performance optimization | 📅 |
 | #18 | Final submission | 📅 |
+
+## Week 2 Day 6 — Refactoring + Docs
+
+### Code Quality Improvements
+| Item | Details |
+|---|---|
+| DQN Utilities | Model save/load + monitor |
+| Project Runner | One command pipeline |
+| Agent Tests | 11 unit tests passing |
+| Agent README | Full documentation |
+| Environment README | Full documentation |
+
+### How to Run Complete Pipeline
+```bash
+# Quick test (fewer episodes)
+cd src
+python project_runner.py --quick
+
+# Full training
+python project_runner.py
+
+# Run all tests
+python tests/test_agents.py
+python tests/test_environment.py
+```
+
+### Issues Updated
+| Issue | Status |
+|---|---|
+| #10 Refactor DQN | ✅ Closed |
+| #14 Week 2 docs | ✅ Closed |
+| #15 Mid Review prep | ✅ Closed |
+| #16 Final docs | 🔄 In Progress |
