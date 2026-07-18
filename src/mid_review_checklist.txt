@@ -1,0 +1,104 @@
+MID REVIEW CHECKLIST — PROJECT 2
+==================================
+Date     : 18th July 2026
+Review   : 20th-27th July 2026
+
+════════════════════════════════════
+GITHUB CHECKS
+════════════════════════════════════
+
+REPOSITORY:
+☑ Repo is PUBLIC
+  → github.com/Ankursaini018/RL-Dynamic-Pricing
+
+COMMIT HISTORY:
+☑ 14+ days of commits
+☑ 3-5 commits per day
+☑ Semantic commit messages
+☑ No large gaps
+
+KANBAN BOARD:
+☑ Issues #10 #14 #15 → Done
+☑ Issues #11-#13 #16-#18 → Todo
+☑ Board actively maintained
+
+════════════════════════════════════
+CODE CHECKS
+════════════════════════════════════
+
+NOTEBOOKS:
+☑ All outputs CLEARED
+☑ Markdown headers in each
+☑ Clean and readable
+
+SOURCE FILES:
+☑ DQN agent complete
+☑ Experience replay working
+☑ Unit tests passing (19 tests)
+☑ Documentation added
+
+GITIGNORE:
+☑ models/ excluded
+☑ *.pth excluded
+☑ __pycache__/ excluded
+
+════════════════════════════════════
+WHAT TO SHOW
+════════════════════════════════════
+
+Tab 1 — GitHub Repo:
+→ README with architecture
+→ Commit history (14+ days)
+→ src/ folder structure
+
+Tab 2 — Kanban Board:
+→ Issues properly organized
+→ Steady progression shown
+
+Tab 3 — Key Notebook:
+→ week2_day7_final_summary.ipynb
+→ Shows complete dashboard
+
+Tab 4 — Training Results:
+→ week2_day2_dqn_training.ipynb
+→ Shows DQN beats baselines
+
+Tab 5 — Price Trajectories:
+→ week2_day4_price_trajectories.ipynb
+→ Shows deadline discounting proof
+
+════════════════════════════════════
+KEY NUMBERS TO REMEMBER
+════════════════════════════════════
+Max Inventory  : 50 tickets
+Max Days       : 30 days
+Price Levels   : 6 ($50 to $300)
+State Space    : 1,581 states
+DQN Network    : 2→128→64→6
+Parameters     : ~10,000
+Training Eps   : 2,000
+Replay Buffer  : 10,000
+Batch Size     : 64
+Target Update  : Every 10 eps
+Seasons Sim    : 1,000
+Unit Tests     : 19 passing
+
+════════════════════════════════════
+OPENING STATEMENT
+════════════════════════════════════
+"I completed Week 1 and 2 of
+Project 2 — RL Dynamic Pricing.
+
+Week 1: Formulated MDP, built custom
+Gymnasium environment, implemented
+5 baselines and Q-Learning.
+
+Week 2: Built Deep Q-Network using
+PyTorch with experience replay and
+target network. Ran 1000-season
+simulation proving DQN beats all
+baselines statistically."
+
+════════════════════════════════════
+STATUS: ✅ READY FOR MID REVIEW!
+════════════════════════════════════
