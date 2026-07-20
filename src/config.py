@@ -45,12 +45,12 @@ ENV = {
 # ─────────────────────────────────────────
 
 Q_LEARNING = {
-    'lr'           : 0.1,
-    'gamma'        : 0.99,
-    'eps_start'    : 1.0,
-    'eps_end'      : 0.01,
-    'eps_decay'    : 0.995,
-    'n_episodes'   : 5000,
+    'learning_rate'  : 0.1,
+    'discount_factor': 0.99,
+    'epsilon_start'  : 1.0,
+    'epsilon_end'    : 0.01,
+    'epsilon_decay'  : 0.995,
+    'n_episodes'     : 5000,
 }
 
 # ─────────────────────────────────────────
@@ -149,3 +149,18 @@ def print_config():
 if __name__ == "__main__":
     print_config()
     save_config()
+
+PPO = {
+    'learning_rate'     : 0.0003,
+    'n_steps'           : 2048,
+    'batch_size'        : 64,
+    'n_epochs'          : 10,
+    'gamma'             : 0.99,
+    'gae_lambda'        : 0.95,
+    'clip_range'        : 0.2,
+    'ent_coef'          : 0.01,
+    'vf_coef'           : 0.5,
+    'max_grad_norm'     : 0.5,
+    'n_episodes'        : 2000,
+    'hidden_size'       : [128, 64],
+}    

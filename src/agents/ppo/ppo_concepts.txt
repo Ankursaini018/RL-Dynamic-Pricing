@@ -1,0 +1,93 @@
+PPO CONCEPT DOCUMENTATION
+==========================
+Project  : RL Dynamic Pricing
+Week     : 3 — PPO Agent
+Date     : 20th July 2026
+
+WHAT IS PPO?
+============
+PPO = Proximal Policy Optimization
+
+Developed by OpenAI in 2017.
+Used in:
+→ ChatGPT (RLHF training)
+→ OpenAI Five (Dota 2)
+→ Robotics control
+→ Game playing agents
+
+WHY PPO OVER DQN?
+=================
+
+DQN Problems:
+→ Only works with discrete actions
+→ Off-policy (uses replay buffer)
+→ Can be unstable with bad updates
+→ Value-based approach
+
+PPO Advantages:
+→ Works with ANY action space
+→ On-policy learning
+→ Stable training (clipped updates)
+→ Policy-based approach
+→ Better sample efficiency
+→ More robust to hyperparameters
+
+HOW PPO WORKS:
+==============
+
+1. POLICY NETWORK:
+   Takes state as input
+   Outputs ACTION PROBABILITIES
+   (not Q-values like DQN!)
+
+2. VALUE NETWORK:
+   Takes state as input
+   Outputs STATE VALUE V(s)
+   (how good is this state?)
+
+3. CLIPPING TRICK:
+   Prevents too-large policy updates
+   Keeps new policy CLOSE to old
+   ratio = new_prob / old_prob
+   clip(ratio, 1-ε, 1+ε)
+   ε = 0.2 typically
+
+4. ADVANTAGE FUNCTION:
+   A(s,a) = Q(s,a) - V(s)
+   How much better is action
+   compared to average?
+
+5. PPO OBJECTIVE:
+   Maximize:
+   E[min(ratio * A, clip(ratio, 1-ε, 1+ε) * A)]
+
+ACTOR-CRITIC ARCHITECTURE:
+===========================
+PPO uses Actor-Critic:
+
+Actor  → Policy network
+         "WHAT action to take"
+         Output: probabilities
+
+Critic → Value network
+         "HOW GOOD is current state"
+         Output: single value
+
+Both networks share layers
+for efficiency!
+
+PPO TRAINING LOOP:
+==================
+1. Collect N steps of experience
+2. Compute advantages
+3. Update policy for K epochs
+4. Apply clipping to prevent
+   large updates
+5. Repeat!
+
+EXPECTED RESULTS:
+=================
+→ PPO more stable than DQN
+→ Better final performance
+→ Less sensitive to hyperparams
+→ Should beat DQN on pricing!
