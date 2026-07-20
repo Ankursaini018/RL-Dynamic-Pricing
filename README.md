@@ -5,13 +5,16 @@
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
 ![PyTorch](https://img.shields.io/badge/PyTorch-Deep%20Learning-red?style=for-the-badge&logo=pytorch)
 ![Gymnasium](https://img.shields.io/badge/Gymnasium-RL%20Environment-green?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Week%202%20Completed-brightgreen?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-orange?style=for-the-badge)
+![Stable-Baselines3](https://img.shields.io/badge/Stable--Baselines3-PPO-orange?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Week%203%20In%20Progress-blue?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
 ![Internship](https://img.shields.io/badge/Infotact-Technical%20Internship-purple?style=for-the-badge)
 
-### **AI-Powered Dynamic Pricing System using Q-Learning & Deep Q Networks (DQN)**
+# AI-Powered Dynamic Pricing using Reinforcement Learning
 
-*A Reinforcement Learning approach for maximizing revenue through intelligent pricing decisions under uncertain customer demand.*
+### **Building Intelligent Pricing Strategies with Q-Learning, Deep Q Networks (DQN), and Proximal Policy Optimization (PPO)**
+
+*An end-to-end Reinforcement Learning project that learns optimal pricing policies for maximizing revenue under uncertain customer demand.*
 
 </div>
 
@@ -19,152 +22,316 @@
 
 # 📚 Table of Contents
 
-- [📖 Project Overview](#-project-overview)
-- [🎯 Problem Statement](#-problem-statement)
-- [✨ Key Features](#-key-features)
-- [🏗️ MDP Formulation](#️-mdp-formulation)
-- [🤖 Reinforcement Learning Pipeline](#-reinforcement-learning-pipeline)
-- [🧠 Agents Implemented](#-agents-implemented)
-- [🏛️ Project Architecture](#️-project-architecture)
-- [📂 Repository Structure](#-repository-structure)
-- [🛠️ Technologies Used](#️-technologies-used)
-- [✅ Week 1 Achievements](#-week-1-achievements)
-- [🚀 Week 2 Achievements](#-week-2-achievements)
-- [🧠 Deep Q-Network Architecture](#-deep-q-network-dqn-architecture)
-- [⚙️ Training Configuration](#️-training-configuration)
-- [📈 Results & Analysis](#-results--analysis)
-- [💻 Installation Guide](#-installation-guide)
-- [▶️ Running the Project](#️-running-the-project)
-- [🧪 Running Tests](#-running-tests)
-- [📊 Project Workflow](#-project-workflow)
-- [🛣️ Roadmap](#️-roadmap)
-- [🔮 Future Improvements](#-future-improvements)
-- [🙏 Acknowledgements](#-acknowledgements)
-- [👨‍💻 Author](#-author)
-- [📄 License](#-license)
+- [📖 Introduction](#-introduction)
+- [🎯 Business Problem](#-business-problem)
+- [✨ Project Highlights](#-project-highlights)
+- [🛠️ Technology Stack](#️-technology-stack)
+- [🎓 Learning Objectives](#-learning-objectives)
+- [📊 Project Scope](#-project-scope)
+- [📌 Key Features](#-key-features)
 
 ---
 
-# 📖 Project Overview
+# 📖 Introduction
 
-Dynamic Pricing is one of the most important optimization problems in industries such as:
+Pricing is one of the most influential factors affecting business profitability. Industries such as airlines, hotels, ride-sharing platforms, ticket booking services, and e-commerce companies continuously adjust prices in response to changing market conditions.
 
-- ✈️ Airlines
-- 🎟️ Event Ticketing
-- 🏨 Hotel Booking
-- 🚕 Ride Sharing
-- 🛒 E-commerce
-- 📦 Inventory Management
+Traditional pricing systems usually depend on manually designed rules or statistical forecasting methods. Although these approaches perform reasonably well in predictable environments, they often struggle when customer demand changes dynamically.
 
-Traditional pricing strategies rely on manually designed rules and heuristics.
+This project demonstrates how **Reinforcement Learning (RL)** can be used to automate pricing decisions by allowing an intelligent software agent to interact with a simulated marketplace.
 
-This project applies **Reinforcement Learning (RL)** to automatically discover an optimal pricing strategy by allowing an intelligent agent to interact with a simulated business environment.
+Instead of relying on predefined business rules, the agent continuously learns from its own experience by observing the consequences of different pricing decisions. Over time, it discovers pricing strategies that maximize long-term revenue while adapting to inventory constraints and uncertain customer demand.
 
-Instead of hardcoding pricing decisions, the RL agent learns **which price to choose** based on:
+The project progresses through multiple Reinforcement Learning approaches:
 
-- Current inventory
-- Remaining selling days
-- Customer demand
-- Expected future rewards
+- Classical Q-Learning
+- Deep Q Networks (DQN)
+- Proximal Policy Optimization (PPO)
 
-The objective is to **maximize total revenue** while minimizing losses due to unsold inventory.
+Each stage introduces increasingly advanced techniques for learning optimal pricing policies.
 
 ---
 
-# 🎯 Problem Statement
+# 🎯 Business Problem
 
-The business must sell a **limited inventory of tickets** before a fixed deadline.
+Consider a company selling a limited number of products or tickets before a fixed deadline.
 
-Challenges include:
+Every day, the company must decide:
 
-- Limited inventory
-- Finite selling horizon
-- Stochastic customer demand
-- Multiple pricing choices
-- Balancing immediate vs future revenue
+> **"What price should we charge today to maximize overall revenue?"**
 
-The agent must learn an optimal pricing policy that maximizes long-term revenue under uncertainty.
+Charging a high price may increase profit per sale but reduce demand.
+
+Charging a low price may increase sales volume but decrease profit.
+
+The objective is to find the optimal balance between these competing goals throughout the selling period.
+
+The Reinforcement Learning agent must continuously answer questions such as:
+
+- Should prices be increased when inventory becomes scarce?
+- Should prices decrease as the deadline approaches?
+- How should pricing react to uncertain customer demand?
+- Which pricing strategy produces the highest long-term revenue?
+
+Rather than programming these decisions manually, the RL agent learns them automatically through repeated interaction with the environment.
 
 ---
 
-# ✨ Key Features
+# ✨ Project Highlights
 
-## Environment
+## 🚀 Reinforcement Learning Journey
+
+This repository demonstrates the progression from basic Reinforcement Learning techniques to modern Deep Reinforcement Learning algorithms.
+
+### ✅ Week 1 — Foundations
+
+- Custom Gymnasium Environment
+- Markov Decision Process (MDP)
+- Reward Engineering
+- Baseline Pricing Agents
+- Tabular Q-Learning
+- Policy Analysis
+
+---
+
+### ✅ Week 2 — Deep Reinforcement Learning
+
+- Deep Q Network (DQN)
+- Neural Network Function Approximation
+- Experience Replay
+- Target Network
+- Model Evaluation
+- Statistical Analysis
+- Business Dashboards
+
+---
+
+### 🔄 Week 3 — Advanced Reinforcement Learning
+
+- PPO Fundamentals
+- Actor-Critic Architecture
+- Rollout Buffer
+- Generalized Advantage Estimation (GAE)
+- PPO Agent Implementation
+- Policy Optimization
+- Comparative Evaluation (PPO vs DQN)
+
+---
+
+### 🚧 Week 4 — Final Project
+
+- Large Scale Evaluation
+- Performance Benchmarking
+- Hyperparameter Optimization
+- Documentation
+- Final Reports
+- Internship Submission
+
+---
+
+# 🛠️ Technology Stack
+
+| Category | Tools & Frameworks |
+|------------|-------------------|
+| Programming Language | Python 3.10+ |
+| Deep Learning | PyTorch |
+| Reinforcement Learning | Gymnasium |
+| Advanced RL | Stable-Baselines3 |
+| Numerical Computing | NumPy |
+| Data Processing | Pandas |
+| Visualization | Matplotlib |
+| Statistics | SciPy |
+| Development Environment | VS Code |
+| Interactive Analysis | Jupyter Notebook |
+| Version Control | Git & GitHub |
+
+---
+
+# 🎓 Learning Objectives
+
+This project focuses on developing practical understanding of modern Reinforcement Learning concepts.
+
+Throughout the internship, the following topics are implemented from scratch:
+
+- Markov Decision Processes (MDP)
+- Environment Design
+- Reward Engineering
+- Exploration vs Exploitation
+- Q-Learning
+- Deep Q Networks
+- Neural Network Approximation
+- Experience Replay
+- Target Networks
+- Policy Gradient Methods
+- Actor-Critic Models
+- PPO Optimization
+- Revenue Optimization
+- Business Simulation
+
+The goal is not only to build working RL agents but also to understand the reasoning behind each algorithm and compare their performance in a realistic pricing scenario.
+
+---
+
+# 📊 Project Scope
+
+The project simulates a real-world revenue management system where an intelligent pricing agent interacts with a business environment over multiple selling periods.
+
+During each episode, the agent:
+
+1. Observes the current business state.
+2. Selects a ticket price.
+3. Receives customer demand generated by the environment.
+4. Earns revenue based on successful sales.
+5. Updates its pricing policy using Reinforcement Learning.
+6. Repeats the process until the selling period ends.
+
+By repeating thousands of simulated seasons, the agent gradually learns pricing strategies that maximize cumulative revenue.
+
+---
+
+# 📌 Key Features
+
+## 🏢 Business Environment
 
 - ✅ Custom Gymnasium Environment
-- ✅ Markov Decision Process (MDP)
-- ✅ Stochastic Demand Function
-- ✅ Reward Engineering
-- ✅ Configurable Inventory
-- ✅ Configurable Time Horizon
+- ✅ Dynamic Inventory Management
+- ✅ Configurable Selling Horizon
+- ✅ Stochastic Customer Demand
+- ✅ Revenue-Based Reward Function
+- ✅ Episode Simulation
 
 ---
 
-## Baseline Pricing Agents
+## 🤖 Pricing Agents
 
-- ✅ Fixed Price Agent
-- ✅ Random Agent
-- ✅ Time-Based Pricing Agent
-- ✅ Demand-Based Pricing Agent
-- ✅ Linear Decay Pricing Agent
+### Baseline Agents
 
----
-
-## Reinforcement Learning
-
-- ✅ Tabular Q-Learning
-- ✅ Deep Q-Network (DQN)
-- ✅ Experience Replay
-- ✅ Target Network
-- ✅ Epsilon-Greedy Exploration
-- ✅ Neural Network Function Approximation
+- Fixed Price Strategy
+- Random Pricing Strategy
+- Time-Based Pricing
+- Demand-Based Pricing
+- Linear Price Decay
 
 ---
 
-## Evaluation
+### Reinforcement Learning Agents
 
-- ✅ 1000 Season Simulation
-- ✅ Revenue Comparison
-- ✅ Policy Analysis
-- ✅ Statistical Validation
-- ✅ Learning Curves
-- ✅ Price Trajectory Visualization
-- ✅ Business Dashboard
+- Tabular Q-Learning
+- Deep Q Network (DQN)
+- Proximal Policy Optimization (PPO)
 
 ---
 
-# 🏗️ MDP Formulation
+## 📈 Training Features
+
+- Experience Replay
+- Target Network Synchronization
+- Epsilon-Greedy Exploration
+- Neural Network Training
+- Rollout Buffer
+- Actor-Critic Learning
+- PPO Clipping Objective
+- Generalized Advantage Estimation (GAE)
+
+---
+
+## 📊 Evaluation & Analysis
+
+- Revenue Comparison
+- Learning Curves
+- Policy Visualization
+- Price Trajectory Analysis
+- Statistical Validation
+- Business Performance Reports
+- Dashboard Generation
+- Agent Benchmarking
+
+---
+
+## 🎯 Current Project Status
+
+| Module | Status |
+|----------|--------|
+| Environment Design | ✅ Completed |
+| Baseline Agents | ✅ Completed |
+| Q-Learning | ✅ Completed |
+| Deep Q Network (DQN) | ✅ Completed |
+| PPO Concepts | ✅ Completed |
+| PPO Network | ✅ Completed |
+| PPO Agent | ✅ Completed |
+| PPO Training | 🔄 In Progress |
+| PPO vs DQN Comparison | ⏳ Upcoming |
+| Hyperparameter Optimization | ⏳ Upcoming |
+| Final Evaluation | ⏳ Upcoming |
+| Documentation | 🔄 In Progress |
+
+---
+
+➡️ **Continue with Part 2**, where we'll cover:
+
+- 🏗️ Markov Decision Process (MDP)
+- 🤖 Reinforcement Learning Pipeline
+- 🧠 Agents Overview
+- 🏛️ Project Architecture
+- 📂 Repository Structure
+
+# 🏗️ Markov Decision Process (MDP)
+
+The Dynamic Pricing problem is formulated as a **Markov Decision Process (MDP)**, which provides the mathematical foundation for Reinforcement Learning.
+
+At every decision step, the pricing agent observes the current business state, chooses a ticket price, receives a reward, and transitions to the next state.
+
+---
+
+## 📌 MDP Components
 
 | Component | Description |
 |------------|-------------|
-| **State** | (Inventory Remaining, Days Remaining) |
-| **Action** | Choose one of 6 discrete ticket prices |
-| **Reward** | Revenue earned from ticket sales |
-| **Penalty** | Unsold inventory penalty at episode end |
-| **Episode End** | Inventory sold out OR final selling day |
-| **Objective** | Maximize cumulative revenue |
+| **State (S)** | Current inventory and remaining selling days |
+| **Action (A)** | Select one of the available ticket prices |
+| **Reward (R)** | Revenue generated from ticket sales |
+| **Transition (P)** | Customer demand determines the next state |
+| **Policy (π)** | Strategy used by the agent for selecting prices |
+| **Objective** | Maximize cumulative discounted revenue |
 
 ---
 
-## State Space
+## 📦 State Space
+
+The environment represents every business situation using two variables:
+
+| Variable | Description |
+|-----------|-------------|
+| Inventory Remaining | Number of unsold tickets |
+| Days Remaining | Remaining selling days |
+
+Example State:
+
+```text
+State = (Inventory = 35, Days Remaining = 18)
+```
+
+Current implementation:
 
 | Variable | Range |
-|----------|-------|
+|-----------|-------|
 | Inventory | 0 → 50 |
-| Days Left | 0 → 30 |
+| Days Remaining | 0 → 30 |
 
-Total State Space:
+Total possible states:
 
-```
+```text
 51 × 31 = 1,581 States
 ```
 
 ---
 
-## Action Space
+## 🎯 Action Space
 
-| Action | Ticket Price |
-|---------|-------------:|
+The pricing agent selects one price from six predefined ticket prices.
+
+| Action | Price |
+|---------|-------|
 | 0 | $50 |
 | 1 | $100 |
 | 2 | $150 |
@@ -172,104 +339,223 @@ Total State Space:
 | 4 | $250 |
 | 5 | $300 |
 
+Each action directly influences customer demand and future revenue.
+
 ---
 
-## Reward Function
+## 💰 Reward Function
+
+The reward is the revenue generated after selecting a ticket price.
 
 Positive reward:
 
-```
-Revenue = Price × Tickets Sold
-```
-
-Penalty:
-
-```
-Unsold Inventory × Penalty Cost
+```text
+Reward = Ticket Price × Tickets Sold
 ```
 
-Goal:
+Penalty for remaining inventory:
 
+```text
+Penalty = Remaining Inventory × Unsold Cost
 ```
-Maximize Total Episode Revenue
+
+Overall objective:
+
+```text
+Maximize Total Revenue
 ```
+
+---
+
+## 🛑 Episode Termination
+
+Each episode ends when one of the following conditions is met:
+
+- All inventory has been sold.
+- The final selling day is reached.
+
+The accumulated revenue over an episode becomes the performance measure for the pricing strategy.
 
 ---
 
 # 🤖 Reinforcement Learning Pipeline
 
-```
-                Environment
-                      │
-                      ▼
-          Current State (s)
-                      │
-                      ▼
-            RL Agent selects action
-                      │
-                      ▼
-             Ticket Price Selected
-                      │
-                      ▼
-        Environment Simulates Demand
-                      │
-                      ▼
-      Reward + Next State Returned
-                      │
-                      ▼
-           Agent Updates Policy
-                      │
-                      ▼
-            Repeat Until Episode Ends
+The learning process follows the standard Reinforcement Learning interaction cycle.
+
+```text
+                    Customer Demand
+                           ▲
+                           │
+                    Environment Update
+                           │
+                           ▼
++------------------------------------------------+
+|           Dynamic Pricing Environment          |
++------------------------------------------------+
+                 ▲                 │
+                 │                 ▼
+          Current State      Selected Price
+                 ▲                 │
+                 │                 ▼
++------------------------------------------------+
+|             Reinforcement Learning Agent       |
++------------------------------------------------+
+                 ▲                 │
+                 │                 ▼
+           Reward Received    Policy Update
 ```
 
 ---
 
-# 🧠 Agents Implemented
+## 🔄 Learning Cycle
 
-| Agent | Category | Status |
-|--------|----------|--------|
-| Fixed Price | Baseline | ✅ |
-| Random | Baseline | ✅ |
-| Time-Based Pricing | Baseline | ✅ |
-| Demand-Based Pricing | Baseline | ✅ |
-| Linear Decay Pricing | Baseline | ✅ |
-| Q-Learning | Reinforcement Learning | ✅ |
-| Deep Q Network (DQN) | Deep Reinforcement Learning | ✅ |
-| PPO (Planned) | Advanced RL | 🚧 |
+For every episode:
+
+1. Initialize the environment.
+2. Observe the current state.
+3. Select a ticket price.
+4. Simulate customer demand.
+5. Receive immediate reward.
+6. Observe the next state.
+7. Update the learning policy.
+8. Repeat until the episode ends.
+
+Thousands of simulated episodes gradually improve the pricing policy.
+
+---
+
+# 🧠 Reinforcement Learning Algorithms
+
+The repository progressively implements increasingly sophisticated pricing agents.
+
+---
+
+## 1️⃣ Baseline Pricing Agents
+
+These rule-based strategies provide reference points for comparison.
+
+| Agent | Strategy |
+|--------|----------|
+| Fixed Price | Constant ticket price |
+| Random | Random price selection |
+| Time-Based | Price decreases over time |
+| Demand-Based | Price reacts to demand |
+| Linear Decay | Linear price reduction |
+
+Although simple, these methods establish baseline business performance.
+
+---
+
+## 2️⃣ Tabular Q-Learning
+
+Week 1 introduces classical Reinforcement Learning using a Q-Table.
+
+Key concepts:
+
+- Bellman Equation
+- Q-Value Updates
+- Epsilon-Greedy Exploration
+- State-Action Value Function
+- Policy Extraction
+
+Advantages:
+
+- Simple implementation
+- Easy to interpret
+- Suitable for small state spaces
+
+Limitations:
+
+- Memory intensive
+- Poor scalability
+- Cannot generalize unseen states
+
+---
+
+## 3️⃣ Deep Q Network (DQN)
+
+Week 2 replaces the Q-Table with a neural network.
+
+Instead of storing every state-action value explicitly, DQN approximates Q-values using deep learning.
+
+Implemented components:
+
+- Neural Network Function Approximation
+- Experience Replay Buffer
+- Target Network
+- Gradient Clipping
+- Epsilon Decay
+- Model Saving & Loading
+
+Advantages:
+
+- Generalizes to unseen states
+- Handles larger environments
+- More scalable than tabular methods
+
+---
+
+## 4️⃣ Proximal Policy Optimization (PPO)
+
+Week 3 introduces PPO, one of the most widely used modern Reinforcement Learning algorithms.
+
+Unlike DQN, PPO directly optimizes the policy instead of estimating Q-values.
+
+Implemented features:
+
+- Actor-Critic Architecture
+- Rollout Buffer
+- Policy Gradient Learning
+- Clipped Objective Function
+- Generalized Advantage Estimation (GAE)
+
+Expected advantages:
+
+- Stable learning
+- Better convergence
+- More robust optimization
+- Strong performance in complex environments
+
+---
+
+# 📊 Algorithm Progress
+
+| Algorithm | Week | Status |
+|------------|------|--------|
+| Baseline Agents | Week 1 | ✅ Completed |
+| Q-Learning | Week 1 | ✅ Completed |
+| Deep Q Network | Week 2 | ✅ Completed |
+| PPO Network | Week 3 | ✅ Completed |
+| PPO Agent | Week 3 | ✅ Completed |
+| PPO Training | Week 3 | 🔄 In Progress |
+| PPO Evaluation | Week 3 | ⏳ Upcoming |
 
 ---
 
 # 🏛️ Project Architecture
 
-```
-                    RL Dynamic Pricing
+The project follows a modular architecture where each component has a dedicated responsibility.
 
-                  ┌────────────────────┐
-                  │ Business Environment│
-                  └─────────┬──────────┘
-                            │
-                            ▼
-                 Dynamic Pricing Environment
-                            │
-          ┌─────────────────┴─────────────────┐
-          │                                   │
-          ▼                                   ▼
-   Baseline Agents                     RL Agents
-                                             │
-                    ┌────────────────────────┴───────────────┐
-                    ▼                                        ▼
-              Q-Learning                              Deep Q Network
-                    │                                        │
-                    └────────────────────────┬───────────────┘
-                                             ▼
-                                 Revenue Optimization
-                                             │
-                                             ▼
-                              Performance Evaluation
-                                             │
-                                             ▼
-                                 Business Insights
+```text
+                   RL Dynamic Pricing System
+
+                           User
+                             │
+                             ▼
+                    Training Pipeline
+                             │
+        ┌────────────────────┼────────────────────┐
+        │                    │                    │
+        ▼                    ▼                    ▼
+ Environment          Reinforcement Agents     Analysis
+        │                    │                    │
+        ▼                    ▼                    ▼
+ Customer Demand      Pricing Decisions     Performance Reports
+        │                    │                    │
+        └──────────────► Results ◄───────────────┘
+                             │
+                             ▼
+                    Visualizations & Dashboards
 ```
 
 ---
@@ -281,18 +567,16 @@ RL-Dynamic-Pricing/
 │
 ├── notebooks/
 │   ├── week1/
-│   └── week2/
+│   ├── week2/
+│   └── week3/
 │
 ├── src/
 │   ├── agents/
 │   │   ├── baseline_agents.py
 │   │   ├── q_learning_agent.py
 │   │   ├── agent_registry.py
-│   │   └── dqn/
-│   │       ├── dqn_network.py
-│   │       ├── dqn_agent.py
-│   │       ├── replay_buffer.py
-│   │       └── dqn_utils.py
+│   │   ├── dqn/
+│   │   └── ppo/
 │   │
 │   ├── environment/
 │   ├── training/
@@ -304,8 +588,9 @@ RL-Dynamic-Pricing/
 │   ├── project_runner.py
 │   └── config.py
 │
-├── results/
+├── notebooks/
 ├── models/
+├── results/
 ├── data/
 ├── requirements.txt
 └── README.md
@@ -313,143 +598,208 @@ RL-Dynamic-Pricing/
 
 ---
 
-# 🛠️ Technologies Used
+## 📦 Core Modules
 
-| Category | Technologies |
-|-----------|--------------|
-| Programming Language | Python |
-| Deep Learning | PyTorch |
-| Reinforcement Learning | Gymnasium |
-| Data Processing | NumPy, Pandas |
-| Visualization | Matplotlib |
-| Statistics | SciPy |
-| Notebook | Jupyter Notebook |
-| Version Control | Git & GitHub |
-| IDE | VS Code |
+| Directory | Purpose |
+|------------|----------|
+| `agents/` | Pricing algorithms and RL agents |
+| `environment/` | Custom Gymnasium environment |
+| `training/` | Model training pipelines |
+| `simulation/` | Revenue simulations |
+| `analysis/` | Business analytics |
+| `visualization/` | Charts and dashboards |
+| `tests/` | Unit and integration tests |
+| `models/` | Saved trained models |
+| `results/` | Generated reports and figures |
 
 ---
+
+➡️ **Continue with Part 3**, where we'll cover:
+
+- ✅ Week 1 Achievements
+- 🚀 Week 2 Achievements
+- 🔄 Week 3 Progress (PPO)
+- 🧠 DQN Architecture
+- 🎭 PPO Actor-Critic Architecture
+- ⚙️ Training Configuration
 
 # ✅ Week 1 Achievements
 
-Week 1 focused on building the foundation of the Reinforcement Learning project by designing the environment, implementing baseline agents, and developing the first learning algorithm.
+Week 1 established the foundation of the Reinforcement Learning pipeline by designing the environment, defining the pricing problem as a Markov Decision Process (MDP), implementing baseline pricing strategies, and training the first Reinforcement Learning agent using Tabular Q-Learning.
 
 ---
 
-## 📌 Deliverables
+## 📌 Week 1 Deliverables
 
 | Module | Status |
 |---------|--------|
-| Markov Decision Process Design | ✅ |
+| Business Problem Formulation | ✅ |
+| Markov Decision Process (MDP) | ✅ |
 | Custom Gymnasium Environment | ✅ |
-| Stochastic Demand Function | ✅ |
-| Reward Engineering | ✅ |
-| State & Action Space Definition | ✅ |
+| State Space Design | ✅ |
+| Action Space Design | ✅ |
+| Reward Function | ✅ |
+| Stochastic Demand Simulation | ✅ |
 | Environment Testing | ✅ |
 | Baseline Pricing Agents | ✅ |
-| Fixed Price Agent | ✅ |
-| Random Pricing Agent | ✅ |
-| Time-Based Pricing Agent | ✅ |
-| Demand-Based Pricing Agent | ✅ |
-| Linear Decay Pricing Agent | ✅ |
-| Q-Learning Algorithm | ✅ |
-| Q-Table Training | ✅ |
+| Q-Learning Agent | ✅ |
 | Policy Extraction | ✅ |
 | Hyperparameter Analysis | ✅ |
-| Results Consolidation | ✅ |
+| Performance Evaluation | ✅ |
 
 ---
 
-## 📊 Week 1 Learning Outcomes
+## 📚 Reinforcement Learning Concepts Covered
 
-During Week 1, the following Reinforcement Learning concepts were implemented from scratch:
+During Week 1, the project introduced several fundamental Reinforcement Learning concepts.
 
 - Markov Decision Process (MDP)
 - Bellman Equation
 - Q-Table Learning
-- Epsilon-Greedy Exploration
+- Exploration vs Exploitation
+- Epsilon-Greedy Policy
 - Reward Engineering
 - Policy Evaluation
-- Dynamic Pricing Environment
-- Environment Simulation
+- Dynamic Pricing Simulation
+
+---
+
+## 🎯 Outcome
+
+By the end of Week 1, the project successfully learned an optimal pricing strategy using classical Reinforcement Learning and established a benchmark for future deep learning models.
 
 ---
 
 # 🚀 Week 2 Achievements
 
-Week 2 extended the project from classical Reinforcement Learning to **Deep Reinforcement Learning** using **Deep Q Networks (DQN)**.
+Week 2 focused on scaling the solution using Deep Reinforcement Learning.
 
-The objective was to replace the tabular Q-Table with a Neural Network capable of approximating Q-values.
+Instead of storing Q-values inside a lookup table, a neural network was introduced to approximate the action-value function, enabling the agent to generalize across unseen states.
 
 ---
 
-## 📌 Deliverables
+## 📌 Week 2 Deliverables
 
 | Module | Status |
 |---------|--------|
-| Deep Q Network | ✅ |
-| Neural Network Implementation | ✅ |
-| Experience Replay Buffer | ✅ |
+| Deep Q Network (DQN) | ✅ |
+| Neural Network Design | ✅ |
+| Experience Replay | ✅ |
+| Replay Buffer | ✅ |
 | Target Network | ✅ |
-| Epsilon Decay Strategy | ✅ |
-| Gradient Clipping | ✅ |
-| DQN Training Pipeline | ✅ |
-| Model Saving & Loading | ✅ |
-| 1000 Season Simulation | ✅ |
-| Statistical Evaluation | ✅ |
+| Epsilon Decay | ✅ |
+| Model Checkpointing | ✅ |
+| Training Pipeline | ✅ |
+| Business Simulation | ✅ |
 | Revenue Comparison | ✅ |
-| Price Trajectory Dashboard | ✅ |
-| Deadline Discounting Analysis | ✅ |
-| Scarcity Pricing Analysis | ✅ |
-| Project Refactoring | ✅ |
-| Mid Review Documentation | ✅ |
+| Policy Visualization | ✅ |
+| Statistical Analysis | ✅ |
+| Dashboard Generation | ✅ |
+| Mid-Project Documentation | ✅ |
 
 ---
 
-## 📈 Week 2 Highlights
+## 🧠 DQN Features
 
-- 🧠 Deep Q-Network implemented using PyTorch
-- 🎯 Neural Network replaces traditional Q-Table
-- 🔄 Experience Replay stabilizes learning
-- 🎯 Target Network reduces oscillations
-- 📉 Adaptive Epsilon Decay balances exploration and exploitation
-- 📊 Comprehensive evaluation across 1000 simulated seasons
-- 📈 Interactive dashboards for policy visualization
+The DQN implementation includes several techniques that improve learning stability.
+
+- Experience Replay
+- Target Network Synchronization
+- Mini-Batch Gradient Descent
+- Neural Network Function Approximation
+- Gradient Clipping
+- Adaptive Exploration
+- Model Saving & Loading
 
 ---
 
-# 🧠 Deep Q-Network (DQN) Architecture
+## 📊 Week 2 Results
 
-The DQN agent approximates the optimal action-value function using a fully connected neural network.
+The trained DQN agent consistently outperformed the rule-based pricing strategies by learning more effective pricing policies.
 
-```
-Input Layer
-──────────────
-Inventory Remaining
-Days Remaining
+### Key Improvements
 
-        │
+- Higher cumulative revenue
+- Better inventory utilization
+- Stable learning curves
+- Improved long-term decision making
+- Intelligent price adaptation
 
-        ▼
+---
 
-Fully Connected Layer
-128 Neurons
-ReLU
+# 🔄 Week 3 Progress — PPO Implementation
 
-        │
+Week 3 marks the transition from value-based Reinforcement Learning to policy-based optimization using **Proximal Policy Optimization (PPO)**.
 
-        ▼
+Instead of estimating Q-values, PPO learns a policy directly through an Actor-Critic framework, resulting in more stable and efficient training.
 
-Fully Connected Layer
-64 Neurons
-ReLU
+---
 
-        │
+## 📌 Week 3 Objectives
 
-        ▼
+| Day | Topic | Status |
+|------|-------|--------|
+| Day 1 | PPO Concepts & Architecture | ✅ |
+| Day 2 | PPO Training | 🔄 |
+| Day 3 | PPO Evaluation | ⏳ |
+| Day 4 | Hyperparameter Tuning | ⏳ |
+| Day 5 | Comparative Analysis | ⏳ |
+| Day 6 | Code Refactoring | ⏳ |
+| Day 7 | Documentation & Wrap-Up | ⏳ |
 
-Output Layer
-6 Q-values
-(One for each price level)
+---
+
+## ✅ Completed So Far
+
+- PPO Configuration
+- Actor-Critic Network
+- PPO Agent
+- PPO Notebook
+- Documentation Update
+
+---
+
+## 🚀 Upcoming Work
+
+- PPO Training Loop
+- Reward Curve Analysis
+- PPO vs DQN Comparison
+- Hyperparameter Optimization
+- Final Evaluation
+
+---
+
+# 🧠 Deep Q Network (DQN) Architecture
+
+The DQN agent replaces the traditional Q-table with a neural network capable of approximating action values for every pricing decision.
+
+```text
+                Input Layer
+          (Inventory, Remaining Days)
+
+                    │
+
+                    ▼
+
+          Fully Connected Layer
+              128 Neurons
+                 ReLU
+
+                    │
+
+                    ▼
+
+          Fully Connected Layer
+               64 Neurons
+                 ReLU
+
+                    │
+
+                    ▼
+
+              Output Layer
+
+         Q-values for 6 Actions
 ```
 
 ---
@@ -458,177 +808,375 @@ Output Layer
 
 | Layer | Configuration |
 |--------|--------------|
-| Input | 2 Features |
-| Hidden Layer 1 | 128 Neurons + ReLU |
-| Hidden Layer 2 | 64 Neurons + ReLU |
-| Output | 6 Q-values |
+| Input Features | 2 |
+| Hidden Layer 1 | 128 Units + ReLU |
+| Hidden Layer 2 | 64 Units + ReLU |
+| Output Layer | 6 Q-values |
 | Framework | PyTorch |
 
-Approximate Parameters:
+Approximate trainable parameters:
 
+```text
+≈ 10,000 Parameters
 ```
-~10,000 Trainable Parameters
+
+---
+
+# 🎭 PPO Actor-Critic Architecture
+
+Unlike DQN, PPO uses two neural networks within a shared architecture.
+
+The **Actor** learns the probability of selecting each pricing action, while the **Critic** estimates how good the current state is.
+
+```text
+             State
+      (Inventory, Days)
+
+                 │
+
+                 ▼
+
+        Shared Neural Network
+
+      128 Units → ReLU
+
+                 │
+
+                 ▼
+
+       64 Units → ReLU
+
+          ┌─────────────┐
+          │             │
+          ▼             ▼
+
+      Actor Head    Critic Head
+
+  Action Prob.      State Value
+
+      Softmax          Linear
 ```
+
+---
+
+## PPO Network Details
+
+| Component | Purpose |
+|-----------|----------|
+| Shared Layers | Feature Extraction |
+| Actor | Policy Learning |
+| Critic | Value Estimation |
+| Output | Action Probabilities |
+| Optimization | PPO Clipping Objective |
+
+---
+
+# ⚖️ DQN vs PPO
+
+| Feature | DQN | PPO |
+|----------|-----|-----|
+| Learning Method | Value-Based | Policy-Based |
+| Architecture | Q-Network | Actor-Critic |
+| Exploration | ε-Greedy | Stochastic Policy |
+| Replay Buffer | Yes | No |
+| Training Style | Off-Policy | On-Policy |
+| Output | Q-values | Action Probabilities |
+| Stability | Good | Excellent |
+| Continuous Actions | Limited | Supported |
 
 ---
 
 # ⚙️ Training Configuration
 
-## Q-Learning
+## Tabular Q-Learning
 
 | Parameter | Value |
-|-----------|-------|
-| Learning Rate | 0.1 |
+|-----------|------:|
+| Learning Rate | 0.10 |
 | Discount Factor | 0.99 |
-| Initial Epsilon | 1.0 |
+| Initial Epsilon | 1.00 |
 | Final Epsilon | 0.01 |
-| Episodes | 5000 |
+| Training Episodes | 5,000 |
 
 ---
 
-## Deep Q Network
+## Deep Q Network (DQN)
 
 | Parameter | Value |
-|-----------|-------|
-| Episodes | 2000 |
+|-----------|------:|
 | Optimizer | Adam |
 | Learning Rate | 0.001 |
 | Batch Size | 64 |
 | Replay Buffer | 10,000 |
-| Target Update | Every 10 Episodes |
 | Discount Factor | 0.99 |
-| Initial Epsilon | 1.0 |
+| Initial Epsilon | 1.00 |
 | Final Epsilon | 0.01 |
+| Target Network Update | Every 10 Episodes |
+| Training Episodes | 2,000 |
 
 ---
 
-# 📈 Results & Analysis
+## Proximal Policy Optimization (PPO)
 
-After training, all pricing strategies were evaluated over **1000 simulated seasons**.
-
-The DQN consistently achieved the highest revenue among all implemented agents.
-
----
-
-## 🏆 Overall Performance
-
-| Rank | Agent | Category |
-|------|---------|-----------|
-| 🥇 | Deep Q Network | Deep Reinforcement Learning |
-| 🥈 | Q-Learning | Reinforcement Learning |
-| 🥉 | Time-Based Pricing | Baseline |
-| 4️⃣ | Demand-Based Pricing | Baseline |
-| 5️⃣ | Linear Decay Pricing | Baseline |
-| 6️⃣ | Fixed Price | Baseline |
-| 7️⃣ | Random Pricing | Baseline |
+| Parameter | Value |
+|-----------|------:|
+| Learning Rate | 0.0003 |
+| Discount Factor (γ) | 0.99 |
+| GAE Lambda | 0.95 |
+| PPO Clip Range | 0.20 |
+| Epochs per Update | 10 |
+| Batch Size | 64 |
+| Rollout Steps | 2,048 |
+| Optimizer | Adam |
 
 ---
 
-## 📊 Business Behaviors Learned
+## 📈 Training Pipeline
 
-The trained DQN automatically discovered several intelligent pricing strategies without any manually designed rules.
+Each Reinforcement Learning algorithm follows the same high-level workflow.
 
-### ✅ Deadline Discounting
-
-As the selling deadline approaches:
-
-- Prices decrease automatically
-- Unsold inventory risk is minimized
-- Revenue remains optimized
+```text
+Initialize Environment
+          │
+          ▼
+Observe Current State
+          │
+          ▼
+Select Pricing Action
+          │
+          ▼
+Simulate Customer Demand
+          │
+          ▼
+Receive Reward
+          │
+          ▼
+Update Learning Algorithm
+          │
+          ▼
+Repeat Until Episode Ends
+```
 
 ---
 
-### ✅ Scarcity Pricing
+➡️ **Continue with Part 4**, which includes:
 
-When inventory becomes scarce:
+- 📊 Results & Analysis
+- 🏆 Performance Comparison
+- 📈 Evaluation Metrics
+- 📸 Generated Outputs
+- 💻 Installation Guide
+- ▶️ Running the Project
 
-- Prices increase naturally
-- Higher profit per ticket
-- Better inventory utilization
+# 📊 Results & Analysis
+
+After training each pricing strategy, the agents are evaluated over **1,000 simulated business seasons** to measure their ability to maximize long-term revenue.
+
+The evaluation compares traditional rule-based pricing strategies with Reinforcement Learning approaches, providing insights into how intelligent pricing decisions improve business performance.
 
 ---
 
-### ✅ Revenue Maximization
+# 🏆 Overall Performance Ranking
 
-Compared with handcrafted pricing strategies:
+| Rank | Agent | Category | Performance |
+|------|---------|-----------|-------------|
+| 🥇 | Deep Q Network (DQN) | Deep Reinforcement Learning | Excellent |
+| 🥈 | PPO *(Expected)* | Policy-Based Reinforcement Learning | Under Evaluation |
+| 🥉 | Tabular Q-Learning | Reinforcement Learning | Very Good |
+| 4️⃣ | Time-Based Pricing | Rule-Based | Good |
+| 5️⃣ | Demand-Based Pricing | Rule-Based | Moderate |
+| 6️⃣ | Linear Decay Pricing | Rule-Based | Moderate |
+| 7️⃣ | Fixed Price | Rule-Based | Basic |
+| 8️⃣ | Random Pricing | Baseline | Poor |
 
-- Higher cumulative revenue
-- Better long-term decisions
-- Improved inventory management
+---
+
+# 📈 Business Insights Learned
+
+The Reinforcement Learning agents discover pricing strategies without manually programmed business rules.
+
+Instead, they learn directly through interactions with the environment.
+
+---
+
+## 🎯 Intelligent Pricing Behaviors
+
+### 📉 Deadline Discounting
+
+As the selling period approaches its end, the agent automatically begins lowering ticket prices.
+
+Benefits:
+
+- Reduce unsold inventory
+- Increase ticket sales
+- Maximize total revenue
+
+---
+
+### 💰 Scarcity Pricing
+
+When only a few tickets remain, the agent naturally increases prices.
+
+Benefits:
+
+- Higher profit per sale
+- Improved inventory utilization
+- Better revenue optimization
+
+---
+
+### 📊 Adaptive Pricing
+
+Instead of using a fixed pricing strategy, the agent adjusts prices dynamically based on the current business state.
+
+The learned policy adapts to:
+
+- Remaining inventory
+- Remaining selling days
+- Customer demand uncertainty
+
+---
+
+### 📦 Inventory Management
+
+The trained models learn to balance two conflicting objectives:
+
+- Selling inventory quickly
+- Maximizing revenue per ticket
+
+This balance leads to significantly better long-term business performance.
+
+---
+
+# 📉 Learning Curves
+
+During training, several metrics are monitored to evaluate learning progress.
+
+These include:
+
+- Episode Reward
+- Average Revenue
+- Training Loss
+- Exploration Rate
+- Inventory Utilization
+- Tickets Sold
+- Revenue Growth
+
+The learning curves help determine whether the model has converged to a stable pricing policy.
 
 ---
 
 # 📊 Evaluation Metrics
 
-The project evaluates agent performance using:
+The project evaluates every pricing agent using multiple business-oriented metrics.
 
-| Metric | Purpose |
-|---------|----------|
-| Total Revenue | Business Performance |
-| Average Revenue | Policy Quality |
-| Tickets Sold | Inventory Efficiency |
-| Remaining Inventory | Waste Analysis |
-| Reward Curve | Learning Progress |
-| Epsilon Curve | Exploration Analysis |
-| Statistical Significance | Agent Comparison |
+| Metric | Description |
+|---------|-------------|
+| Total Revenue | Overall business revenue generated |
+| Average Revenue | Mean revenue per episode |
+| Tickets Sold | Inventory utilization |
+| Remaining Inventory | Unsold stock analysis |
+| Reward Curve | Learning performance |
+| Policy Stability | Consistency of pricing decisions |
+| Revenue Distribution | Performance variation |
+| Training Time | Computational efficiency |
 
 ---
 
-# 📸 Project Outputs
+# 📈 Comparative Analysis
 
-The project automatically generates various visualizations and reports.
+The project compares Reinforcement Learning algorithms across several characteristics.
 
-```
+| Feature | Q-Learning | DQN | PPO |
+|-----------|-----------|-----|-----|
+| Learning Type | Value-Based | Value-Based | Policy-Based |
+| State Representation | Q-Table | Neural Network | Actor-Critic |
+| Scalability | Limited | High | Very High |
+| Stability | Moderate | High | Excellent |
+| Exploration | ε-Greedy | ε-Greedy | Stochastic Policy |
+| Continuous Actions | No | Limited | Yes |
+| Sample Efficiency | Moderate | High | High |
+
+---
+
+# 📸 Generated Outputs
+
+Training automatically produces multiple visualizations and reports for analysis.
+
+```text
 results/
 
 ├── training_curve.png
+├── reward_curve.png
+├── epsilon_decay.png
 ├── revenue_comparison.png
 ├── policy_heatmap.png
+├── inventory_analysis.png
 ├── price_trajectory.png
-├── week2_final_dashboard.png
+├── business_dashboard.png
+├── simulation_results.csv
 ├── statistical_analysis.csv
-├── business_report.csv
-└── simulation_results.csv
+└── business_report.csv
 ```
 
 ---
 
-# 📈 Example Visualizations
+# 📊 Available Visualizations
 
-The project includes dashboards for:
+The project generates graphical reports including:
 
-- 📉 DQN Training Curve
+- 📈 Training Reward Curve
+- 📉 Loss Curve
 - 💰 Revenue Comparison
-- 🎟️ Inventory vs Revenue
-- 📊 Price Trajectories
-- 📈 Epsilon Decay
-- 📉 Reward Distribution
+- 🎟 Inventory Utilization
+- 📊 Price Distribution
+- 📈 Revenue Distribution
+- 📉 Epsilon Decay
 - 🧠 Learned Pricing Policy
-- 📊 Week 2 Final Dashboard
+- 📊 Business Dashboard
+- 📋 Statistical Summary
 
 ---
 
-# 🎯 Key Achievements
+# 🎯 Key Project Achievements
 
-✅ Custom Reinforcement Learning Environment
+## Environment
 
-✅ 5 Baseline Pricing Strategies
+- ✅ Custom Gymnasium Environment
+- ✅ Dynamic Pricing Simulator
+- ✅ Stochastic Demand Model
+- ✅ Reward Engineering
 
-✅ Tabular Q-Learning
+---
 
-✅ Deep Q Network
+## Reinforcement Learning
 
-✅ Experience Replay
+- ✅ Baseline Pricing Agents
+- ✅ Tabular Q-Learning
+- ✅ Deep Q Network (DQN)
+- ✅ PPO Architecture
+- ✅ Actor-Critic Network
+- ✅ PPO Agent
 
-✅ Target Network
+---
 
-✅ 1000 Season Simulation
+## Deep Learning
 
-✅ Statistical Validation
+- ✅ Neural Network Approximation
+- ✅ Experience Replay
+- ✅ Target Network
+- ✅ Gradient Clipping
+- ✅ Policy Optimization
 
-✅ Business Dashboard
+---
 
-✅ Intelligent Dynamic Pricing Policy
+## Business Analytics
+
+- ✅ Revenue Analysis
+- ✅ Statistical Comparison
+- ✅ Policy Visualization
+- ✅ Dashboard Generation
+- ✅ Performance Benchmarking
 
 ---
 
@@ -636,20 +1184,23 @@ The project includes dashboards for:
 
 ## Prerequisites
 
-Before running this project, ensure the following software is installed:
+Before running the project, install the following software:
 
-- Python 3.10 or higher
+- Python 3.10 or later
 - Git
 - pip
-- Jupyter Notebook (Optional)
+- Jupyter Notebook (optional)
+- VS Code (recommended)
 
 ---
 
-## Clone the Repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/your-username/RL-Dynamic-Pricing.git
 ```
+
+Move into the project directory.
 
 ```bash
 cd RL-Dynamic-Pricing
@@ -657,7 +1208,7 @@ cd RL-Dynamic-Pricing
 
 ---
 
-## Create Virtual Environment (Recommended)
+## Create a Virtual Environment
 
 ### Windows
 
@@ -665,7 +1216,7 @@ cd RL-Dynamic-Pricing
 python -m venv .venv
 ```
 
-Activate:
+Activate the environment:
 
 ```bash
 .venv\Scripts\activate
@@ -690,11 +1241,25 @@ pip install -r requirements.txt
 
 ---
 
+## Verify Installation
+
+Check that Python and PyTorch are installed correctly.
+
+```bash
+python --version
+```
+
+```bash
+pip list
+```
+
+---
+
 # ▶️ Running the Project
 
-## Quick Pipeline
+## Quick Verification
 
-Runs a lightweight version of the project for quick verification.
+Execute a lightweight pipeline to verify the project setup.
 
 ```bash
 cd src
@@ -704,9 +1269,9 @@ python project_runner.py --quick
 
 ---
 
-## Complete Pipeline
+## Full Training Pipeline
 
-Runs the full training and evaluation pipeline.
+Run the complete Reinforcement Learning workflow.
 
 ```bash
 python project_runner.py
@@ -714,7 +1279,7 @@ python project_runner.py
 
 ---
 
-## Running Individual Modules
+## Individual Modules
 
 ### Train Q-Learning
 
@@ -728,6 +1293,14 @@ python training/q_learning_trainer.py
 
 ```bash
 python training/dqn_trainer.py
+```
+
+---
+
+### Train PPO *(Week 3)*
+
+```bash
+python training/ppo_trainer.py
 ```
 
 ---
@@ -748,33 +1321,35 @@ python simulation/business_report.py
 
 ---
 
-### Analyze Week 2 Results
-
-```bash
-python analysis/week2_analyzer.py
-```
-
----
-
-### Launch Notebooks
+### Launch Jupyter Notebook
 
 ```bash
 jupyter notebook
 ```
 
-Open:
-
-```
-notebooks/
-```
-
-and execute the notebooks for Week 1 or Week 2.
+Open the notebook corresponding to the desired internship week and execute the cells sequentially.
 
 ---
 
+➡️ **Continue with Part 5**, which includes:
+
+- 🧪 Running Tests
+- 📊 Complete Project Workflow
+- 📌 Repository Progress
+- 🛣️ Development Roadmap
+- 🔮 Future Improvements
+- 📚 Learning Outcomes
+- 🤝 Contributing
+- 👨‍💻 Author
+- 📄 License
+- ⭐ Support
+- 🎉 Footer
+
 # 🧪 Running Tests
 
-Run the complete testing suite to verify the implementation.
+Testing helps ensure that every module functions correctly before training or evaluation.
+
+---
 
 ## Environment Tests
 
@@ -792,50 +1367,72 @@ python tests/test_agents.py
 
 ---
 
-## Expected Result
+## DQN Tests
 
-```
-All tests passed successfully.
+```bash
+python tests/test_dqn.py
 ```
 
 ---
 
-# 📊 Project Workflow
+## PPO Tests
 
+```bash
+python tests/test_ppo.py
 ```
-                  Start
-                    │
-                    ▼
-         Initialize Environment
-                    │
-                    ▼
-          Select Pricing Agent
-                    │
-                    ▼
-        Choose Ticket Price Action
-                    │
-                    ▼
-         Simulate Customer Demand
-                    │
-                    ▼
-         Receive Reward & Next State
-                    │
-                    ▼
-        Update Agent (Q-Learning/DQN)
-                    │
-                    ▼
-          Episode Termination?
-               │          │
-             No           Yes
-               │           │
-               ▼           ▼
-         Continue       Evaluate Policy
-                            │
-                            ▼
-                 Revenue Comparison
-                            │
-                            ▼
-                    Business Insights
+
+---
+
+## Expected Output
+
+```text
+====================================
+
+All tests passed successfully!
+
+====================================
+```
+
+---
+
+# 📊 Complete Project Workflow
+
+The project follows a structured Reinforcement Learning workflow from environment creation to business analysis.
+
+```text
+                    START
+                      │
+                      ▼
+        Initialize Pricing Environment
+                      │
+                      ▼
+             Observe Current State
+                      │
+                      ▼
+            Select Pricing Action
+                      │
+                      ▼
+          Simulate Customer Demand
+                      │
+                      ▼
+      Receive Reward & Next State
+                      │
+                      ▼
+          Update Learning Policy
+                      │
+                      ▼
+          Episode Finished?
+             │            │
+            No           Yes
+             │            │
+             ▼            ▼
+      Continue Training  Evaluate Model
+                           │
+                           ▼
+                Generate Reports & Charts
+                           │
+                           ▼
+                     Business Insights
 ```
 
 ---
@@ -846,101 +1443,111 @@ All tests passed successfully.
 |------------|--------|
 | Environment Design | ✅ Completed |
 | MDP Formulation | ✅ Completed |
-| Baseline Agents | ✅ Completed |
+| Baseline Pricing Agents | ✅ Completed |
 | Q-Learning | ✅ Completed |
-| Q-Table Analysis | ✅ Completed |
+| Policy Extraction | ✅ Completed |
 | Hyperparameter Analysis | ✅ Completed |
-| Deep Q Network | ✅ Completed |
+| Deep Q Network (DQN) | ✅ Completed |
 | Experience Replay | ✅ Completed |
 | Target Network | ✅ Completed |
-| Model Evaluation | ✅ Completed |
-| Statistical Analysis | ✅ Completed |
-| Business Dashboard | ✅ Completed |
-| PPO Implementation | 🚧 Planned |
-| Hyperparameter Optimization | 🚧 Planned |
-| Final Project Report | 🚧 Planned |
+| DQN Evaluation | ✅ Completed |
+| PPO Concepts | ✅ Completed |
+| PPO Network | ✅ Completed |
+| PPO Agent | ✅ Completed |
+| PPO Training | 🔄 In Progress |
+| PPO Evaluation | ⏳ Upcoming |
+| Hyperparameter Optimization | ⏳ Upcoming |
+| Final Internship Report | ⏳ Upcoming |
 
 ---
 
 # 🛣️ Development Roadmap
 
-## ✅ Week 1
+## ✅ Week 1 — Reinforcement Learning Fundamentals
 
-- MDP Formulation
 - Environment Design
+- Markov Decision Process
 - Demand Simulation
-- Baseline Agents
+- Baseline Pricing Agents
 - Q-Learning
-- Policy Analysis
+- Policy Evaluation
 
 ---
 
-## ✅ Week 2
+## ✅ Week 2 — Deep Reinforcement Learning
 
 - Deep Q Network
 - Experience Replay
 - Target Network
-- DQN Evaluation
-- Statistical Validation
-- Mid Review Preparation
+- DQN Training
+- Statistical Evaluation
+- Business Dashboard
 
 ---
 
-## 🚧 Week 3
+## 🔄 Week 3 — PPO Implementation
 
+- PPO Concepts
+- Actor-Critic Architecture
 - PPO Agent
-- Hyperparameter Optimization
-- Comparative Analysis
-- Performance Improvements
+- PPO Training
+- Policy Evaluation
+- PPO vs DQN Comparison
 
 ---
 
-## 🚧 Week 4
+## 🚧 Week 4 — Final Project
 
-- Final Documentation
-- Model Optimization
-- Project Cleanup
+- Hyperparameter Optimization
+- Performance Benchmarking
+- Documentation
+- Code Cleanup
 - Final Internship Submission
 
 ---
 
 # 🔮 Future Improvements
 
-This project can be extended in several directions:
+The current project provides a strong foundation that can be extended in several directions.
 
-- PPO (Proximal Policy Optimization)
+Possible future enhancements include:
+
 - Double DQN
 - Dueling DQN
 - Rainbow DQN
 - Soft Actor-Critic (SAC)
+- Multi-Agent Reinforcement Learning
 - Continuous Action Space
-- Multi-Agent Pricing
 - Airline Revenue Management
 - Hotel Dynamic Pricing
-- Real-World Pricing Datasets
-- Deployment as a Web Application
-- Interactive Dashboard using Streamlit
+- Retail Pricing Optimization
+- Real-World Demand Datasets
+- Streamlit Dashboard
+- REST API Deployment
+- Cloud-Based Model Serving
 
 ---
 
-# 📖 Learning Outcomes
+# 📚 Learning Outcomes
 
-This project demonstrates practical implementation of:
+This project demonstrates practical implementation of modern Reinforcement Learning techniques.
 
-- Reinforcement Learning
-- Deep Reinforcement Learning
+Core concepts covered include:
+
 - Markov Decision Processes
+- Reward Engineering
+- Dynamic Programming
 - Q-Learning
-- Bellman Equation
 - Deep Q Networks
-- Experience Replay
-- Target Networks
-- Function Approximation
-- Exploration vs Exploitation
+- Policy Gradient Methods
+- Actor-Critic Models
+- PPO Optimization
 - Neural Networks with PyTorch
 - Business Simulation
 - Revenue Optimization
-- Dynamic Pricing
+- Model Evaluation
+- Statistical Analysis
+- Reinforcement Learning in Production
 
 ---
 
@@ -948,89 +1555,285 @@ This project demonstrates practical implementation of:
 
 Contributions are welcome!
 
-If you'd like to improve this project:
+To contribute:
 
-1. Fork the repository.
+1. Fork this repository.
 2. Create a new feature branch.
 3. Commit your changes.
-4. Push the branch.
+4. Push your branch.
 5. Open a Pull Request.
 
-Please ensure that all tests pass before submitting changes.
+Please ensure that your code is well documented and passes all available tests before submitting.
+
+---
+
+➡️ **Continue with Part 6**, which includes:
+
+- 👨‍💻 Author
+- 🙏 Acknowledgements
+- 📄 License
+- ⭐ Support
+- 🎉 Closing Footer
+
+# 👨‍💻 Author
+
+<div align="center">
+
+## **Ankur Saini**
+
+**Artificial Intelligence Undergraduate | Machine Learning Enthusiast | Reinforcement Learning Developer**
+
+Passionate about designing intelligent systems that solve real-world business problems using Artificial Intelligence, Machine Learning, and Deep Reinforcement Learning.
+
+</div>
+
+---
+
+## 🚀 Areas of Interest
+
+- 🤖 Artificial Intelligence
+- 🧠 Machine Learning
+- 🎯 Reinforcement Learning
+- 📊 Data Science
+- 🔥 Deep Learning
+- 🐍 Python Development
+- 📈 Business Intelligence
+- 💡 AI Product Development
+
+---
+
+## 🌐 Connect With Me
+
+### GitHub
+
+https://github.com/Ankursaini018
+
+---
+
+### LinkedIn
+
+https://www.linkedin.com/in/ankur-saini-596173374/
+
+---
+
+### Portfolio
+
+*Coming Soon...*
+
+---
+
+# 🏅 Internship Timeline
+
+| Week | Focus Area | Status |
+|-------|------------|--------|
+| Week 1 | Reinforcement Learning Fundamentals | ✅ Completed |
+| Week 2 | Deep Q Network (DQN) | ✅ Completed |
+| Week 3 | Proximal Policy Optimization (PPO) | 🔄 In Progress |
+| Week 4 | Final Evaluation & Optimization | ⏳ Upcoming |
+
+---
+
+# 🏆 Project Highlights
+
+This project demonstrates the practical implementation of modern Reinforcement Learning techniques for solving a real-world Dynamic Pricing problem.
+
+### Completed
+
+- ✅ Custom Gymnasium Environment
+- ✅ Business Simulation
+- ✅ Markov Decision Process
+- ✅ Reward Engineering
+- ✅ Baseline Pricing Agents
+- ✅ Tabular Q-Learning
+- ✅ Deep Q Network (DQN)
+- ✅ Experience Replay
+- ✅ Target Network
+- ✅ Statistical Evaluation
+- ✅ Business Dashboards
+- ✅ PPO Concepts
+- ✅ PPO Actor-Critic Network
+- ✅ PPO Agent
+
+---
+
+### Currently Working On
+
+- 🔄 PPO Training
+- 🔄 Policy Optimization
+- 🔄 Comparative Analysis
+
+---
+
+### Upcoming
+
+- ⏳ Hyperparameter Optimization
+- ⏳ PPO vs DQN Evaluation
+- ⏳ Final Performance Benchmark
+- ⏳ Internship Documentation
+- ⏳ Final Project Submission
+
+---
+
+# 📈 Skills Demonstrated
+
+## Reinforcement Learning
+
+- Q-Learning
+- Deep Q Networks
+- Policy Gradient Methods
+- PPO
+- Markov Decision Processes
+
+---
+
+## Deep Learning
+
+- PyTorch
+- Neural Networks
+- Backpropagation
+- Optimization
+- Function Approximation
+
+---
+
+## Python Ecosystem
+
+- NumPy
+- Pandas
+- Matplotlib
+- Gymnasium
+- Stable-Baselines3
+
+---
+
+## Software Engineering
+
+- Object-Oriented Programming
+- Modular Project Architecture
+- Git & GitHub
+- Version Control
+- Documentation
+- Testing
 
 ---
 
 # 🙏 Acknowledgements
 
-This project was developed as part of the:
+This project has been developed as part of the
 
-**Infotact Solutions – Data Science & Machine Learning Technical Internship (2026)**
+## **Infotact Solutions**
+### Data Science & Machine Learning Technical Internship (2026)
 
-Special thanks to:
+Special thanks to the following open-source communities and organizations for providing outstanding tools and learning resources:
 
-- Infotact Solutions
 - OpenAI Gymnasium
 - PyTorch
+- Stable-Baselines3
 - NumPy
 - Pandas
 - Matplotlib
 - SciPy
+- Python Software Foundation
 - Open Source Community
 
----
-
-# 👨‍💻 Author
-
-## Ankur Saini
-
-**Artificial Intelligence Undergraduate**
-
-Passionate about:
-
-- Artificial Intelligence
-- Machine Learning
-- Deep Learning
-- Reinforcement Learning
-- Data Science
-- Python Development
-
-### Connect with me
-
-- GitHub: https://github.com/Ankursaini018
-- LinkedIn: www.linkedin.com/in/ankur-saini-596173374
+Their contributions have made this project possible.
 
 ---
 
 # 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
 
-You are free to use, modify, and distribute this project for educational and research purposes.
+You are free to:
+
+- Use
+- Study
+- Modify
+- Share
+
+for educational and research purposes while retaining the original license.
+
+---
+
+# 📚 References
+
+The following resources were helpful throughout the implementation of this project:
+
+- Sutton & Barto — *Reinforcement Learning: An Introduction*
+- OpenAI Gymnasium Documentation
+- PyTorch Documentation
+- Stable-Baselines3 Documentation
+- Reinforcement Learning Research Papers
 
 ---
 
 # ⭐ Support
 
-If you found this project helpful:
+If you found this repository useful, consider supporting the project by:
 
-⭐ Star this repository
+⭐ Starring the repository
 
-🍴 Fork the repository
+🍴 Forking the repository
 
-📢 Share it with others
+🛠️ Contributing improvements
 
-Your support motivates further development and improvements.
+📢 Sharing it with others
+
+Every contribution and star helps motivate future development.
+
+---
+
+# 🚀 Future Vision
+
+This repository serves as the foundation for more advanced Reinforcement Learning applications in dynamic decision-making.
+
+Future directions include:
+
+- Airline Revenue Management
+- Hotel Pricing Optimization
+- Retail Price Optimization
+- Cloud Deployment
+- Interactive Web Dashboard
+- Real-Time Pricing Systems
+- Multi-Agent Reinforcement Learning
+- Production-Ready AI Services
 
 ---
 
 <div align="center">
 
-## Thank You for Visiting!
+# 🎯 RL Dynamic Pricing using Reinforcement Learning
 
-**RL Dynamic Pricing using Reinforcement Learning**
+### **Learning Intelligent Pricing through Artificial Intelligence**
 
-*Building intelligent pricing strategies through AI and Deep Reinforcement Learning.*
+---
 
-⭐ **Don't forget to Star the Repository!** ⭐
+### 📊 Current Progress
+
+| Module | Progress |
+|----------|-----------|
+| Environment | ✅ |
+| Q-Learning | ✅ |
+| DQN | ✅ |
+| PPO | 🔄 |
+| Final Evaluation | ⏳ |
+
+---
+
+### 🚀 Built With
+
+**Python • PyTorch • Gymnasium • Stable-Baselines3 • NumPy • Pandas • Matplotlib**
+
+---
+
+### 💡 "Teaching machines to make smarter pricing decisions through Reinforcement Learning."
+
+---
+
+## ⭐ Thank You for Visiting!
+
+If you enjoyed exploring this project, don't forget to leave a ⭐ on the repository.
+
+Happy Learning! 🚀
 
 </div>
