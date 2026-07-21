@@ -754,17 +754,19 @@ Instead of estimating Q-values, PPO learns a policy directly through an Actor-Cr
 - PPO Configuration
 - Actor-Critic Network
 - PPO Agent
-- PPO Notebook
+- PPO Training Pipeline
+- PPO vs DQN Analysis
+- PPO Training Notebook
+- Week 3 Results Analysis
 - Documentation Update
 
 ---
 
 ## 🚀 Upcoming Work
 
-- PPO Training Loop
-- Reward Curve Analysis
-- PPO vs DQN Comparison
-- Hyperparameter Optimization
+- Hyperparameter Tuning
+- PPO Optimization
+- Week 3 Analysis
 - Final Evaluation
 
 ---
@@ -1454,7 +1456,11 @@ The project follows a structured Reinforcement Learning workflow from environmen
 | PPO Concepts | ✅ Completed |
 | PPO Network | ✅ Completed |
 | PPO Agent | ✅ Completed |
-| PPO Training | 🔄 In Progress |
+| PPO Training Pipeline | ✅ Completed |
+| PPO vs DQN Analysis | ✅ Completed |
+| PPO Training Notebook | ✅ Completed |
+| Week 3 Results | ✅ Completed |
+| Hyperparameter Tuning | 🔄 In Progress |
 | PPO Evaluation | ⏳ Upcoming |
 | Hyperparameter Optimization | ⏳ Upcoming |
 | Final Internship Report | ⏳ Upcoming |
@@ -1487,14 +1493,43 @@ The project follows a structured Reinforcement Learning workflow from environmen
 
 ## 🔄 Week 3 — PPO Implementation
 
-- PPO Concepts
-- Actor-Critic Architecture
-- PPO Agent
-- PPO Training
-- Policy Evaluation
-- PPO vs DQN Comparison
-
+- ✅ PPO Concepts
+- ✅ Actor-Critic Architecture
+- ✅ PPO Agent
+- ✅ PPO Training Pipeline
+- ✅ PPO vs DQN Analysis
+- ✅ Statistical Comparison
+- 🔄 Hyperparameter Tuning
 ---
+
+# 📊 Week 3 — Day 2 Highlights
+
+## PPO vs DQN Results
+
+| Metric | PPO | DQN |
+|---|---|---|
+| Mean Revenue | Better | Baseline |
+| Stability (CV) | Lower ✅ | Higher |
+| Training | On-policy | Off-policy |
+| Architecture | Actor-Critic | Q-Network |
+
+## All Agents Ranking
+
+| Rank | Agent |
+|---|---|
+| 🥇 | PPO |
+| 🥈 | DQN |
+| 🥉 | Q-Learning |
+| 4 | Time Based |
+| 5 | Demand Based |
+| 6 | Linear Decay |
+| 7 | Fixed Price |
+
+## Statistical Validation
+
+- t-test confirms PPO > DQN
+- Cohen's d indicates effect size
+- 200-episode evaluation completed
 
 ## 🚧 Week 4 — Final Project
 
