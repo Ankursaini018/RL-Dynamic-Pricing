@@ -740,25 +740,53 @@ Instead of estimating Q-values, PPO learns a policy directly through an Actor-Cr
 | Day | Topic | Status |
 |------|-------|--------|
 | Day 1 | PPO Concepts & Architecture | ✅ |
-| Day 2 | PPO Training | 🔄 |
-| Day 3 | PPO Evaluation | ⏳ |
-| Day 4 | Hyperparameter Tuning | ⏳ |
-| Day 5 | Comparative Analysis | ⏳ |
-| Day 6 | Code Refactoring | ⏳ |
-| Day 7 | Documentation & Wrap-Up | ⏳ |
+| Day 2 | PPO Training & Comparison | ✅ |
+| Day 3 | Hyperparameter Tuning | ✅ |
+| Day 4 | Final Comparison & Analysis | 🔄 |
+| Day 5 | Week 3 Wrap-Up | ⏳ |
 
 ---
 
+# 🔧 Week 3 Day 3 — Hyperparameter Tuning
+
+## PPO Grid Search Results
+
+| Config | LR | Clip | Epochs | Revenue |
+|---|---|---|---|---|
+| Best Guess | 0.0005 | 0.2 | 15 | 🥇 Best |
+| Default | 0.0003 | 0.2 | 10 | 2nd |
+| High LR | 0.001 | 0.2 | 10 | 3rd |
+| More Epochs | 0.0003 | 0.2 | 20 | 4th |
+| Others | ... | ... | ... | ... |
+
+## Best PPO Config Found
+
+| Parameter | Value |
+|---|---|
+| Learning Rate | 0.0005 |
+| Clip Range | 0.2 |
+| N Epochs | 15 |
+| Entropy Coef | 0.02 |
+
+## Key Finding
+
+PPO with tuned hyperparameters outperforms both DQN and all baselines!
+
+## Issues Status
+
+| Issue | Status |
+|---|---|
+| #11 PPO Agent | ✅ Closed |
+| #12 Hyperparameter Tuning | ✅ Closed |
+| #13 Final Comparison | 🔄 Tomorrow |
+
+
 ## ✅ Completed So Far
 
-- PPO Configuration
-- Actor-Critic Network
-- PPO Agent
-- PPO Training Pipeline
-- PPO vs DQN Analysis
-- PPO Training Notebook
-- Week 3 Results Analysis
-- Documentation Update
+- PPO Hyperparameter Grid Search
+- Combined PPO vs DQN Tuner
+- Hyperparameter Tuning Notebook
+- Configuration Manager
 
 ---
 
@@ -1442,7 +1470,7 @@ The project follows a structured Reinforcement Learning workflow from environmen
 # 📌 Repository Progress
 
 | Milestone | Status |
-|------------|--------|
+|-----------|--------|
 | Environment Design | ✅ Completed |
 | MDP Formulation | ✅ Completed |
 | Baseline Pricing Agents | ✅ Completed |
@@ -1460,8 +1488,10 @@ The project follows a structured Reinforcement Learning workflow from environmen
 | PPO vs DQN Analysis | ✅ Completed |
 | PPO Training Notebook | ✅ Completed |
 | Week 3 Results | ✅ Completed |
-| Hyperparameter Tuning | 🔄 In Progress |
-| PPO Evaluation | ⏳ Upcoming |
+| Hyperparameter Tuning | ✅ Completed |
+| Combined Tuning | ✅ Completed |
+| Configuration Manager | ✅ Completed |
+| PPO Evaluation | 🔄 In Progress |
 | Hyperparameter Optimization | ⏳ Upcoming |
 | Final Internship Report | ⏳ Upcoming |
 
@@ -1499,7 +1529,8 @@ The project follows a structured Reinforcement Learning workflow from environmen
 - ✅ PPO Training Pipeline
 - ✅ PPO vs DQN Analysis
 - ✅ Statistical Comparison
-- 🔄 Hyperparameter Tuning
+- ✅ Hyperparameter Tuning
+- 🔄 Final Comparison
 ---
 
 # 📊 Week 3 — Day 2 Highlights
