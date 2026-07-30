@@ -293,7 +293,42 @@ python src/simulation/business_value.py
 
 ---
 
-## ✅ Week 4 — Final Evaluation
+## Week 4 Day 2 — Business Dashboard ✅
+
+### Business Value (PPO vs Best Baseline)
+
+| Period | Revenue Uplift |
+|---|---|
+| Daily | +$XXX |
+| Weekly | +$XXX |
+| Monthly | +$XXX |
+| Annual | +$XXX |
+
+### PPO Behaviors Proved
+
+| Behavior | Proof |
+|---|---|
+| Deadline Discounting | Price drops X% near deadline |
+| Scarcity Premium | Price rises X% for low inventory |
+
+### Dashboard Includes
+
+- ✅ Final rankings (1000 seasons)
+- ✅ Sell-through rates
+- ✅ PPO price trajectories
+- ✅ Deadline discounting proof
+- ✅ Revenue distributions
+- ✅ Business value projections
+- ✅ RL evolution chart
+
+### Issues Updated
+
+| Issue | Status |
+|---|---|
+| #16 Final documentation | 🔄 In Progress |
+| #20 Business dashboard | ✅ Closed |
+| #17 Optimization | 📅 Tomorrow |
+| #18 Final submission | 📅 Day 4 |
 
 ### Deliverables
 
