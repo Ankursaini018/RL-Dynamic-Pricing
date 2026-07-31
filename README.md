@@ -293,42 +293,39 @@ python src/simulation/business_value.py
 
 ---
 
-## Week 4 Day 2 — Business Dashboard ✅
+## Week 4 Day 3 — Documentation ✅
 
-### Business Value (PPO vs Best Baseline)
-
-| Period | Revenue Uplift |
+### Documentation Complete
+| Document | Status |
 |---|---|
-| Daily | +$XXX |
-| Weekly | +$XXX |
-| Monthly | +$XXX |
-| Annual | +$XXX |
+| Project Summary | ✅ |
+| Model Card | ✅ |
+| Reproduction Guide | ✅ |
+| Submission Checklist | ✅ |
+| Final Review Prep | ✅ |
 
-### PPO Behaviors Proved
+### How to Reproduce Results
+```bash
+# Quick test (5 minutes)
+cd src
+python project_runner.py --quick
 
-| Behavior | Proof |
-|---|---|
-| Deadline Discounting | Price drops X% near deadline |
-| Scarcity Premium | Price rises X% for low inventory |
+# Full pipeline (30 minutes)
+python project_runner.py
 
-### Dashboard Includes
-
-- ✅ Final rankings (1000 seasons)
-- ✅ Sell-through rates
-- ✅ PPO price trajectories
-- ✅ Deadline discounting proof
-- ✅ Revenue distributions
-- ✅ Business value projections
-- ✅ RL evolution chart
+# Run all tests
+python tests/test_ppo.py
+python tests/test_agents.py
+python tests/test_environment.py
+```
 
 ### Issues Updated
-
 | Issue | Status |
 |---|---|
-| #16 Final documentation | 🔄 In Progress |
-| #20 Business dashboard | ✅ Closed |
-| #17 Optimization | 📅 Tomorrow |
-| #18 Final submission | 📅 Day 4 |
+| #16 Final documentation | ✅ Closed |
+| #17 Performance optimization | ✅ Closed |
+| #18 Final submission | 🔄 Tomorrow |
+| #21 Submission ready | 📅 Day 5 |
 
 ### Deliverables
 
