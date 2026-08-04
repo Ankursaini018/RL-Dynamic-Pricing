@@ -9,6 +9,11 @@ final status report.
 
 Infotact DS/ML Internship — Project 2
 Week 4 : Final Verification
+
+FIX APPLIED:
+- Uses Path(__file__).resolve() for correct paths
+- Saves verification report to correct results folder
+- Handles both results/ and notebooks/results/ locations
 """
 
 import numpy as np
@@ -17,8 +22,50 @@ import os
 from pathlib import Path
 import sys
 
+# ─────────────────────────────────────────
+# GET PROJECT ROOT DYNAMICALLY
+# ─────────────────────────────────────────
+# This file lives at:
+#   <PROJECT_ROOT>/src/final_verification.py
+#
+# So going 1 level up gives PROJECT_ROOT:
+#   Path(__file__).resolve().parent   = src/
+#   Path(__file__).resolve().parents[1] = PROJECT_ROOT ✅
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(PROJECT_ROOT))
+SRC_ROOT     = PROJECT_ROOT / 'src'
+
+# Add src to path for imports
+sys.path.insert(0, str(SRC_ROOT))
+
+# ─────────────────────────────────────────
+# DETECT RESULTS FOLDER
+# ─────────────────────────────────────────
+# Based on your folder structure, results
+# can be in TWO places:
+#   1. <PROJECT_ROOT>/results/
+#   2. <PROJECT_ROOT>/notebooks/results/
+#
+# We check both and use whichever exists!
+
+_results_dir1 = PROJECT_ROOT / 'results'
+_results_dir2 = PROJECT_ROOT / 'notebooks' / 'results'
+
+if _results_dir2.exists():
+    RESULTS_DIR = _results_dir2
+elif _results_dir1.exists():
+    RESULTS_DIR = _results_dir1
+else:
+    # Create results dir if neither exists
+    RESULTS_DIR = _results_dir1
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
+# Ensure results dir exists
+RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
+# ─────────────────────────────────────────
+# IMPORTS (after path setup)
+# ─────────────────────────────────────────
 
 from environment.pricing_env import DynamicPricingEnv
 from agents.ppo.ppo_agent import PPOAgent
@@ -44,8 +91,10 @@ from training.config_manager import (
     BEST_DQN_CONFIG
 )
 
-os.makedirs('../results', exist_ok=True)
 
+# ─────────────────────────────────────────
+# MAIN VERIFICATION
+# ─────────────────────────────────────────
 
 def run_final_verification():
     """
@@ -57,14 +106,14 @@ def run_final_verification():
     print("  Project 2 — RL Dynamic Pricing")
     print("  Infotact DS/ML Internship 2026")
     print("=" * 60)
+    print(f"\n  Project Root : {PROJECT_ROOT}")
+    print(f"  Results Dir  : {RESULTS_DIR}")
 
     results = {}
 
     # ── Check 1: Structure ──
     print("\n[CHECK 1] Project Structure...")
-    results['structure'] = (
-        check_project_structure()
-    )
+    results['structure'] = check_project_structure()
 
     # ── Check 2: Unit Tests ──
     print("\n[CHECK 2] Unit Tests...")
@@ -89,6 +138,7 @@ def run_final_verification():
     env = DynamicPricingEnv()
 
     # Quick PPO test
+    print("  Training PPO (100 eps)...")
     ppo = PPOAgent(
         env, {**BEST_PPO_CONFIG, 'n_episodes': 100}
     )
@@ -96,6 +146,7 @@ def run_final_verification():
     ppo_eval = ppo.evaluate(n_episodes=20)
 
     # Quick DQN test
+    print("  Training DQN (100 eps)...")
     dqn = DQNAgent(
         env, {**BEST_DQN_CONFIG, 'n_episodes': 100}
     )
@@ -103,33 +154,25 @@ def run_final_verification():
     dqn_eval = dqn.evaluate(n_episodes=20)
 
     # Quick baseline
-    bl_df = evaluate_agent(
+    bl_df  = evaluate_agent(
         TimedPricingAgent(env), n_episodes=20
     )
     bl_rev = bl_df['total_revenue'].mean()
 
-    ppo_wins = (
-        ppo_eval['mean_revenue'] > bl_rev
-    )
-    dqn_wins = (
-        dqn_eval['mean_revenue'] > bl_rev
-    )
+    ppo_wins = ppo_eval['mean_revenue'] > bl_rev
+    dqn_wins = dqn_eval['mean_revenue'] > bl_rev
 
-    print(f"  PPO Revenue   : "
-          f"${ppo_eval['mean_revenue']:.0f}")
-    print(f"  DQN Revenue   : "
-          f"${dqn_eval['mean_revenue']:.0f}")
+    print(f"\n  PPO Revenue   : ${ppo_eval['mean_revenue']:.0f}")
+    print(f"  DQN Revenue   : ${dqn_eval['mean_revenue']:.0f}")
     print(f"  Best Baseline : ${bl_rev:.0f}")
-    print(f"  PPO > Baseline: "
-          f"{'✅' if ppo_wins else '⚠️'}")
+    print(f"  PPO > Baseline: {'✅' if ppo_wins else '⚠️'}")
+    print(f"  DQN > Baseline: {'✅' if dqn_wins else '⚠️'}")
 
     results['agent_check'] = ppo_wins
 
     # ── Check 4: Results Files ──
     print("\n[CHECK 4] Results Files...")
-    results['results_files'] = (
-        check_results_files()
-    )
+    results['results_files'] = check_results_files()
 
     # ── Final Summary ──
     print("\n" + "=" * 60)
@@ -154,39 +197,39 @@ def run_final_verification():
         print("  ✅ PROJECT IS SUBMISSION READY!")
     else:
         failed = [
-            k for k, v in checks.items()
-            if not v
+            k for k, v in checks.items() if not v
         ]
         print(f"  ⚠️  Fix these: {failed}")
     print("─" * 60)
 
-    # Save verification report
+    # ── Save Verification Report ──
     report = {
-        'date'       : '2nd August 2026',
-        'checks'     : {
-            k: bool(v)
-            for k, v in checks.items()
+        'date'         : '4th August 2026',
+        'project_root' : str(PROJECT_ROOT),
+        'results_dir'  : str(RESULTS_DIR),
+        'checks'       : {
+            k: bool(v) for k, v in checks.items()
         },
-        'all_passed' : bool(all_passed),
-        'ppo_revenue': float(
-            ppo_eval['mean_revenue']
-        ),
-        'dqn_revenue': float(
-            dqn_eval['mean_revenue']
-        ),
-        'bl_revenue' : float(bl_rev),
+        'all_passed'   : bool(all_passed),
+        'ppo_revenue'  : float(ppo_eval['mean_revenue']),
+        'dqn_revenue'  : float(dqn_eval['mean_revenue']),
+        'bl_revenue'   : float(bl_rev),
     }
 
-    with open(
-        '../results/verification_report.json',
-        'w'
-    ) as f:
+    # Save to correct results folder
+    report_path = RESULTS_DIR / 'verification_report.json'
+    with open(report_path, 'w') as f:
         json.dump(report, f, indent=4)
 
     print(f"\n✅ Verification report saved!")
+    print(f"   Path: {report_path}")
 
     return all_passed
 
+
+# ─────────────────────────────────────────
+# MAIN
+# ─────────────────────────────────────────
 
 if __name__ == "__main__":
     passed = run_final_verification()
