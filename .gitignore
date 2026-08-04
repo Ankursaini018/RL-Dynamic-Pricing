@@ -1,21 +1,49 @@
-# Models and Results
-models/
-data/
-results/
-*.pkl
-*.pt
-*.h5
-*.pth
-
 # Python
 __pycache__/
+*.py[cod]
+*.pyo
 *.pyc
-.env
-venv/
+.Python
+*.egg-info/
+dist/
+build/
 
-# Notebooks
-.ipynb_checkpoints/
+# Models (too large for git)
+models/
+*.pth
+*.pt
+*.pkl
+*.joblib
+
+# Data (download separately)
+data/
+*.csv
+!results/*.csv
+
+# Environment
+.env
+.venv
+venv/
+env/
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# Logs
+*.log
+logs/
+
+# Temp
+tmp/
+temp/
