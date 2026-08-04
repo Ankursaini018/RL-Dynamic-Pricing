@@ -10,7 +10,7 @@
 
 ---
 
-## 🎯 Problem Statement
+# 🎯 Problem Statement
 
 Airlines and hotels must sell **finite inventory**
 over **limited time**. Traditional fixed pricing
@@ -22,7 +22,7 @@ simulated booking seasons!
 
 ---
 
-## 🏗️ MDP Formulation
+# 🏗️ MDP Formulation
 
 | Component | Value |
 |---|---|
@@ -34,7 +34,7 @@ simulated booking seasons!
 
 ---
 
-## 📊 Final Results (1000 Seasons)
+# 📊 Final Results (1000 Seasons)
 
 | Rank | Agent | Type | Notes |
 |---|---|---|---|
@@ -48,27 +48,31 @@ simulated booking seasons!
 
 ---
 
-## ✅ Proven PPO Behaviors
+# ✅ Proven PPO Behaviors
 
-### 1. Deadline Discounting
+## 1. Deadline Discounting
+
 PPO drops prices near departure
 to clear remaining inventory!
 
-Early (20-30 days) : $250 avg
-Urgent (0-5 days) : $100 avg
-Price Drop : ~60% ✅
-
-### 2. Scarcity Premium Pricing
-PPO raises prices when
-inventory is running low!
-
-High inventory (>40) : $150 avg
-Low inventory (<10) : $250 avg
-Price Premium : ~67% ✅
+- Early (20–30 days): **$250 avg**
+- Urgent (0–5 days): **$100 avg**
+- **Price Drop:** ~60% ✅
 
 ---
 
-## 🧠 Algorithm Comparison
+## 2. Scarcity Premium Pricing
+
+PPO raises prices when
+inventory is running low!
+
+- High inventory (>40): **$150 avg**
+- Low inventory (<10): **$250 avg**
+- **Price Premium:** ~67% ✅
+
+---
+
+# 🧠 Algorithm Comparison
 
 | Feature | Q-Learning | DQN | PPO |
 |---|---|---|---|
@@ -77,51 +81,56 @@ Price Premium : ~67% ✅
 | Training | TD Update | Off-policy | On-policy |
 | Exploration | ε-greedy | ε-greedy | Entropy bonus |
 | Stability | Medium | Good | Best |
-| Used in | Classic RL | Atari games | **ChatGPT!** |
+| Used in | Classic RL | Atari Games | **ChatGPT!** |
 
 ---
 
-## 🏗️ PPO ArchitectureInput : 2 neurons (inventory, days_left)
-↓
+# 🏗️ PPO Architecture
+
+```text
+Input : 2 neurons (inventory, days_left)
+              │
+              ▼
 Shared : 128 neurons (ReLU)
-↓
+              │
+              ▼
 Shared : 64 neurons (ReLU)
-↓
-┌────┴────┐
-↓ ↓
-Actor Critic
-6 neurons 1 neuron
-(Softmax) (Linear)
-↓ ↓
-Probability State
-per price Value
+              │
+      ┌───────┴────────┐
+      ▼                ▼
+   Actor            Critic
+ 6 neurons         1 neuron
+ (Softmax)         (Linear)
+      ▼                ▼
+Probability      State Value
+per Price
+```
 
 ---
 
-## 🔑 DQN Key Innovations
+# 🔑 DQN Key Innovations
 
 | Innovation | Purpose |
 |---|---|
 | Experience Replay (10,000) | Breaks correlations |
 | Target Network | Stable training targets |
-| Epsilon Greedy (1.0→0.01) | Exploration strategy |
-| Gradient Clipping | Prevents explosions |
+| Epsilon Greedy (1.0 → 0.01) | Exploration strategy |
+| Gradient Clipping | Prevents exploding gradients |
 
 ---
 
-## 🔑 PPO Key Innovations
+# 🔑 PPO Key Innovations
 
 | Innovation | Purpose |
 |---|---|
-| Clipped Objective (ε=0.2) | Stable updates |
-| GAE (λ=0.95) | Better advantages |
+| Clipped Objective (ε = 0.2) | Stable updates |
+| GAE (λ = 0.95) | Better advantages |
 | On-policy Rollouts | Fresh experience |
 | Entropy Bonus | Encourages exploration |
 
 ---
 
-## 📁 Project Structure
-## 📁 Project Structure
+# 📁 Project Structure
 
 ```text
 RL-Dynamic-Pricing/
@@ -181,13 +190,13 @@ RL-Dynamic-Pricing/
 │       └── test_ppo.py               # 7 PPO tests
 │
 ├── notebooks/
-│   ├── week1/                        # Week 1 notebooks
-│   ├── week2/                        # Week 2 notebooks
-│   ├── week3/                        # Week 3 notebooks
-│   └── week4/                        # Week 4 notebooks
+│   ├── week1/
+│   ├── week2/
+│   ├── week3/
+│   └── week4/
 │
-├── results/                          # Generated outputs
-├── models/                           # Trained models (gitignored)
+├── results/
+├── models/
 ├── FINAL_SUBMISSION_CHECKLIST.md
 ├── requirements.txt
 └── README.md
@@ -195,33 +204,50 @@ RL-Dynamic-Pricing/
 
 ---
 
-## 🚀 How to Run
+# 🚀 How to Run
 
-### Quick Start (5 minutes)
+## Quick Start (5 Minutes)
+
 ```bash
-git clone https://github.com/Ankursaini018/
-RL-Dynamic-Pricing.git
+git clone https://github.com/Ankursaini018/RL-Dynamic-Pricing.git
+
 cd RL-Dynamic-Pricing
+
 pip install -r requirements.txt
+
 cd src
+
 python project_runner.py --quick
 ```
 
-### Full Pipeline (30 minutes)
+---
+
+## Full Pipeline (30 Minutes)
+
 ```bash
 cd src
+
 python project_runner.py
 ```
 
-### Run All Tests (26 tests)
+---
+
+## Run All Tests (26 Tests)
+
 ```bash
 cd src
+
 python tests/test_environment.py
+
 python tests/test_agents.py
+
 python tests/test_ppo.py
 ```
 
-### Individual Components
+---
+
+## Individual Components
+
 ```bash
 # Environment
 python environment/pricing_env.py
@@ -229,7 +255,7 @@ python environment/pricing_env.py
 # PPO (Best Agent)
 python agents/ppo/ppo_agent.py
 
-# Final 1000-season Simulation
+# Final 1000-Season Simulation
 python simulation/final_simulation.py
 
 # Project Summary
@@ -238,114 +264,207 @@ python project_summary.py
 
 ---
 
-## 📊 Hyperparameter Summary
+# 📊 Hyperparameter Summary
 
-### Best PPO Config
+## Best PPO Configuration
+
 | Parameter | Value |
-|---|---|
+|---|---:|
 | Learning Rate | 0.0005 |
 | Clip Range | 0.2 |
 | N Epochs | 15 |
-| Entropy Coef | 0.02 |
+| Entropy Coefficient | 0.02 |
 | GAE Lambda | 0.95 |
-| Gamma | 0.99 |
-
-### Best DQN Config
-| Parameter | Value |
-|---|---|
-| Learning Rate | 0.001 |
-| Batch Size | 64 |
-| Buffer Size | 10,000 |
-| Target Update | Every 10 eps |
 | Gamma | 0.99 |
 
 ---
 
-## 🧪 Unit Tests
+## Best DQN Configuration
+
+| Parameter | Value |
+|---|---:|
+| Learning Rate | 0.001 |
+| Batch Size | 64 |
+| Replay Buffer Size | 10,000 |
+| Target Network Update | Every 10 Episodes |
+| Gamma | 0.99 |
+
+---
+
+# 🧪 Unit Tests
 
 | Module | Tests | Status |
-|---|---|---|
+|---|---:|---|
 | Environment | 8 | ✅ All Pass |
-| Agents (baseline + QL) | 11 | ✅ All Pass |
+| Agents (Baseline + Q-Learning) | 11 | ✅ All Pass |
 | PPO | 7 | ✅ All Pass |
 | **Total** | **26** | **✅ All Pass** |
 
 ---
 
-## 📅 Week-by-Week Progress
+# 📅 Week-by-Week Progress
 
-| Week | Focus | Key Achievement |
+| Week | Focus | Achievement |
 |---|---|---|
-| Week 1 | MDP + Q-Learning | Q-Learning beats baselines |
-| Week 2 | Deep Q-Network | DQN beats Q-Learning |
-| Week 3 | PPO Agent | PPO beats DQN! |
-| Week 4 | Final Polish | 1000-season proof complete |
+| **Week 1** | MDP + Environment + Q-Learning | Q-Learning outperformed heuristic baselines |
+| **Week 2** | Deep Q-Network (DQN) | DQN outperformed Q-Learning |
+| **Week 3** | PPO Agent | PPO achieved the best overall performance |
+| **Week 4** | Final Polish & Documentation | 1000-season proof, dashboard and documentation completed |
 
 ---
 
----
+# 📊 GitHub Statistics
 
-## 🎯 Final Status — 2nd August 2026
-
-### Everything Complete!
-| Component | Status |
-|---|---|
-| Week 1 MDP + Q-Learning | ✅ |
-| Week 2 Deep Q-Network | ✅ |
-| Week 3 PPO Agent | ✅ |
-| Week 4 Final Polish | ✅ |
-| All 21 Issues | ✅ Closed |
-| All 26 Tests | ✅ Passing |
-| 28+ Commit Days | ✅ |
-| Business Dashboard | ✅ |
-| 1000-Season Proof | ✅ |
-
-### Final Review
-**Window: 5th - 10th August 2026**
-**Status: READY! 💪**
+| Metric | Value |
+|---|---:|
+| Consecutive Commit Days | **30+** |
+| GitHub Issues Closed | **21 / 21** |
+| Python Scripts | **50+** |
+| Jupyter Notebooks | **25+** |
+| Unit Tests | **26** |
+| Project Duration | **4 Weeks** |
 
 ---
 
-## 📅 Project Timeline
+# 📅 Project Timeline
 
 | Date | Milestone |
 |---|---|
-| 5th July | Project 2 Started |
-| 11th July | Week 1 Complete |
-| 18th July | Week 2 Complete |
-| 26th July | Week 3 Complete |
-| 4th August | Week 4 Complete |
-| 5-10 August | **Final Review** |
+| **5th July 2026** | Project Started |
+| **11th July 2026** | Week 1 Completed |
+| **18th July 2026** | Week 2 Completed |
+| **26th July 2026** | Week 3 Completed |
+| **4th August 2026** | Week 4 Completed |
+| **5th–10th August 2026** | Final Review |
 
 ---
 
-## 🎯 Day 6 Status — 3rd August
+# 🎉 PROJECT COMPLETE — 4th August 2026
 
-```
-Tomorrow is the LAST DAY!
+## Final Status
 
-Final commits on 4th August
-Then Final Review begins!
-
-YOU ARE READY! 💪🔥
-```
-
-## 📊 GitHub Stats
-
-| Metric | Value |
+| Item | Status |
 |---|---|
-| Commit Days | 28+ consecutive |
-| Issues Closed | 21/21 |
-| Python Scripts | 50+ |
-| Notebooks | 25+ |
-| Unit Tests | 26 |
+| All 4 Weeks | ✅ Complete |
+| All 21 Issues | ✅ Closed |
+| All 26 Tests | ✅ Passing |
+| Daily Commits | ✅ 30+ Days |
+| Business Dashboard | ✅ Done |
+| 1000-Season Proof | ✅ Done |
+| Documentation | ✅ Done |
 
 ---
 
-## 🔗 Links
+## 🚀 How to Run
 
-- **GitHub**: github.com/Ankursaini018/RL-Dynamic-Pricing
-- **Intern**: Solo Worker
-- **Program**: Infotact DS/ML Internship 2026
-- **Duration**: 5th July - 4th August 2026
+### Single Command (Recommended)
 
+```bash
+python src/run_all_checks.py
+```
+
+---
+
+### Full Pipeline
+
+```bash
+python src/project_runner.py
+```
+
+---
+
+### Quick Test
+
+```bash
+python src/project_runner.py --quick
+```
+
+---
+
+# 🏆 Final Project Achievements
+
+- ✅ Custom Gymnasium Environment
+- ✅ Markov Decision Process (MDP) Formulation
+- ✅ 5 Baseline Pricing Agents
+- ✅ Tabular Q-Learning Agent
+- ✅ Deep Q-Network (DQN)
+- ✅ PPO Actor-Critic Agent
+- ✅ Hyperparameter Optimization
+- ✅ 1000-Season Evaluation
+- ✅ Statistical Significance Testing
+- ✅ Business Value Analysis
+- ✅ Dynamic Pricing Dashboard
+- ✅ Complete Documentation
+- ✅ Professional GitHub Repository
+
+---
+
+# 📈 Final Performance Ranking
+
+| Rank | Agent |
+|---|---|
+| 🥇 | PPO |
+| 🥈 | DQN |
+| 🥉 | Q-Learning |
+| 4️⃣ | Time-Based Pricing |
+| 5️⃣ | Demand-Based Pricing |
+| 6️⃣ | Linear Decay |
+| 7️⃣ | Fixed Price |
+
+---
+
+# 🎯 Final Review
+
+**Review Window:** **5th – 10th August 2026**
+
+**Project Status:**
+
+> **READY FOR FINAL REVIEW! 💪🔥**
+
+---
+
+# 👨‍💻 Developer
+
+**Completed By:** Ankur Saini
+
+**Program:** Infotact DS/ML Internship 2026
+
+**Project:** Reinforcement Learning Dynamic Pricing System
+
+**Duration:** **5th July – 4th August 2026**
+
+---
+
+# 📌 Repository
+
+**GitHub Repository**
+
+```
+https://github.com/Ankursaini018/RL-Dynamic-Pricing
+```
+
+---
+
+# ⭐ Acknowledgement
+
+This project was completed as part of the **Infotact DS/ML Technical Internship 2026**, demonstrating the application of **Reinforcement Learning** techniques—including **Q-Learning, Deep Q-Network (DQN), and Proximal Policy Optimization (PPO)**—to solve a real-world dynamic pricing problem in the travel and hospitality domain.
+
+---
+
+## 🚀 Project Completed Successfully
+
+```
+██████╗ ██╗     
+██╔══██╗██║     
+██████╔╝██║     
+██╔══██╗██║     
+██║  ██║███████╗
+╚═╝  ╚═╝╚══════╝
+
+Dynamic Pricing Project
+
+Status : ✅ COMPLETE
+Date   : 4th August 2026
+
+Thank You!
+```
