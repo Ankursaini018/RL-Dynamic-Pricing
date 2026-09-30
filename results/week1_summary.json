@@ -1,0 +1,61 @@
+{
+    "week": 1,
+    "project": "RL Dynamic Pricing",
+    "environment": {
+        "max_inventory": 50,
+        "max_days": 30,
+        "price_levels": [
+            50,
+            100,
+            150,
+            200,
+            250,
+            300
+        ],
+        "state_space": 1581
+    },
+    "baseline_results": {
+        "Fixed Price": {
+            "mean_revenue": 1933.5,
+            "std_revenue": 391.9038611236643,
+            "mean_sold": 13.32
+        },
+        "Time Based": {
+            "mean_revenue": 2193.5,
+            "std_revenue": 471.7073544930461,
+            "mean_sold": 11.99
+        },
+        "Demand Based": {
+            "mean_revenue": 1710.5,
+            "std_revenue": 363.7830827747922,
+            "mean_sold": 15.08
+        },
+        "Linear Decay": {
+            "mean_revenue": 2106.5,
+            "std_revenue": 538.4534062544973,
+            "mean_sold": 11.25
+        }
+    },
+    "q_learning": {
+        "mean_revenue": 2002.0,
+        "std_revenue": 574.5833272903069,
+        "improvement_pct": -8.730339639844996,
+        "beats_baseline": false,
+        "config": {
+            "learning_rate": 0.1,
+            "discount_factor": 0.99,
+            "epsilon_start": 1.0,
+            "epsilon_end": 0.01,
+            "epsilon_decay": 0.995,
+            "n_episodes": 5000
+        }
+    },
+    "week1_status": {
+        "mdp_designed": true,
+        "gym_env_built": true,
+        "demand_fn_done": true,
+        "baselines_done": true,
+        "q_learning_done": true,
+        "q_table_analyzed": true
+    }
+}

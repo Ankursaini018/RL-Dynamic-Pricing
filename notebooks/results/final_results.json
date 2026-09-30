@@ -1,0 +1,60 @@
+{
+    "project": "RL Dynamic Pricing",
+    "best_agent": "PPO",
+    "best_revenue": 2327.0,
+    "vs_baseline": 8.916452141352678,
+    "all_agents": [
+        {
+            "Agent": "PPO",
+            "Mean Revenue": 2327.0,
+            "Std Revenue": 603.7143364207943
+        },
+        {
+            "Agent": "DQN",
+            "Mean Revenue": 2255.0,
+            "Std Revenue": 623.3177359902412
+        },
+        {
+            "Agent": "Linear Decay",
+            "Mean Revenue": 2136.5,
+            "Std Revenue": 548.3149117288735
+        },
+        {
+            "Agent": "Time Based",
+            "Mean Revenue": 2111.0,
+            "Std Revenue": 528.7482836612782
+        },
+        {
+            "Agent": "Q-Learning",
+            "Mean Revenue": 2097.5,
+            "Std Revenue": 500.31864846315693
+        },
+        {
+            "Agent": "Fixed Price",
+            "Mean Revenue": 2035.5,
+            "Std Revenue": 436.02283092850666
+        },
+        {
+            "Agent": "Demand Based",
+            "Mean Revenue": 1723.5,
+            "Std Revenue": 335.4068086260732
+        }
+    ],
+    "statistical_proof": {
+        "Q-Learning": {
+            "ppo_mean": 2222.0,
+            "other_mean": 2032.0,
+            "improvement": 9.350393700787402,
+            "p_value": 0.0007704527041599136,
+            "significant": true
+        },
+        "DQN": {
+            "ppo_mean": 2222.0,
+            "other_mean": 2233.5,
+            "improvement": -0.5148869487351689,
+            "p_value": 0.8444573948112432,
+            "significant": false
+        }
+    },
+    "week3_complete": true
+}

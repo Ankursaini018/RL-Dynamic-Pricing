@@ -190,7 +190,7 @@ def save_final_results(
         'all_agents'   : results_df[[
             'Agent', 'Mean Revenue', 'Std Revenue'
         ]].to_dict('records'),
-        'statistical_proof': proof_results,
+        'statistical_proof': json.loads(json.dumps(proof_results, default=lambda o: bool(o) if hasattr(o, "item") else float(o))),
         'week3_complete'   : True,
     }
 

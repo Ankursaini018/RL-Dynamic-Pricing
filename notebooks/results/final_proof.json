@@ -1,0 +1,63 @@
+{
+    "winner": "PPO",
+    "winner_revenue": 2204.35,
+    "best_baseline": "Time Based",
+    "best_bl_revenue": 2128.55,
+    "improvement_pct": 3.561109675600748,
+    "n_seasons": 1000,
+    "statistical_proof": {
+        "n_comparisons": 6,
+        "significant": 5,
+        "all_significant": false
+    },
+    "proof_summary": {
+        "Fixed Price": {
+            "winner_mean": 2204.35,
+            "other_mean": 1990.8,
+            "improvement": 10.726843480008034,
+            "p_value": 4.0564663219952853e-25,
+            "cohens_d": 0.46957381005604315,
+            "significant": true
+        },
+        "Time Based": {
+            "winner_mean": 2204.35,
+            "other_mean": 2128.55,
+            "improvement": 3.561109675600748,
+            "p_value": 0.0010791327942496533,
+            "cohens_d": 0.1464832108645952,
+            "significant": true
+        },
+        "Demand Based": {
+            "winner_mean": 2204.35,
+            "other_mean": 1697.55,
+            "improvement": 29.85479072781361,
+            "p_value": 1.0743692485382311e-122,
+            "cohens_d": 1.131768800668468,
+            "significant": true
+        },
+        "Linear Decay": {
+            "winner_mean": 2204.35,
+            "other_mean": 2072.85,
+            "improvement": 6.3439226186168804,
+            "p_value": 2.8082380703075537e-08,
+            "cohens_d": 0.24945467951344746,
+            "significant": true
+        },
+        "Q-Learning": {
+            "winner_mean": 2204.35,
+            "other_mean": 2071.95,
+            "improvement": 6.3901155915924654,
+            "p_value": 1.56318914750192e-08,
+            "cohens_d": 0.25405011427032587,
+            "significant": true
+        },
+        "DQN": {
+            "winner_mean": 2204.35,
+            "other_mean": 2242.55,
+            "improvement": -1.7034179839914503,
+            "p_value": 0.13334285298179427,
+            "cohens_d": -0.0671898976696934,
+            "significant": false
+        }
+    }
+}

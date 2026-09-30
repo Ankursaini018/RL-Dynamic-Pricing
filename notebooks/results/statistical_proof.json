@@ -1,0 +1,50 @@
+{
+    "Fixed Price": {
+        "winner_mean": 2228.95,
+        "other_mean": 1976.25,
+        "improvement": 12.786843769765962,
+        "p_value": 3.207193548452878e-32,
+        "cohens_d": 0.538157500001353,
+        "significant": true
+    },
+    "Time Based": {
+        "winner_mean": 2228.95,
+        "other_mean": 2114.65,
+        "improvement": 5.405149788381043,
+        "p_value": 1.9561399879398856e-06,
+        "cohens_d": 0.21351765710247347,
+        "significant": true
+    },
+    "Demand Based": {
+        "winner_mean": 2228.95,
+        "other_mean": 1688.8,
+        "improvement": 31.984249171008994,
+        "p_value": 1.8277347134212664e-130,
+        "cohens_d": 1.173104609520116,
+        "significant": true
+    },
+    "Linear Decay": {
+        "winner_mean": 2228.95,
+        "other_mean": 2067.1,
+        "improvement": 7.829809878573843,
+        "p_value": 1.274063740561589e-11,
+        "cohens_d": 0.30476983817581565,
+        "significant": true
+    },
+    "Q-Learning": {
+        "winner_mean": 2228.95,
+        "other_mean": 2014.85,
+        "improvement": 10.626101198600388,
+        "p_value": 7.404071899816701e-19,
+        "cohens_d": 0.400804799225273,
+        "significant": true
+    },
+    "DQN": {
+        "winner_mean": 2228.95,
+        "other_mean": 2230.2,
+        "improvement": -0.056048784862344186,
+        "p_value": 0.9569432318814195,
+        "cohens_d": -0.002416011888191506,
+        "significant": false
+    }
+}

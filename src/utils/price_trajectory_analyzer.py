@@ -59,16 +59,19 @@ def get_episode_trajectory(
 
     while not done:
         # Get action
+        # Get action
         if hasattr(agent, 'select_action'):
-            action = agent.select_action(
-                state, training=False
-            )
+            try:
+                action = agent.select_action(
+                    state, training=False
+                )
+            except TypeError:
+                action = agent.select_action(state)
         else:
-            action = agent.run_episode(
-                seed=seed
-            )['prices_used'][day] \
-            if day == 0 else 0
-
+                action = agent.run_episode(
+                    seed=seed
+                )['prices_used'][day] \
+                if day == 0 else 0
         obs, reward, term, trunc, info = (
             env.step(action)
         )

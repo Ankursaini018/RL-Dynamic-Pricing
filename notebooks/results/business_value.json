@@ -1,0 +1,13 @@
+{
+    "winner": "PPO",
+    "winner_revenue": 2228.95,
+    "baseline_revenue": 2114.65,
+    "daily_uplift": 114.29999999999973,
+    "monthly_uplift": 3428.999999999992,
+    "annual_uplift": 41719.4999999999,
+    "uplift_pct": 5.405149788381043,
+    "winner_sell_pct": 23.100000000000005,
+    "baseline_sell_pct": 29.892000000000003,
+    "sell_improvement": -6.791999999999998,
+    "recommendation": "Deploy PPO for +5.4% revenue!"
+}

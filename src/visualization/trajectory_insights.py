@@ -209,20 +209,29 @@ def compare_trajectory_patterns(
         # Run 5 episodes and overlay
         for ep in range(5):
             prices = []
+
             if hasattr(agent, 'select_action'):
                 state, _ = env.reset(seed=ep)
-                done     = False
+                done = False
+
                 while not done:
-                    action = agent.select_action(
-                        state, training=False
-                    )
+                    try:
+                        action = agent.select_action(
+                            state,
+                            training=False
+                        )
+                    except TypeError:
+                        action = agent.select_action(state)
+
                     prices.append(
                         PRICE_LEVELS[action]
                     )
+
                     state, _, term, trunc, _ = (
                         env.step(action)
                     )
                     done = term or trunc
+
             else:
                 result = agent.run_episode(seed=ep)
                 prices = result['prices_used']
@@ -230,7 +239,8 @@ def compare_trajectory_patterns(
             axes[i].plot(
                 prices,
                 color=colors[i % len(colors)],
-                alpha=0.4, linewidth=1.5
+                alpha=0.4,
+                linewidth=1.5
             )
 
         axes[i].set_title(
@@ -242,19 +252,30 @@ def compare_trajectory_patterns(
         axes[i].set_ylim([0, 350])
         axes[i].grid(True, alpha=0.3)
         axes[i].axvspan(
-            25, 30, alpha=0.1, color='red'
+            25, 30,
+            alpha=0.1,
+            color='red'
         )
 
     axes[-1].set_xlabel('Day of Season')
+
     plt.suptitle(
         'Pricing Pattern Comparison\n'
         'All Agents — Multiple Episodes',
-        fontsize=13, fontweight='bold'
+        fontsize=13,
+        fontweight='bold'
     )
+
     plt.tight_layout()
-    plt.savefig(save_path,
-                bbox_inches='tight', dpi=150)
+
+    plt.savefig(
+        save_path,
+        bbox_inches='tight',
+        dpi=150
+    )
+
     plt.show()
+
     print(f"✅ Saved: {save_path}")
 
 

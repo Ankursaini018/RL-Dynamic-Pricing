@@ -81,16 +81,20 @@ def collect_trajectories(
         day      = 0
         done     = False
 
-        while not done:
-            if hasattr(agent, 'select_action'):
-                action = agent.select_action(
-                    state, training=False
-                )
-            else:
+    while not done:
+            if hasattr(agent, 'run_episode'):
                 result = agent.run_episode(
                     seed=seed + ep
                 )
                 break
+            else:
+                try:
+                    action = agent.select_action(
+                        state,
+                        training=False
+                    )
+                except TypeError:
+                    action = agent.select_action(state)
 
             obs, reward, term, trunc, info = (
                 env.step(action)
@@ -113,11 +117,11 @@ def collect_trajectories(
             day  += 1
 
         # Handle baseline agents
-        if not hasattr(agent, 'select_action'):
-            for d, price in enumerate(
-                result['prices_used']
-            ):
-                all_data.append({
+            if not hasattr(agent, 'select_action'):
+                for d, price in enumerate(
+                    result['prices_used']
+                ):
+                    all_data.append({
                     'episode'    : ep,
                     'day'        : d + 1,
                     'price'      : price,
@@ -234,53 +238,67 @@ def create_price_dashboard(
         if traj is None:
             continue
 
-        # Single episode trajectory
-        ep0 = traj[traj['episode'] == 0]
+                # Single episode trajectory
+        dqn_traj = trajectories['DQN 🤖']
 
-        if not ep0.empty:
+        if not dqn_traj.empty:
+            first_episode = dqn_traj[
+                dqn_traj['episode'] == 0
+            ]
+
+            rev = first_episode['cum_revenue'].max()
+
             ax.plot(
-                ep0['day'],
-                ep0['price'],
-                color=colors[idx],
-                linewidth=2.5,
-                marker='o', markersize=5,
-                label='Price'
+                first_episode['day'],
+                first_episode['price'],
+                label='DQN 🤖'
             )
 
             # Mark sales
-            sales = ep0[ep0['bought'] == 1]
+            sales = first_episode[first_episode['bought'] == 1]
             ax.scatter(
                 sales['day'],
                 sales['price'],
-                color='green', s=100,
+                color='green',
+                s=100,
                 zorder=5,
-                label='Sale ✓'
+                label='Sale'
             )
 
             # Mark no sales
-            no_sales = ep0[ep0['bought'] == 0]
+            no_sales = first_episode[first_episode['bought'] == 0]
             ax.scatter(
                 no_sales['day'],
                 no_sales['price'],
-                color='red', s=30,
-                zorder=5, alpha=0.5,
+                color='red',
+                s=30,
+                zorder=5,
+                alpha=0.5,
                 label='No Sale'
             )
 
-            rev = ep0['cum_revenue'].max()
+            ax.fill_between(
+                first_episode['day'],
+                0,
+                first_episode['cum_revenue'],
+                alpha=0.1
+            )
+
             ax.set_title(
                 f'{name}\nRevenue: ${rev:.0f}',
-                fontweight='bold', fontsize=11
+                fontweight='bold'
             )
+
             ax.set_xlabel('Day')
             ax.set_ylabel('Price ($)')
             ax.legend(fontsize=8)
             ax.grid(True, alpha=0.3)
-            ax.set_ylim([0, 350])
+            ax.set_ylim(0, 350)
 
             # Deadline zone
             ax.axvspan(
-                25, 30, alpha=0.1,
+                25, 30,
+                alpha=0.1,
                 color='red'
             )
 

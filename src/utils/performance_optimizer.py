@@ -58,11 +58,17 @@ def benchmark_agents(
 
             while not done:
                 if hasattr(agent, 'select_action'):
-                    action = agent.select_action(
-                        state, training=False
-                    )
-                    if isinstance(action, tuple):
-                        action = action[0]
+                        try:
+                            action = agent.select_action(
+                                state,
+                                training=False
+                            )
+                        except TypeError:
+                            # Heuristic agents don't accept the training argument
+                            action = agent.select_action(state)
+
+                        if isinstance(action, tuple):
+                            action = action[0]
                 else:
                     result = agent.run_episode(
                         seed=ep

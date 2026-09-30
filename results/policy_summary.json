@@ -1,0 +1,26 @@
+{
+    "agent_type": "Q-Learning",
+    "training_episodes": 5000,
+    "final_epsilon": 0.01,
+    "mean_revenue_last100": 1811.1,
+    "q_table_shape": [
+        51,
+        31,
+        6
+    ],
+    "price_levels": [
+        50,
+        100,
+        150,
+        200,
+        250,
+        300
+    ],
+    "policy_insights": {
+        "early_avg_price": 66.39928698752229,
+        "late_avg_price": 78.43137254901961,
+        "high_inv_price": 132.40469208211144,
+        "low_inv_price": 50.0,
+        "most_used_price": 50
+    }
+}

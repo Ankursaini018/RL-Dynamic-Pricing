@@ -91,7 +91,8 @@ def _categorize_state(
 
 
 def save_policy_summary(
-        agent: QLearningAgent):
+        agent: QLearningAgent,
+        save_path: str = "../results/policy_summary.json"):
     """
     Save policy summary as JSON.
 

@@ -1,0 +1,42 @@
+{
+    "rankings": [
+        {
+            "rank": 1,
+            "agent": "Q-Learning",
+            "revenue": 2245.0
+        },
+        {
+            "rank": 2,
+            "agent": "DQN",
+            "revenue": 2212.5
+        },
+        {
+            "rank": 3,
+            "agent": "Time Based",
+            "revenue": 2197.5
+        },
+        {
+            "rank": 4,
+            "agent": "Fixed Price",
+            "revenue": 1912.5
+        },
+        {
+            "rank": 5,
+            "agent": "Linear Decay",
+            "revenue": 1872.5
+        },
+        {
+            "rank": 6,
+            "agent": "PPO \ud83c\udfc6",
+            "revenue": 1850.0
+        },
+        {
+            "rank": 7,
+            "agent": "Demand Based",
+            "revenue": 1675.0
+        }
+    ],
+    "ppo_vs_baseline": -15.813424345847555,
+    "ppo_vs_dqn": -16.38418079096045,
+    "quick_mode": true
+}

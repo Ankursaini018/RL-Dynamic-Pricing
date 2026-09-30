@@ -1,0 +1,52 @@
+{
+    "project": {
+        "name": "RL Dynamic Pricing",
+        "domain": "Travel & Hospitality",
+        "intern": "Solo Worker",
+        "program": "Infotact DS/ML Internship 2026",
+        "github": "Ankursaini018/RL-Dynamic-Pricing"
+    },
+    "env": {
+        "max_inventory": 50,
+        "max_days": 30,
+        "price_levels": [
+            50,
+            100,
+            150,
+            200,
+            250,
+            300
+        ],
+        "base_demand": 0.7,
+        "price_sensitivity": 0.6,
+        "unsold_penalty": -10
+    },
+    "q_learn": {
+        "lr": 0.1,
+        "gamma": 0.99,
+        "eps_start": 1.0,
+        "eps_end": 0.01,
+        "eps_decay": 0.995,
+        "n_episodes": 5000
+    },
+    "dqn": {
+        "lr": 0.001,
+        "gamma": 0.99,
+        "eps_start": 1.0,
+        "eps_end": 0.01,
+        "eps_decay": 0.995,
+        "n_episodes": 2000,
+        "batch_size": 64,
+        "memory_size": 10000,
+        "target_update": 10,
+        "hidden_size": [
+            128,
+            64
+        ]
+    },
+    "eval": {
+        "n_episodes": 100,
+        "n_seasons": 1000,
+        "seed": 42
+    }
+}

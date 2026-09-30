@@ -1,0 +1,15 @@
+{
+    "date": "4th August 2026",
+    "project_root": "X:\\Infotact\\RL-Dynamic-Pricing",
+    "results_dir": "X:\\Infotact\\RL-Dynamic-Pricing\\notebooks\\results",
+    "checks": {
+        "Project Structure": true,
+        "Unit Tests (26)": true,
+        "Agent Check": false,
+        "Results Files": false
+    },
+    "all_passed": false,
+    "ppo_revenue": 1642.5,
+    "dqn_revenue": 2270.0,
+    "bl_revenue": 1992.5
+}

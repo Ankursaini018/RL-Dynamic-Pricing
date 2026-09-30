@@ -15,14 +15,29 @@ import os
 import sys
 
 # --------------------------------------------------
-# Add project src directory to Python path
+# Project paths
 # --------------------------------------------------
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SRC_DIR = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
 
-if SRC_DIR not in sys.path:
-    sys.path.insert(0, SRC_DIR)
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(CURRENT_DIR, "..", "..")
+)
+
+RESULTS_DIR = os.path.join(
+    PROJECT_ROOT,
+    "results"
+)
+
+os.makedirs(
+    RESULTS_DIR,
+    exist_ok=True
+)
+
+SAVE_PATH = os.path.join(
+    RESULTS_DIR,
+    "agent_comparison.png"
+)
 
 from environment.pricing_env import DynamicPricingEnv
 

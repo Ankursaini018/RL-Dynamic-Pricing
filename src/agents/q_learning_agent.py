@@ -285,11 +285,21 @@ class QLearningAgent:
         print("=" * 55)
 
         for episode in range(n_episodes):
+
+            if episode == 0:
+                print("Started Episode 1")
             state, _ = self.env.reset()
             total_reward = 0
             done = False
 
+            step = 0
+
             while not done:
+
+                step += 1
+
+                if step % 100 == 0:
+                    print(f"Episode {episode+1} Step {step}")
                 # Select action
                 action = self.select_action(
                     state, training=True

@@ -1,0 +1,161 @@
+{
+    "project": "RL Dynamic Pricing",
+    "program": "Infotact DS/ML Internship 2026",
+    "date": "2026-08-04",
+    "weeks_completed": 4,
+    "final_rankings": [
+        {
+            "rank": 1,
+            "medal": "Gold",
+            "agent": "DQN",
+            "mean_revenue": 2230.2,
+            "std_revenue": 507.80490921792574,
+            "sell_through": 22.992
+        },
+        {
+            "rank": 2,
+            "medal": "Silver",
+            "agent": "PPO",
+            "mean_revenue": 2228.95,
+            "std_revenue": 527.2925515640582,
+            "sell_through": 23.100000000000005
+        },
+        {
+            "rank": 3,
+            "medal": "Bronze",
+            "agent": "Time Based",
+            "mean_revenue": 2114.65,
+            "std_revenue": 543.7541227853321,
+            "sell_through": 23.196
+        },
+        {
+            "rank": 4,
+            "medal": "4th",
+            "agent": "Linear Decay",
+            "mean_revenue": 2067.1,
+            "std_revenue": 535.3215474452333,
+            "sell_through": 22.416000000000004
+        },
+        {
+            "rank": 5,
+            "medal": "5th",
+            "agent": "Q-Learning",
+            "mean_revenue": 2014.85,
+            "std_revenue": 541.4981049807078,
+            "sell_through": 23.108000000000004
+        },
+        {
+            "rank": 6,
+            "medal": "6th",
+            "agent": "Fixed Price",
+            "mean_revenue": 1976.25,
+            "std_revenue": 404.2113609540488,
+            "sell_through": 27.094
+        },
+        {
+            "rank": 7,
+            "medal": "7th",
+            "agent": "Demand Based",
+            "mean_revenue": 1688.8,
+            "std_revenue": 382.63032546567183,
+            "sell_through": 29.892000000000003
+        }
+    ],
+    "best_agent": {
+        "name": "PPO",
+        "type": "Actor-Critic RL",
+        "revenue": 2228.95
+    },
+    "statistical_proof": {
+        "n_seasons": 1000,
+        "n_comparisons": 6,
+        "all_significant": false,
+        "details": {
+            "Fixed Price": {
+                "winner_mean": 2228.95,
+                "other_mean": 1976.25,
+                "improvement": 12.786843769765962,
+                "p_value": 3.207193548452878e-32,
+                "cohens_d": 0.538157500001353,
+                "significant": true
+            },
+            "Time Based": {
+                "winner_mean": 2228.95,
+                "other_mean": 2114.65,
+                "improvement": 5.405149788381043,
+                "p_value": 1.9561399879398856e-06,
+                "cohens_d": 0.21351765710247347,
+                "significant": true
+            },
+            "Demand Based": {
+                "winner_mean": 2228.95,
+                "other_mean": 1688.8,
+                "improvement": 31.984249171008994,
+                "p_value": 1.8277347134212664e-130,
+                "cohens_d": 1.173104609520116,
+                "significant": true
+            },
+            "Linear Decay": {
+                "winner_mean": 2228.95,
+                "other_mean": 2067.1,
+                "improvement": 7.829809878573843,
+                "p_value": 1.274063740561589e-11,
+                "cohens_d": 0.30476983817581565,
+                "significant": true
+            },
+            "Q-Learning": {
+                "winner_mean": 2228.95,
+                "other_mean": 2014.85,
+                "improvement": 10.626101198600388,
+                "p_value": 7.404071899816701e-19,
+                "cohens_d": 0.400804799225273,
+                "significant": true
+            },
+            "DQN": {
+                "winner_mean": 2228.95,
+                "other_mean": 2230.2,
+                "improvement": -0.056048784862344186,
+                "p_value": 0.9569432318814195,
+                "cohens_d": -0.002416011888191506,
+                "significant": false
+            }
+        }
+    },
+    "behavior_proof": {
+        "deadline_drop_pct": 5.65625,
+        "scarcity_premium_pct": NaN,
+        "early_avg": 200.0,
+        "urgent_avg": 188.6875,
+        "high_inv_avg": 199.31216931216932,
+        "low_inv_avg": NaN
+    },
+    "business_value": {
+        "winner": "PPO",
+        "winner_revenue": 2228.95,
+        "baseline_revenue": 2114.65,
+        "daily_uplift": 114.29999999999973,
+        "monthly_uplift": 3428.999999999992,
+        "annual_uplift": 41719.4999999999,
+        "uplift_pct": 5.405149788381043,
+        "winner_sell_pct": 23.100000000000005,
+        "baseline_sell_pct": 29.892000000000003,
+        "sell_improvement": -6.791999999999998,
+        "recommendation": "Deploy PPO for +5.4% revenue!"
+    },
+    "technical_summary": {
+        "algorithms": [
+            "Q-Learning (Tabular)",
+            "DQN (Deep Q-Network)",
+            "PPO (Proximal Policy Optimization)"
+        ],
+        "frameworks": [
+            "PyTorch",
+            "Gymnasium",
+            "NumPy",
+            "Pandas"
+        ],
+        "unit_tests": 26,
+        "notebooks": 21
+    },
+    "recommendation": "Deploy PPO pricing agent for +5.4% revenue improvement over traditional pricing strategies!"
+}

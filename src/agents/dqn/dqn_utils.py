@@ -58,16 +58,20 @@ def save_dqn_model(agent,
         'model_name'      : model_name,
         'state_size'      : agent.state_size,
         'action_size'     : agent.action_size,
-        'hidden_sizes'    : agent.config['hidden_size'],
-        'training_episodes': len(
-            agent.episode_rewards
+        'hidden_sizes': list(
+            agent.config['hidden_size']
+        ),
+        'training_episodes': int(
+            len(agent.episode_rewards)
         ),
         'final_epsilon'   : float(agent.epsilon),
         'mean_reward_last100': float(
             np.mean(agent.episode_rewards[-100:])
             if agent.episode_rewards else 0
         ),
-        'buffer_size'     : len(agent.buffer),
+        'buffer_size': int(
+            len(agent.buffer)
+        ),
         'config'          : agent.config
     }
 
@@ -75,7 +79,7 @@ def save_dqn_model(agent,
         save_dir, f'{model_name}_metadata.json'
     )
     with open(meta_path, 'w') as f:
-        json.dump(metadata, f, indent=4)
+        json.dump(metadata, f, indent=4, default=int)
 
     print(f"✅ Model saved!")
     print(f"   Weights  : {model_path}")

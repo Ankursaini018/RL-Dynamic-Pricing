@@ -76,7 +76,17 @@ def save_ppo_model(
         save_dir, f'{model_name}_metadata.json'
     )
     with open(meta_path, 'w') as f:
-        json.dump(metadata, f, indent=4)
+        json.dump(
+            metadata,
+            f,
+            indent=4,
+            default=lambda x: (
+                int(x) if isinstance(x, np.integer)
+                else float(x) if isinstance(x, np.floating)
+                else bool(x) if isinstance(x, np.bool_)
+                else str(x)
+            )
+        )
 
     print(f"✅ PPO Model saved!")
     print(f"   Weights  : {model_path}")

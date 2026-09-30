@@ -161,6 +161,10 @@ def print_review_demo_guide():
 # GITIGNORE CHECKER
 # ─────────────────────────────────────────
 
+from pathlib import Path
+import os
+
+
 def check_gitignore() -> bool:
     """
     Verify .gitignore has all required
@@ -171,7 +175,10 @@ def check_gitignore() -> bool:
     bool
         True if gitignore is correct.
     """
-    gitignore_path = '../.gitignore'
+
+    # Project root (RL-Dynamic-Pricing/)
+    project_root = Path(__file__).resolve().parents[2]
+    gitignore_path = project_root / ".gitignore"
 
     required_entries = [
         'models/',
@@ -182,15 +189,17 @@ def check_gitignore() -> bool:
         '.env',
     ]
 
-    if not os.path.exists(gitignore_path):
+    if not gitignore_path.exists():
         print("❌ .gitignore not found!")
         return False
 
-    with open(gitignore_path, 'r') as f:
+    with open(gitignore_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
     print("=== .gitignore CHECK ===\n")
+
     all_ok = True
+
     for entry in required_entries:
         if entry in content:
             print(f"  ✅ {entry}")
@@ -201,7 +210,7 @@ def check_gitignore() -> bool:
     if all_ok:
         print("\n  ✅ .gitignore is complete!")
     else:
-        print("\n  ⚠️  Add missing entries!")
+        print("\n  ⚠️ Add missing entries!")
 
     return all_ok
 
