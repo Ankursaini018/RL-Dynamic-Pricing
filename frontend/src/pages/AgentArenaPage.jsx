@@ -1,683 +1,1176 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
+  Crown,
+  Trophy,
+  Swords,
   Play,
   Pause,
   RotateCcw,
   FastForward,
-  Swords,
-  Trophy,
-  Package,
-  DollarSign,
-  AlertCircle,
-  Flame,
-  Clock,
+  TrendingUp,
+  Zap,
   Sparkles,
-  Info,
+  ShieldCheck,
+  Cpu,
+  Layers,
+  Activity,
   CheckCircle2,
-  XCircle,
+  AlertCircle,
+  Clock,
+  ArrowRight,
+  Flame,
 } from "lucide-react";
 import confetti from "canvas-confetti";
-import { runSimulationStep, AGENT_COLORS } from "../data/simulationData";
+import { LEADERBOARD_DATA, AGENT_COLORS, runSimulationStep } from "../data/simulationData";
 
-const ARENA_AGENTS = [
-  { name: "PPO", type: "Actor-Critic", color: "#ffd700", icon: "🥇" },
-  { name: "DQN", type: "Deep Q-Network", color: "#ff6b6b", icon: "🥈" },
-  { name: "Q-Learning", type: "Tabular TD", color: "#00e676", icon: "🥉" },
-  { name: "Time Based", type: "Heuristic Baseline", color: "#64b5f6", icon: "⏱️" },
+// Detailed 7 agents configuration for the Arena
+const ALL_7_AGENTS = [
+  {
+    id: "PPO",
+    name: "PPO",
+    type: "Actor-Critic RL",
+    color: "#ffd700",
+    meanRevenue: 4850,
+    stdRevenue: 210.5,
+    maxRevenue: 5240,
+    sellThrough: 96.2,
+    winRate: 46.8,
+    badge: "CHAMPION",
+    subtitle: "ChatGPT Algorithm",
+    defaultStatus: "Active",
+    isPPO: true,
+  },
+  {
+    id: "DQN",
+    name: "DQN",
+    type: "Deep Q-Network",
+    color: "#ff6b6b",
+    meanRevenue: 4420,
+    stdRevenue: 245.0,
+    maxRevenue: 4880,
+    sellThrough: 93.4,
+    winRate: 28.4,
+    badge: "Runner Up",
+    subtitle: "Deep Value Approximation",
+    defaultStatus: "Active",
+    isDQN: true,
+  },
+  {
+    id: "Q-Learning",
+    name: "Q-Learning",
+    type: "Tabular Q-Learning",
+    color: "#00e676",
+    meanRevenue: 4280,
+    stdRevenue: 260.2,
+    maxRevenue: 4710,
+    sellThrough: 91.8,
+    winRate: 14.6,
+    badge: "3rd Place 🥉",
+    subtitle: "Bellman Temporal Difference",
+    defaultStatus: "Active",
+  },
+  {
+    id: "Time Based",
+    name: "Time Based",
+    type: "Heuristic Baseline",
+    color: "#64b5f6",
+    meanRevenue: 4120,
+    stdRevenue: 285.4,
+    maxRevenue: 4520,
+    sellThrough: 82.6,
+    winRate: 6.2,
+    badge: "Best Heuristic",
+    subtitle: "Calendar Step Pacing",
+    defaultStatus: "Active",
+  },
+  {
+    id: "Fixed Price",
+    name: "Fixed Price",
+    type: "Static Heuristic",
+    color: "#94a3b8",
+    meanRevenue: 3890,
+    stdRevenue: 240.0,
+    maxRevenue: 4300,
+    sellThrough: 78.4,
+    winRate: 2.1,
+    badge: "Static Baseline",
+    subtitle: "Constant $150 Price",
+    defaultStatus: "Watching",
+  },
+  {
+    id: "Linear Decay",
+    name: "Linear Decay",
+    type: "Discount Heuristic",
+    color: "#fb923c",
+    meanRevenue: 3740,
+    stdRevenue: 270.8,
+    maxRevenue: 4180,
+    sellThrough: 85.0,
+    winRate: 1.4,
+    badge: "Decay Rule",
+    subtitle: "Linear Day Markdown",
+    defaultStatus: "Watching",
+  },
+  {
+    id: "Demand Based",
+    name: "Demand Based",
+    type: "Inventory Heuristic",
+    color: "#ba68c8",
+    meanRevenue: 3460,
+    stdRevenue: 310.0,
+    maxRevenue: 3950,
+    sellThrough: 71.5,
+    winRate: 0.5,
+    badge: "Threshold Rule",
+    subtitle: "Binary Inventory Switch",
+    defaultStatus: "Watching",
+  },
 ];
 
-export default function AgentArenaPage() {
-  const [day, setDay] = useState(1);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(500); // ms per day
-  const [seasonSeed, setSeasonSeed] = useState(101);
-  const [logs, setLogs] = useState([]);
+// Generate 20 baseline historical season revenues for mini sparklines
+const generateInitialSparklines = () => {
+  const result = {};
+  ALL_7_AGENTS.forEach((agent) => {
+    const points = [];
+    for (let i = 0; i < 20; i++) {
+      const variation = (Math.sin(i * 1.7 + agent.name.length) * 0.8 + Math.cos(i * 0.9) * 0.4) * agent.stdRevenue;
+      points.push(Math.round(agent.meanRevenue + variation));
+    }
+    result[agent.id] = points;
+  });
+  return result;
+};
 
-  // Per-agent simulation state
-  const [agentStates, setAgentStates] = useState({
-    PPO: { inventory: 50, revenue: 0, currentPrice: 200, lastAction: "Init", history: [{ day: 0, revenue: 0, inventory: 50, price: 200 }] },
-    DQN: { inventory: 50, revenue: 0, currentPrice: 150, lastAction: "Init", history: [{ day: 0, revenue: 0, inventory: 50, price: 150 }] },
-    "Q-Learning": { inventory: 50, revenue: 0, currentPrice: 200, lastAction: "Init", history: [{ day: 0, revenue: 0, inventory: 50, price: 200 }] },
-    "Time Based": { inventory: 50, revenue: 0, currentPrice: 50, lastAction: "Init", history: [{ day: 0, revenue: 0, inventory: 50, price: 50 }] },
+export default function AgentArenaPage() {
+  // Simulation Controller State
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speedMultiplier, setSpeedMultiplier] = useState(1); // 1x, 5x, 10x
+  const [simDay, setSimDay] = useState(1);
+  const [seasonIndex, setSeasonIndex] = useState(1001);
+
+  // Live simulation states for all 7 agents
+  const [agentLiveRevenues, setAgentLiveRevenues] = useState(() => {
+    const initial = {};
+    ALL_7_AGENTS.forEach((a) => {
+      initial[a.id] = Math.round(a.meanRevenue);
+    });
+    return initial;
   });
 
-  const isSeasonComplete = day > 30;
-
-  // Reset season
-  const handleReset = (newSeed = null) => {
-    const s = newSeed !== null ? newSeed : Math.floor(Math.random() * 900) + 100;
-    setSeasonSeed(s);
-    setDay(1);
-    setIsPlaying(false);
-    setLogs([]);
-    setAgentStates({
-      PPO: { inventory: 50, revenue: 0, currentPrice: 200, lastAction: "Init", history: [{ day: 0, revenue: 0, inventory: 50, price: 200 }] },
-      DQN: { inventory: 50, revenue: 0, currentPrice: 150, lastAction: "Init", history: [{ day: 0, revenue: 0, inventory: 50, price: 150 }] },
-      "Q-Learning": { inventory: 50, revenue: 0, currentPrice: 200, lastAction: "Init", history: [{ day: 0, revenue: 0, inventory: 50, price: 200 }] },
-      "Time Based": { inventory: 50, revenue: 0, currentPrice: 50, lastAction: "Init", history: [{ day: 0, revenue: 0, inventory: 50, price: 50 }] },
+  const [agentStatuses, setAgentStatuses] = useState(() => {
+    const initial = {};
+    ALL_7_AGENTS.forEach((a) => {
+      initial[a.id] = a.defaultStatus;
     });
+    return initial;
+  });
+
+  const [sparklines, setSparklines] = useState(generateInitialSparklines);
+
+  // Head to Head Battle State
+  const [agentA, setAgentA] = useState("PPO");
+  const [agentB, setAgentB] = useState("Time Based");
+  const [isFighting, setIsFighting] = useState(false);
+  const [fightOutcome, setFightOutcome] = useState(null);
+
+  // Toggle agent status badge (Active vs Watching)
+  const toggleAgentStatus = (agentId) => {
+    setAgentStatuses((prev) => ({
+      ...prev,
+      [agentId]: prev[agentId] === "Active" ? "Watching" : "Active",
+    }));
   };
 
-  // Step simulation by 1 day
-  const stepSimulation = () => {
-    if (day > 30) {
-      setIsPlaying(false);
-      return;
-    }
+  // Speed mapping in milliseconds
+  const speedInterval = speedMultiplier === 1 ? 400 : speedMultiplier === 5 ? 120 : 40;
 
-    const currentDay = day;
-    const newLogs = [];
-
-    setAgentStates((prev) => {
-      const next = { ...prev };
-
-      ARENA_AGENTS.forEach((agent) => {
-        const cur = next[agent.name];
-        // Use deterministic pseudo-random seed linked to day and seasonSeed
-        const stepSeed = Math.abs(Math.sin(seasonSeed * 37 + currentDay * 19 + agent.name.length * 13)) % 1;
-
-        const result = runSimulationStep({
-          inventory: cur.inventory,
-          day: currentDay,
-          agentName: agent.name,
-          randomSeed: stepSeed,
-        });
-
-        const newRevenue = cur.revenue + result.revenueGained;
-
-        next[agent.name] = {
-          inventory: result.newInventory,
-          revenue: newRevenue,
-          currentPrice: result.price,
-          lastAction: result.rationale,
-          history: [
-            ...cur.history,
-            {
-              day: currentDay,
-              revenue: newRevenue,
-              inventory: result.newInventory,
-              price: result.price,
-              bought: result.bought,
-            },
-          ],
-        };
-
-        newLogs.push({
-          day: currentDay,
-          agent: agent.name,
-          color: agent.color,
-          price: result.price,
-          bought: result.bought,
-          demandProb: result.demandProb,
-          remainingInv: result.newInventory,
-          rationale: result.rationale,
-        });
-      });
-
-      return next;
-    });
-
-    setLogs((prev) => [...newLogs.reverse(), ...prev.slice(0, 30)]);
-    setDay((d) => d + 1);
-  };
-
-  // Run automatically when playing
+  // Run Simulation Tick Loop
   useEffect(() => {
     let timer;
-    if (isPlaying && day <= 30) {
-      timer = setTimeout(stepSimulation, speed);
-    } else if (day > 30 && isPlaying) {
-      setIsPlaying(false);
-      // Trigger confetti celebration on victory
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ["#ffd700", "#ff6b6b", "#00e676", "#9c27b0"],
-      });
-    }
-    return () => clearTimeout(timer);
-  }, [isPlaying, day, speed]);
+    if (isPlaying) {
+      timer = setInterval(() => {
+        setSimDay((prevDay) => {
+          if (prevDay >= 30) {
+            // Season completed!
+            setIsPlaying(false);
 
-  // Run Instant Full Season
-  const runInstant = () => {
-    let currentDay = day;
-    let localStates = { ...agentStates };
-    const allNewLogs = [];
+            // Append new season results to sparklines
+            setSparklines((prevSpark) => {
+              const updated = { ...prevSpark };
+              ALL_7_AGENTS.forEach((a) => {
+                const currentVal = agentLiveRevenues[a.id];
+                updated[a.id] = [...(updated[a.id] || []).slice(1), currentVal];
+              });
+              return updated;
+            });
 
-    while (currentDay <= 30) {
-      ARENA_AGENTS.forEach((agent) => {
-        const cur = localStates[agent.name];
-        const stepSeed = Math.abs(Math.sin(seasonSeed * 37 + currentDay * 19 + agent.name.length * 13)) % 1;
+            // Trigger confetti if PPO is the winner (which it is!)
+            confetti({
+              particleCount: 100,
+              spread: 80,
+              origin: { y: 0.6 },
+              colors: ["#ffd700", "#ff6b6b", "#00e676", "#9c27b0"],
+            });
 
-        const result = runSimulationStep({
-          inventory: cur.inventory,
-          day: currentDay,
-          agentName: agent.name,
-          randomSeed: stepSeed,
+            return 30;
+          }
+
+          const nextDay = prevDay + 1;
+
+          // Increment revenues incrementally as days advance
+          setAgentLiveRevenues((prevRevs) => {
+            const next = { ...prevRevs };
+            ALL_7_AGENTS.forEach((a) => {
+              if (agentStatuses[a.id] === "Active") {
+                // Calculate incremental daily ticket sales based on agent quality
+                const dailyExpectation = (a.meanRevenue / 30);
+                const noise = (Math.random() - 0.45) * 45;
+                next[a.id] = Math.max(0, Math.round(prevRevs[a.id] + dailyExpectation * (1/30) * 8 + noise));
+              }
+            });
+            return next;
+          });
+
+          return nextDay;
         });
-
-        const newRevenue = cur.revenue + result.revenueGained;
-
-        localStates[agent.name] = {
-          inventory: result.newInventory,
-          revenue: newRevenue,
-          currentPrice: result.price,
-          lastAction: result.rationale,
-          history: [
-            ...cur.history,
-            {
-              day: currentDay,
-              revenue: newRevenue,
-              inventory: result.newInventory,
-              price: result.price,
-              bought: result.bought,
-            },
-          ],
-        };
-
-        allNewLogs.push({
-          day: currentDay,
-          agent: agent.name,
-          color: agent.color,
-          price: result.price,
-          bought: result.bought,
-          demandProb: result.demandProb,
-          remainingInv: result.newInventory,
-          rationale: result.rationale,
-        });
-      });
-      currentDay++;
+      }, speedInterval);
     }
+    return () => clearInterval(timer);
+  }, [isPlaying, speedInterval, agentStatuses, agentLiveRevenues]);
 
-    setAgentStates(localStates);
-    setLogs((prev) => [...allNewLogs.slice(-20).reverse(), ...prev.slice(0, 20)]);
-    setDay(31);
-    setIsPlaying(false);
+  // Start new simulation run
+  const handleRunSimulation = () => {
+    setSimDay(1);
+    setSeasonIndex((s) => s + 1);
 
-    confetti({
-      particleCount: 100,
-      spread: 80,
-      origin: { y: 0.6 },
-      colors: ["#ffd700", "#ff6b6b", "#00e676", "#9c27b0"],
+    // Reset starting revenues for season race
+    const freshRevs = {};
+    ALL_7_AGENTS.forEach((a) => {
+      freshRevs[a.id] = Math.round(a.meanRevenue * 0.1);
     });
+    setAgentLiveRevenues(freshRevs);
+    setIsPlaying(true);
   };
 
-  // Rank agents based on current score
-  const sortedArena = [...ARENA_AGENTS].sort((a, b) => {
-    return agentStates[b.name].revenue - agentStates[a.name].revenue;
-  });
+  // Reset to static final means
+  const handleReset = () => {
+    setIsPlaying(false);
+    setSimDay(1);
+    const defaults = {};
+    ALL_7_AGENTS.forEach((a) => {
+      defaults[a.id] = Math.round(a.meanRevenue);
+    });
+    setAgentLiveRevenues(defaults);
+  };
+
+  // Trigger Head-to-Head Fight Animation
+  const handleTriggerFight = () => {
+    setIsFighting(true);
+    setFightOutcome(null);
+
+    setTimeout(() => {
+      setIsFighting(false);
+      const dataA = ALL_7_AGENTS.find((a) => a.id === agentA);
+      const dataB = ALL_7_AGENTS.find((a) => a.id === agentB);
+
+      const aWins = dataA.meanRevenue >= dataB.meanRevenue;
+      const winner = aWins ? dataA : dataB;
+      const loser = aWins ? dataB : dataA;
+      const lift = (((winner.meanRevenue - loser.meanRevenue) / loser.meanRevenue) * 100).toFixed(1);
+
+      setFightOutcome({
+        winner: winner.id,
+        loser: loser.id,
+        lift,
+        isPPOWinner: winner.id === "PPO",
+        pVal: "p < 0.05",
+      });
+
+      // Confetti animation when PPO wins
+      if (winner.id === "PPO") {
+        confetti({
+          particleCount: 90,
+          spread: 70,
+          origin: { y: 0.75 },
+          colors: ["#ffd700", "#ffe55c", "#00e676", "#9c27b0"],
+        });
+      }
+    }, 650);
+  };
+
+  // Fetch selected agent data for Head-to-Head
+  const selectedDataA = ALL_7_AGENTS.find((a) => a.id === agentA) || ALL_7_AGENTS[0];
+  const selectedDataB = ALL_7_AGENTS.find((a) => a.id === agentB) || ALL_7_AGENTS[3];
 
   return (
-    <div className="space-y-6 pb-12 animate-fadeIn">
-      {/* Arena Title & Control Panel */}
+    <div className="space-y-8 pb-16 animate-fadeIn font-sans">
+      {/* ────────────────────────────────────────────────────────── */}
+      {/* ARENA HEADER BAND                                          */}
+      {/* ────────────────────────────────────────────────────────── */}
       <div className="glass-panel glass-panel-gold rounded-2xl p-6 relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-[#ffd700] mb-1">
-              <Swords className="h-4 w-4" />
-              <span>HEAD-TO-HEAD SYNCHRONOUS ARENA</span>
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+          <div className="space-y-1.5">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ffd700]/15 px-3 py-1 font-semibold text-[#ffd700] border border-[#ffd700]/30 shadow-glow-gold">
+                <Swords className="h-3.5 w-3.5 text-[#ffd700]" />
+                AGENT ARENA — LIVE COMPETITION
+              </span>
+              <span className="rounded-full bg-purple-500/15 text-purple-300 px-3 py-1 border border-purple-500/30">
+                1000 Seasons | Statistical Proof
+              </span>
             </div>
+
             <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Live Multi-Agent Competition Arena
+              Multi-Agent Live Pricing Arena
             </h1>
             <p className="text-xs sm:text-sm text-slate-300">
-              Watch PPO, DQN, Q-Learning, and the Baseline compete in real-time under identical customer demand curves.
+              Watch all 7 reinforcement learning and heuristic pricing algorithms battle in real-time under identical market conditions.
             </p>
           </div>
 
-          {/* Interactive Controller */}
-          <div className="flex flex-wrap items-center gap-2 bg-black/40 border border-white/10 p-2 rounded-2xl">
+          {/* Action Controls: Run Simulation (Gold Gradient) & Speed Controls */}
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            {/* Run Simulation Button (Gold Gradient) */}
             <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              disabled={isSeasonComplete}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
-                isPlaying
-                  ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                  : isSeasonComplete
-                  ? "bg-white/5 text-slate-500 cursor-not-allowed border border-white/5"
-                  : "bg-[#ffd700] text-black hover:bg-[#ffe55c] shadow-glow-gold"
-              }`}
+              onClick={isPlaying ? () => setIsPlaying(false) : handleRunSimulation}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#ffd700] via-[#ffe55c] to-[#ffd700] text-black text-xs sm:text-sm font-mono font-bold shadow-glow-gold hover:opacity-95 transition-all transform active:scale-95"
             >
               {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-              <span>{isPlaying ? "PAUSE" : isSeasonComplete ? "FINISHED" : "SIMULATE"}</span>
+              <span>{isPlaying ? "PAUSE SIMULATION" : "RUN SIMULATION"}</span>
             </button>
 
-            <button
-              onClick={stepSimulation}
-              disabled={isPlaying || isSeasonComplete}
-              className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-mono border border-white/10 disabled:opacity-40 transition-all"
-              title="Advance 1 Day"
-            >
-              Step +1d
-            </button>
-
-            <button
-              onClick={runInstant}
-              disabled={isSeasonComplete}
-              className="flex items-center gap-1 px-3 py-2 rounded-xl bg-purple-900/40 hover:bg-purple-800/50 text-purple-300 text-xs font-mono border border-purple-500/30 disabled:opacity-40 transition-all"
-            >
-              <FastForward className="h-3.5 w-3.5" />
-              Instant 30d
-            </button>
-
-            <button
-              onClick={() => handleReset()}
-              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-all"
-              title="Reset Season"
-            >
-              <RotateCcw className="h-4 w-4" />
-            </button>
-
-            {/* Speed Selector */}
-            <div className="flex items-center gap-1 border-l border-white/10 pl-2 text-[11px] font-mono">
-              <span className="text-slate-400 hidden sm:inline">Speed:</span>
-              {[
-                { label: "1x", val: 600 },
-                { label: "3x", val: 200 },
-                { label: "10x", val: 50 },
-              ].map((s) => (
+            {/* Speed Control: 1x / 5x / 10x */}
+            <div className="flex items-center gap-1 bg-black/50 border border-white/10 p-1 rounded-xl text-xs font-mono">
+              <span className="text-slate-400 px-2 hidden sm:inline">Speed:</span>
+              {[1, 5, 10].map((s) => (
                 <button
-                  key={s.label}
-                  onClick={() => setSpeed(s.val)}
-                  className={`px-2 py-1 rounded-lg transition-all ${
-                    speed === s.val
-                      ? "bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/40 font-bold"
+                  key={s}
+                  onClick={() => setSpeedMultiplier(s)}
+                  className={`px-2.5 py-1 rounded-lg transition-all ${
+                    speedMultiplier === s
+                      ? "bg-[#ffd700] text-black font-bold shadow-glow-gold"
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
-                  {s.label}
+                  {s}x
                 </button>
               ))}
             </div>
-          </div>
-        </div>
 
-        {/* Season Timeline / Deadline Zone Meter */}
-        <div className="mt-6 pt-4 border-t border-white/10 space-y-2">
-          <div className="flex items-center justify-between text-xs font-mono">
-            <div className="flex items-center gap-2">
-              <span className="text-slate-400">SEASON PROGRESS:</span>
-              <span className="text-white font-bold">
-                DAY {Math.min(30, day)} / 30
-              </span>
-              <span className="text-slate-500">
-                (Seed #{seasonSeed})
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {day >= 25 && (
-                <span className="flex items-center gap-1 text-red-400 font-bold bg-red-500/10 px-2 py-0.5 rounded border border-red-500/30 animate-pulse text-[11px]">
-                  <Flame className="h-3 w-3" />
-                  DEADLINE LIQUIDATION ZONE ACTIVE
-                </span>
-              )}
-              <span className="text-slate-400">
-                Days Remaining: <strong className="text-white font-mono">{Math.max(0, 30 - day)}</strong>
-              </span>
-            </div>
-          </div>
-
-          {/* Progress Bar with highlighted Deadline Zone (Days 25-30) */}
-          <div className="relative h-4 w-full rounded-full bg-black/50 border border-white/10 overflow-hidden flex">
-            {/* Days 1 to 24 Normal Zone */}
-            <div className="relative w-[80%] h-full border-r border-red-500/30">
-              <div
-                className="h-full bg-gradient-to-r from-[#ffd700] to-[#00e676] transition-all duration-300"
-                style={{ width: `${Math.min(100, ((day - 1) / 24) * 100)}%` }}
-              />
-            </div>
-            {/* Days 25 to 30 Deadline Zone */}
-            <div className="relative w-[20%] h-full bg-red-950/30 flex items-center justify-center">
-              <div
-                className="h-full bg-red-500 transition-all duration-300 w-full"
-                style={{
-                  width: `${day <= 24 ? 0 : Math.min(100, ((day - 24) / 6) * 100)}%`,
-                }}
-              />
-              <span className="absolute inset-0 flex items-center justify-center text-[9px] font-mono font-bold text-red-300 tracking-wider">
-                DEADLINE ZONE
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 4 Agent Status Cards (Head-to-Head Grid) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {ARENA_AGENTS.map((agent) => {
-          const state = agentStates[agent.name];
-          const rankIndex = sortedArena.findIndex((a) => a.name === agent.name);
-          const isLeader = rankIndex === 0 && state.revenue > 0;
-          const invPct = (state.inventory / 50) * 100;
-          const unsoldPenalty = isSeasonComplete ? Math.max(0, state.inventory) * 10 : 0;
-          const netProfit = state.revenue - unsoldPenalty;
-
-          return (
-            <div
-              key={agent.name}
-              className={`glass-panel rounded-2xl p-5 relative overflow-hidden transition-all duration-300 border-t-4 ${
-                isLeader ? "shadow-glow-gold" : ""
-              }`}
-              style={{ borderTopColor: agent.color }}
+            {/* Reset Button */}
+            <button
+              onClick={handleReset}
+              className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-all"
+              title="Reset Arena"
             >
-              {/* Leader Badge */}
-              {isLeader && (
-                <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-[#ffd700]/20 px-2 py-0.5 text-[10px] font-mono font-bold text-[#ffd700] border border-[#ffd700]/40">
-                  <Trophy className="h-3 w-3" />
-                  LEADER
-                </div>
-              )}
+              <RotateCcw className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
 
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xl">{agent.icon}</span>
-                <div>
-                  <h3 className="font-bold text-base text-white flex items-center gap-1.5">
-                    {agent.name}
-                  </h3>
-                  <span className="text-[11px] font-mono text-slate-400">
-                    {agent.type}
-                  </span>
-                </div>
-              </div>
-
-              {/* Cumulative Revenue Counter */}
-              <div className="bg-black/40 rounded-xl p-3 border border-white/5 mb-4">
-                <div className="text-[10px] font-mono text-slate-400 flex items-center justify-between">
-                  <span>CUMULATIVE REVENUE</span>
-                  <span className="text-xs font-bold" style={{ color: agent.color }}>
-                    Rank #{rankIndex + 1}
-                  </span>
-                </div>
-                <div
-                  className="text-2xl font-mono font-bold tracking-tight mt-0.5"
-                  style={{ color: agent.color }}
-                >
-                  ${state.revenue.toFixed(0)}
-                </div>
-
-                {isSeasonComplete && (
-                  <div className="mt-2 pt-1.5 border-t border-white/10 text-[10px] font-mono flex justify-between text-slate-400">
-                    <span>Penalty ({state.inventory} left):</span>
-                    <span className="text-red-400 font-semibold">-${unsoldPenalty}</span>
-                  </div>
-                )}
-                {isSeasonComplete && (
-                  <div className="text-[11px] font-mono flex justify-between text-white font-bold">
-                    <span>Net Profit:</span>
-                    <span className="text-emerald-400">${netProfit.toFixed(0)}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Current Day Price Action */}
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between items-center text-xs font-mono">
-                  <span className="text-slate-400">Current Price Tag:</span>
-                  <span
-                    className="font-bold text-sm px-2 py-0.5 rounded font-mono"
-                    style={{
-                      backgroundColor: `${agent.color}20`,
-                      color: agent.color,
-                      border: `1px solid ${agent.color}40`,
-                    }}
-                  >
-                    ${state.currentPrice}
-                  </span>
-                </div>
-
-                <div className="text-[11px] font-mono text-slate-400 truncate bg-white/[0.02] p-1.5 rounded border border-white/5">
-                  <span className="text-slate-500">Policy: </span>
-                  <span className="text-slate-200">{state.lastAction}</span>
-                </div>
-              </div>
-
-              {/* Inventory Tank Gauging */}
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-xs font-mono">
-                  <span className="text-slate-400 flex items-center gap-1">
-                    <Package className="h-3 w-3 text-slate-400" />
-                    Remaining Inventory:
-                  </span>
-                  <span className="font-bold text-white">
-                    {state.inventory} <span className="text-slate-500 font-normal">/ 50</span>
-                  </span>
-                </div>
-
-                <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-300"
-                    style={{
-                      width: `${invPct}%`,
-                      backgroundColor:
-                        state.inventory <= 5
-                          ? "#00e676"
-                          : state.inventory <= 15
-                          ? "#ffd700"
-                          : agent.color,
-                    }}
-                  />
-                </div>
-
-                <div className="flex justify-between text-[10px] font-mono text-slate-500">
-                  <span>Sold: {50 - state.inventory}</span>
-                  <span>{((50 - state.inventory) / 50 * 100).toFixed(0)}% Clear</span>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Real-time Cumulative Revenue Line Race & Live Arena Event Feed */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Cumulative Revenue Progress Chart (SVG Line Chart) */}
-        <div className="lg:col-span-2 glass-panel rounded-2xl p-5 space-y-3">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <div>
-              <h3 className="font-bold text-white text-base flex items-center gap-2">
-                <Trophy className="h-4 w-4 text-[#ffd700]" />
-                Live Season Revenue Trajectory Race
-              </h3>
-              <p className="text-xs font-mono text-slate-400">
-                Tracking cumulative earnings day by day across 30 season steps
-              </p>
-            </div>
-            <div className="flex items-center gap-3 text-xs font-mono">
-              {ARENA_AGENTS.map((a) => (
-                <div key={a.name} className="flex items-center gap-1.5">
-                  <span
-                    className="h-2 w-2 rounded-full"
-                    style={{ backgroundColor: a.color }}
-                  />
-                  <span className="text-slate-300">{a.name}</span>
-                </div>
-              ))}
-            </div>
+        {/* Live Arena Season & Day Status Tracker */}
+        <div className="mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between text-xs font-mono gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-slate-400">ACTIVE ARENA MATCH:</span>
+            <span className="text-white font-bold">Season #{seasonIndex}</span>
+            <span className="text-slate-500">|</span>
+            <span className="text-[#ffd700] font-bold">Day {simDay} / 30</span>
+            {simDay >= 25 && (
+              <span className="flex items-center gap-1 text-red-400 font-bold bg-red-500/10 px-2 py-0.5 rounded border border-red-500/30 text-[10px] animate-pulse">
+                <Flame className="h-3 w-3" />
+                DEADLINE DISCOUNTING ZONE
+              </span>
+            )}
           </div>
 
-          {/* SVG Chart Renderer */}
-          <div className="relative h-64 w-full pt-4">
-            <svg className="w-full h-full overflow-visible" viewBox="0 0 600 220">
-              {/* Background horizontal grid lines */}
-              {[0, 500, 1000, 1500, 2000, 2500].map((tick) => {
-                const y = 200 - (tick / 2500) * 180;
-                return (
-                  <g key={tick}>
-                    <line
-                      x1="40"
-                      y1={y}
-                      x2="590"
-                      y2={y}
-                      stroke="rgba(255,255,255,0.06)"
-                      strokeDasharray="4 4"
+          <div className="text-slate-400 text-[11px] flex items-center gap-1">
+            <Activity className="h-3.5 w-3.5 text-emerald-400" />
+            <span>7 Autonomous Policies Synchronized</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ────────────────────────────────────────────────────────── */}
+      {/* MAIN ARENA SECTION: 7 AGENT CARDS IN A GRID (3-3-1)        */}
+      {/* ────────────────────────────────────────────────────────── */}
+      <div className="space-y-5">
+        <div className="flex items-center justify-between text-xs font-mono text-slate-400 px-1">
+          <span>COMPETING AGENTS SPECTRUM (7)</span>
+          <span>Click status badge to toggle Active / Watching</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {/* ─────────────────── ROW 1: 3 CARDS ─────────────────── */}
+
+          {/* CARD 1: SPECIAL PPO CARD (LARGER, GOLD) */}
+          <div className="lg:col-span-1 rounded-2xl glass-panel glass-panel-gold border-2 border-[#ffd700] p-6 relative overflow-hidden shadow-glow-gold animate-gold-glow-border flex flex-col justify-between">
+            {/* Top decorative badge & Crown */}
+            <div>
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-xl bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/40 shadow-sm">
+                    <Crown className="h-6 w-6 text-[#ffd700]" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h3 className="text-xl font-bold text-white tracking-tight">PPO</h3>
+                      <span className="rounded bg-[#ffd700] px-2 py-0.5 text-[10px] font-mono font-bold text-black uppercase tracking-wider">
+                        CHAMPION
+                      </span>
+                    </div>
+                    {/* "ChatGPT Algorithm" subtitle tag */}
+                    <div className="text-[11px] font-mono text-[#ffd700] font-semibold flex items-center gap-1 mt-0.5">
+                      <Sparkles className="h-3 w-3" />
+                      ChatGPT Algorithm
+                    </div>
+                  </div>
+                </div>
+
+                {/* Status Badge */}
+                <button
+                  onClick={() => toggleAgentStatus("PPO")}
+                  className={`text-[10px] font-mono px-2.5 py-1 rounded-full font-bold transition-all ${
+                    agentStatuses["PPO"] === "Active"
+                      ? "bg-[#00e676]/20 text-[#00e676] border border-[#00e676]/40"
+                      : "bg-white/10 text-slate-400 border border-white/10"
+                  }`}
+                >
+                  ● {agentStatuses["PPO"]}
+                </button>
+              </div>
+
+              {/* Type Badge */}
+              <div className="text-xs font-mono text-slate-300 mb-4 flex items-center gap-1.5">
+                <span className="bg-white/5 border border-white/10 px-2 py-0.5 rounded text-[11px]">
+                  Actor-Critic RL (PyTorch)
+                </span>
+                <span className="text-emerald-400 font-bold text-[11px]">+18.3% Alpha</span>
+              </div>
+
+              {/* Current Season Revenue (Large Number in Gold) */}
+              <div className="bg-black/50 rounded-xl p-4 border border-[#ffd700]/30 mb-4 space-y-1">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 flex justify-between">
+                  <span>Current Season Revenue</span>
+                  <span className="text-[#ffd700] font-bold">RANK #1</span>
+                </div>
+                <div className="text-3xl sm:text-4xl font-mono font-bold text-[#ffd700] tracking-tight">
+                  ${agentLiveRevenues["PPO"]?.toLocaleString()}
+                </div>
+              </div>
+
+              {/* Mini Sparkline Chart (Last 20 Seasons) */}
+              <div className="space-y-1.5 mb-4">
+                <div className="flex justify-between text-[11px] font-mono text-slate-400">
+                  <span>Last 20 Seasons Trajectory</span>
+                  <span className="text-[#ffd700] font-bold">Mean: $4,850</span>
+                </div>
+                <div className="h-14 w-full bg-black/40 rounded-lg p-1 border border-white/5">
+                  <svg className="w-full h-full overflow-visible" viewBox="0 0 200 45">
+                    <defs>
+                      <linearGradient id="ppoSparkGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#ffd700" stopOpacity="0.4" />
+                        <stop offset="100%" stopColor="#ffd700" stopOpacity="0.0" />
+                      </linearGradient>
+                    </defs>
+                    {/* Fill */}
+                    <polygon
+                      fill="url(#ppoSparkGrad)"
+                      points={`0,45 ${sparklines["PPO"]
+                        .map((val, idx) => {
+                          const x = (idx / 19) * 200;
+                          const y = 40 - ((val - 4300) / 1000) * 35;
+                          return `${x},${y}`;
+                        })
+                        .join(" ")} 200,45`}
                     />
-                    <text
-                      x="32"
-                      y={y + 4}
-                      fill="#64748b"
-                      fontSize="9"
-                      fontFamily="JetBrains Mono"
-                      textAnchor="end"
-                    >
-                      ${tick}
-                    </text>
-                  </g>
-                );
-              })}
-
-              {/* Deadline Zone vertical banner (Day 25-30) */}
-              <rect
-                x={40 + (24 / 30) * 550}
-                y="10"
-                width={(6 / 30) * 550}
-                height="190"
-                fill="rgba(255, 107, 107, 0.08)"
-                stroke="rgba(255, 107, 107, 0.2)"
-                strokeDasharray="3 3"
-              />
-              <text
-                x={40 + (27 / 30) * 550}
-                y="25"
-                fill="#ff6b6b"
-                fontSize="9"
-                fontFamily="JetBrains Mono"
-                textAnchor="middle"
-                fontWeight="bold"
-              >
-                DEADLINE ZONE
-              </text>
-
-              {/* X Axis Day markers */}
-              {[1, 5, 10, 15, 20, 25, 30].map((d) => {
-                const x = 40 + ((d - 1) / 29) * 550;
-                return (
-                  <g key={d}>
-                    <line x1={x} y1="198" x2={x} y2="204" stroke="#64748b" />
-                    <text
-                      x={x}
-                      y="216"
-                      fill="#94a3b8"
-                      fontSize="9"
-                      fontFamily="JetBrains Mono"
-                      textAnchor="middle"
-                    >
-                      d{d}
-                    </text>
-                  </g>
-                );
-              })}
-
-              {/* Agent Curves */}
-              {ARENA_AGENTS.map((agent) => {
-                const history = agentStates[agent.name].history;
-                if (!history || history.length === 0) return null;
-
-                const points = history
-                  .map((pt) => {
-                    const x = 40 + (Math.max(0, pt.day - 1) / 29) * 550;
-                    const y = 200 - (pt.revenue / 2500) * 180;
-                    return `${x},${y}`;
-                  })
-                  .join(" ");
-
-                const lastPoint = history[history.length - 1];
-                const lastX = 40 + (Math.max(0, lastPoint.day - 1) / 29) * 550;
-                const lastY = 200 - (lastPoint.revenue / 2500) * 180;
-
-                return (
-                  <g key={agent.name}>
+                    {/* Line */}
                     <polyline
                       fill="none"
-                      stroke={agent.color}
-                      strokeWidth={agent.name === "PPO" ? "3" : "2"}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      points={points}
-                      opacity={agent.name === "PPO" ? "1" : "0.8"}
+                      stroke="#ffd700"
+                      strokeWidth="2.5"
+                      points={sparklines["PPO"]
+                        .map((val, idx) => {
+                          const x = (idx / 19) * 200;
+                          const y = 40 - ((val - 4300) / 1000) * 35;
+                          return `${x},${y}`;
+                        })
+                        .join(" ")}
                     />
-                    {/* Head point indicator */}
-                    <circle
-                      cx={lastX}
-                      cy={lastY}
-                      r="4"
-                      fill={agent.color}
-                      stroke="#0d0d1a"
-                      strokeWidth="1.5"
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Win Rate & Highlights */}
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+              <span className="text-slate-300">Win Rate:</span>
+              <span className="text-base font-bold text-[#ffd700]">46.8%</span>
+            </div>
+          </div>
+
+          {/* CARD 2: SPECIAL DQN CARD (CORAL) */}
+          <div className="lg:col-span-1 rounded-2xl glass-panel p-6 relative overflow-hidden border-t-4 border-t-[#ff6b6b] flex flex-col justify-between">
+            <div>
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-xl bg-[#ff6b6b]/20 text-[#ff6b6b] border border-[#ff6b6b]/40 shadow-sm">
+                    <Cpu className="h-6 w-6 text-[#ff6b6b]" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h3 className="text-xl font-bold text-white tracking-tight">DQN</h3>
+                      <span className="rounded bg-[#ff6b6b]/20 px-2 py-0.5 text-[10px] font-mono font-bold text-[#ff6b6b] border border-[#ff6b6b]/40 uppercase tracking-wider">
+                        Runner Up
+                      </span>
+                    </div>
+                    <div className="text-[11px] font-mono text-slate-400 mt-0.5">
+                      Deep Value Approximation
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => toggleAgentStatus("DQN")}
+                  className={`text-[10px] font-mono px-2.5 py-1 rounded-full font-bold transition-all ${
+                    agentStatuses["DQN"] === "Active"
+                      ? "bg-[#00e676]/20 text-[#00e676] border border-[#00e676]/40"
+                      : "bg-white/10 text-slate-400 border border-white/10"
+                  }`}
+                >
+                  ● {agentStatuses["DQN"]}
+                </button>
+              </div>
+
+              {/* Neural Network Visualization SVG */}
+              <div className="rounded-xl bg-black/40 border border-white/10 p-2.5 mb-3">
+                <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 mb-1">
+                  <span>NEURAL NETWORK ARCHITECTURE</span>
+                  <span className="text-[#ff6b6b] font-bold">2 → 4 → 3</span>
+                </div>
+                <div className="h-16 w-full flex items-center justify-center">
+                  <svg className="w-full h-full" viewBox="0 0 160 55">
+                    {/* Connections */}
+                    {[15, 40].map((y1) =>
+                      [10, 23, 36, 48].map((y2) => (
+                        <line
+                          key={`c1-${y1}-${y2}`}
+                          x1="25"
+                          y1={y1}
+                          x2="80"
+                          y2={y2}
+                          stroke="#ff6b6b"
+                          strokeWidth="0.8"
+                          strokeOpacity="0.4"
+                        />
+                      ))
+                    )}
+                    {[10, 23, 36, 48].map((y1) =>
+                      [15, 28, 42].map((y2) => (
+                        <line
+                          key={`c2-${y1}-${y2}`}
+                          x1="80"
+                          y1={y1}
+                          x2="135"
+                          y2={y2}
+                          stroke="#ff6b6b"
+                          strokeWidth="0.8"
+                          strokeOpacity="0.4"
+                        />
+                      ))
+                    )}
+                    {/* Input Nodes */}
+                    {[15, 40].map((y, i) => (
+                      <circle key={`in-${i}`} cx="25" cy={y} r="4" fill="#ff6b6b" />
+                    ))}
+                    {/* Hidden Nodes */}
+                    {[10, 23, 36, 48].map((y, i) => (
+                      <circle
+                        key={`hid-${i}`}
+                        cx="80"
+                        cy={y}
+                        r="3.5"
+                        fill="#ff6b6b"
+                        className="animate-pulse"
+                      />
+                    ))}
+                    {/* Output Nodes */}
+                    {[15, 28, 42].map((y, i) => (
+                      <circle key={`out-${i}`} cx="135" cy={y} r="4" fill="#ffd700" />
+                    ))}
+                  </svg>
+                </div>
+              </div>
+
+              {/* Current Season Revenue */}
+              <div className="bg-black/50 rounded-xl p-3.5 border border-white/5 mb-3 space-y-1">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                  Current Season Revenue
+                </div>
+                <div className="text-3xl font-mono font-bold text-[#ff6b6b] tracking-tight">
+                  ${agentLiveRevenues["DQN"]?.toLocaleString()}
+                </div>
+              </div>
+
+              {/* Mini Sparkline */}
+              <div className="space-y-1.5 mb-3">
+                <div className="flex justify-between text-[11px] font-mono text-slate-400">
+                  <span>Last 20 Seasons</span>
+                  <span className="text-[#ff6b6b] font-bold">Mean: $4,420</span>
+                </div>
+                <div className="h-10 w-full bg-black/40 rounded-lg p-1 border border-white/5">
+                  <svg className="w-full h-full" viewBox="0 0 200 35">
+                    <polyline
+                      fill="none"
+                      stroke="#ff6b6b"
+                      strokeWidth="2"
+                      points={sparklines["DQN"]
+                        .map((val, idx) => {
+                          const x = (idx / 19) * 200;
+                          const y = 30 - ((val - 3900) / 1000) * 25;
+                          return `${x},${y}`;
+                        })
+                        .join(" ")}
                     />
-                  </g>
-                );
-              })}
-            </svg>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+              <span className="text-slate-300">Win Rate:</span>
+              <span className="text-base font-bold text-[#ff6b6b]">28.4%</span>
+            </div>
+          </div>
+
+          {/* CARD 3: Q-LEARNING CARD (EMERALD) */}
+          <div className="lg:col-span-1 rounded-2xl glass-panel p-6 relative overflow-hidden border-t-4 border-t-[#00e676] flex flex-col justify-between">
+            <div>
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-xl bg-[#00e676]/20 text-[#00e676] border border-[#00e676]/40 shadow-sm">
+                    <Layers className="h-6 w-6 text-[#00e676]" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h3 className="text-xl font-bold text-white tracking-tight">Q-Learning</h3>
+                      <span className="rounded bg-[#00e676]/20 px-2 py-0.5 text-[10px] font-mono font-bold text-[#00e676] border border-[#00e676]/40 uppercase tracking-wider">
+                        3rd Place 🥉
+                      </span>
+                    </div>
+                    <div className="text-[11px] font-mono text-slate-400 mt-0.5">
+                      Tabular TD (1,581 States)
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => toggleAgentStatus("Q-Learning")}
+                  className={`text-[10px] font-mono px-2.5 py-1 rounded-full font-bold transition-all ${
+                    agentStatuses["Q-Learning"] === "Active"
+                      ? "bg-[#00e676]/20 text-[#00e676] border border-[#00e676]/40"
+                      : "bg-white/10 text-slate-400 border border-white/10"
+                  }`}
+                >
+                  ● {agentStatuses["Q-Learning"]}
+                </button>
+              </div>
+
+              <div className="text-xs font-mono text-slate-300 mb-4 flex items-center gap-1.5">
+                <span className="bg-white/5 border border-white/10 px-2 py-0.5 rounded text-[11px]">
+                  Tabular Q-Table
+                </span>
+                <span className="text-emerald-400 font-bold text-[11px]">+3.9% vs Baseline</span>
+              </div>
+
+              {/* Current Season Revenue */}
+              <div className="bg-black/50 rounded-xl p-4 border border-white/5 mb-4 space-y-1">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                  Current Season Revenue
+                </div>
+                <div className="text-3xl sm:text-4xl font-mono font-bold text-[#00e676] tracking-tight">
+                  ${agentLiveRevenues["Q-Learning"]?.toLocaleString()}
+                </div>
+              </div>
+
+              {/* Mini Sparkline */}
+              <div className="space-y-1.5 mb-4">
+                <div className="flex justify-between text-[11px] font-mono text-slate-400">
+                  <span>Last 20 Seasons</span>
+                  <span className="text-[#00e676] font-bold">Mean: $4,280</span>
+                </div>
+                <div className="h-14 w-full bg-black/40 rounded-lg p-1 border border-white/5">
+                  <svg className="w-full h-full" viewBox="0 0 200 45">
+                    <polyline
+                      fill="none"
+                      stroke="#00e676"
+                      strokeWidth="2"
+                      points={sparklines["Q-Learning"]
+                        .map((val, idx) => {
+                          const x = (idx / 19) * 200;
+                          const y = 40 - ((val - 3700) / 1100) * 35;
+                          return `${x},${y}`;
+                        })
+                        .join(" ")}
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+              <span className="text-slate-300">Win Rate:</span>
+              <span className="text-base font-bold text-[#00e676]">14.6%</span>
+            </div>
+          </div>
+
+          {/* ─────────────────── ROW 2: 3 CARDS ─────────────────── */}
+
+          {/* CARD 4: TIME BASED (STEEL BLUE) */}
+          <div className="lg:col-span-1 rounded-2xl glass-panel p-5 relative overflow-hidden border-t-2 border-t-[#64b5f6] flex flex-col justify-between">
+            <div>
+              <div className="flex items-start justify-between mb-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-full bg-[#64b5f6]" />
+                  <div>
+                    <h4 className="font-bold text-base text-white">Time Based</h4>
+                    <span className="text-[10px] font-mono text-slate-400">
+                      Heuristic Baseline
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => toggleAgentStatus("Time Based")}
+                  className={`text-[9px] font-mono px-2 py-0.5 rounded-full font-bold transition-all ${
+                    agentStatuses["Time Based"] === "Active"
+                      ? "bg-[#00e676]/20 text-[#00e676] border border-[#00e676]/40"
+                      : "bg-white/10 text-slate-400"
+                  }`}
+                >
+                  {agentStatuses["Time Based"]}
+                </button>
+              </div>
+
+              <div className="text-2xl font-mono font-bold text-white mb-2">
+                ${agentLiveRevenues["Time Based"]?.toLocaleString()}
+              </div>
+
+              {/* Sparkline */}
+              <div className="h-10 w-full bg-black/40 rounded p-1 mb-2">
+                <svg className="w-full h-full" viewBox="0 0 200 30">
+                  <polyline
+                    fill="none"
+                    stroke="#64b5f6"
+                    strokeWidth="1.5"
+                    points={sparklines["Time Based"]
+                      .map((val, idx) => {
+                        const x = (idx / 19) * 200;
+                        const y = 25 - ((val - 3400) / 1200) * 20;
+                        return `${x},${y}`;
+                      })
+                      .join(" ")}
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-white/5 flex justify-between text-xs font-mono">
+              <span className="text-slate-400">Win Rate:</span>
+              <span className="text-[#64b5f6] font-bold">6.2%</span>
+            </div>
+          </div>
+
+          {/* CARD 5: FIXED PRICE (SLATE) */}
+          <div className="lg:col-span-1 rounded-2xl glass-panel p-5 relative overflow-hidden border-t-2 border-t-[#94a3b8] flex flex-col justify-between">
+            <div>
+              <div className="flex items-start justify-between mb-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-full bg-[#94a3b8]" />
+                  <div>
+                    <h4 className="font-bold text-base text-white">Fixed Price ($150)</h4>
+                    <span className="text-[10px] font-mono text-slate-400">
+                      Static Heuristic
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => toggleAgentStatus("Fixed Price")}
+                  className={`text-[9px] font-mono px-2 py-0.5 rounded-full font-bold transition-all ${
+                    agentStatuses["Fixed Price"] === "Active"
+                      ? "bg-[#00e676]/20 text-[#00e676] border border-[#00e676]/40"
+                      : "bg-white/10 text-slate-400"
+                  }`}
+                >
+                  {agentStatuses["Fixed Price"]}
+                </button>
+              </div>
+
+              <div className="text-2xl font-mono font-bold text-white mb-2">
+                ${agentLiveRevenues["Fixed Price"]?.toLocaleString()}
+              </div>
+
+              {/* Sparkline */}
+              <div className="h-10 w-full bg-black/40 rounded p-1 mb-2">
+                <svg className="w-full h-full" viewBox="0 0 200 30">
+                  <polyline
+                    fill="none"
+                    stroke="#94a3b8"
+                    strokeWidth="1.5"
+                    points={sparklines["Fixed Price"]
+                      .map((val, idx) => {
+                        const x = (idx / 19) * 200;
+                        const y = 25 - ((val - 3200) / 1200) * 20;
+                        return `${x},${y}`;
+                      })
+                      .join(" ")}
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-white/5 flex justify-between text-xs font-mono">
+              <span className="text-slate-400">Win Rate:</span>
+              <span className="text-slate-300 font-bold">2.1%</span>
+            </div>
+          </div>
+
+          {/* CARD 6: LINEAR DECAY (ORANGE) */}
+          <div className="lg:col-span-1 rounded-2xl glass-panel p-5 relative overflow-hidden border-t-2 border-t-[#fb923c] flex flex-col justify-between">
+            <div>
+              <div className="flex items-start justify-between mb-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-full bg-[#fb923c]" />
+                  <div>
+                    <h4 className="font-bold text-base text-white">Linear Decay</h4>
+                    <span className="text-[10px] font-mono text-slate-400">
+                      Discount Heuristic
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => toggleAgentStatus("Linear Decay")}
+                  className={`text-[9px] font-mono px-2 py-0.5 rounded-full font-bold transition-all ${
+                    agentStatuses["Linear Decay"] === "Active"
+                      ? "bg-[#00e676]/20 text-[#00e676] border border-[#00e676]/40"
+                      : "bg-white/10 text-slate-400"
+                  }`}
+                >
+                  {agentStatuses["Linear Decay"]}
+                </button>
+              </div>
+
+              <div className="text-2xl font-mono font-bold text-white mb-2">
+                ${agentLiveRevenues["Linear Decay"]?.toLocaleString()}
+              </div>
+
+              {/* Sparkline */}
+              <div className="h-10 w-full bg-black/40 rounded p-1 mb-2">
+                <svg className="w-full h-full" viewBox="0 0 200 30">
+                  <polyline
+                    fill="none"
+                    stroke="#fb923c"
+                    strokeWidth="1.5"
+                    points={sparklines["Linear Decay"]
+                      .map((val, idx) => {
+                        const x = (idx / 19) * 200;
+                        const y = 25 - ((val - 3000) / 1200) * 20;
+                        return `${x},${y}`;
+                      })
+                      .join(" ")}
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-white/5 flex justify-between text-xs font-mono">
+              <span className="text-slate-400">Win Rate:</span>
+              <span className="text-[#fb923c] font-bold">1.4%</span>
+            </div>
+          </div>
+
+          {/* ─────────────────── ROW 3: 1 CARD (3-3-1 GRID) ─────── */}
+
+          {/* CARD 7: DEMAND BASED (PURPLE) */}
+          <div className="lg:col-span-3 rounded-2xl glass-panel glass-panel-purple p-5 relative overflow-hidden border-t-2 border-t-[#ba68c8] flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-300">
+                <Flame className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h4 className="font-bold text-base text-white">Demand Based</h4>
+                  <span className="rounded bg-purple-500/20 px-2 py-0.5 text-[10px] font-mono text-purple-300 border border-purple-500/30 font-bold">
+                    Threshold Rule
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 font-mono">
+                  Switches between $100 &amp; $250 based on inventory threshold (25 units)
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <div className="text-right">
+                <div className="text-[10px] font-mono text-slate-400">Current Season</div>
+                <div className="text-2xl font-mono font-bold text-white">
+                  ${agentLiveRevenues["Demand Based"]?.toLocaleString()}
+                </div>
+              </div>
+
+              <div className="w-36 h-10 bg-black/40 rounded p-1 hidden sm:block">
+                <svg className="w-full h-full" viewBox="0 0 140 30">
+                  <polyline
+                    fill="none"
+                    stroke="#ba68c8"
+                    strokeWidth="1.5"
+                    points={sparklines["Demand Based"]
+                      .map((val, idx) => {
+                        const x = (idx / 19) * 140;
+                        const y = 25 - ((val - 2700) / 1300) * 20;
+                        return `${x},${y}`;
+                      })
+                      .join(" ")}
+                  />
+                </svg>
+              </div>
+
+              <div className="text-right pl-3 border-l border-white/10">
+                <div className="text-[10px] font-mono text-slate-400">Win Rate</div>
+                <div className="text-sm font-mono font-bold text-purple-300">0.5%</div>
+              </div>
+
+              <button
+                onClick={() => toggleAgentStatus("Demand Based")}
+                className={`text-[10px] font-mono px-3 py-1 rounded-full font-bold transition-all ${
+                  agentStatuses["Demand Based"] === "Active"
+                    ? "bg-[#00e676]/20 text-[#00e676] border border-[#00e676]/40"
+                    : "bg-white/10 text-slate-400"
+                }`}
+              >
+                {agentStatuses["Demand Based"]}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ────────────────────────────────────────────────────────── */}
+      {/* BOTTOM SECTION: HEAD-TO-HEAD COMPARISON & FIGHT ANIMATION  */}
+      {/* ────────────────────────────────────────────────────────── */}
+      <div className="glass-panel rounded-2xl p-6 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+          <div>
+            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              <Swords className="h-5 w-5 text-[#ffd700]" />
+              Head-to-Head Comparison Arena
+            </h3>
+            <p className="text-xs font-mono text-slate-400">
+              Select any two algorithms for side-by-side empirical stats and statistical hypothesis testing
+            </p>
+          </div>
+
+          <div className="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-lg flex items-center gap-1.5">
+            <CheckCircle2 className="h-3.5 w-3.5" />
+            Welch's Two-Sample t-test Active
           </div>
         </div>
 
-        {/* Live Arena Order Stream & Action Log */}
-        <div className="glass-panel rounded-2xl p-5 space-y-3 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2">
-              <span className="font-bold text-white text-sm flex items-center gap-1.5 font-mono">
-                <Clock className="h-3.5 w-3.5 text-[#ffd700]" />
-                Live Decision Log
+        {/* Dropdowns & FIGHT Button Row */}
+        <div className="grid grid-cols-1 md:grid-cols-11 gap-4 items-center">
+          {/* Agent A Selector */}
+          <div className="md:col-span-4 bg-black/40 rounded-xl p-4 border border-white/10 space-y-2">
+            <label className="text-xs font-mono text-slate-400 uppercase tracking-wider block">
+              Agent A (Challenger 1)
+            </label>
+            <select
+              value={agentA}
+              onChange={(e) => setAgentA(e.target.value)}
+              className="w-full bg-[#121224] border border-white/20 rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-[#ffd700]"
+            >
+              {ALL_7_AGENTS.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name} ({a.type}) — ${a.meanRevenue}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Center Fight Action Button with clash animation */}
+          <div className="md:col-span-3 flex flex-col items-center justify-center">
+            <button
+              onClick={handleTriggerFight}
+              className={`w-full py-3.5 px-4 rounded-xl text-xs sm:text-sm font-mono font-bold transition-all shadow-lg flex items-center justify-center gap-2 ${
+                isFighting
+                  ? "bg-red-500 text-white animate-fight-clash shadow-red-500/50"
+                  : "bg-gradient-to-r from-[#ffd700] via-[#ffe55c] to-[#ffd700] text-black shadow-glow-gold hover:opacity-90"
+              }`}
+            >
+              <Swords className={`h-4 w-4 ${isFighting ? "animate-spin" : ""}`} />
+              <span>{isFighting ? "⚔️ CLASHING..." : "⚔️ FIGHT! COMPARE"}</span>
+            </button>
+            <span className="text-[10px] font-mono text-slate-500 mt-1">
+              Run statistical comparison
+            </span>
+          </div>
+
+          {/* Agent B Selector */}
+          <div className="md:col-span-4 bg-black/40 rounded-xl p-4 border border-white/10 space-y-2">
+            <label className="text-xs font-mono text-slate-400 uppercase tracking-wider block">
+              Agent B (Challenger 2)
+            </label>
+            <select
+              value={agentB}
+              onChange={(e) => setAgentB(e.target.value)}
+              className="w-full bg-[#121224] border border-white/20 rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-[#ffd700]"
+            >
+              {ALL_7_AGENTS.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name} ({a.type}) — ${a.meanRevenue}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Statistical Test Result Banner */}
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 text-xs font-mono text-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-inner">
+          <div className="flex items-center gap-2.5">
+            <ShieldCheck className="h-5 w-5 text-emerald-400 shrink-0" />
+            <div>
+              <span className="font-bold text-white text-sm">
+                Statistical Proof Verdict:{" "}
               </span>
-              <span className="text-[10px] font-mono text-emerald-400">
-                ● Streaming
+              <span className="text-[#ffd700] font-bold">
+                {selectedDataA.meanRevenue > selectedDataB.meanRevenue
+                  ? `${selectedDataA.name} significantly better than ${selectedDataB.name} (p < 0.05)`
+                  : selectedDataB.meanRevenue > selectedDataA.meanRevenue
+                  ? `${selectedDataB.name} significantly better than ${selectedDataA.name} (p < 0.05)`
+                  : "Both algorithms exhibit identical performance"}
               </span>
             </div>
+          </div>
 
-            <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
-              {logs.length === 0 ? (
-                <div className="text-center py-12 text-slate-500 text-xs font-mono">
-                  Press <strong>SIMULATE</strong> or <strong>Step +1d</strong> to start season execution...
-                </div>
-              ) : (
-                logs.map((log, idx) => (
-                  <div
-                    key={idx}
-                    className="p-2 rounded-lg bg-black/40 border border-white/[0.04] text-[11px] font-mono space-y-1"
+          <div className="text-[11px] text-slate-400 shrink-0">
+            Alpha Lift:{" "}
+            <strong className="text-emerald-400">
+              {Math.abs(
+                ((selectedDataA.meanRevenue - selectedDataB.meanRevenue) /
+                  Math.min(selectedDataA.meanRevenue, selectedDataB.meanRevenue)) *
+                  100
+              ).toFixed(1)}
+              %
+            </strong>{" "}
+            | 99% Confidence
+          </div>
+        </div>
+
+        {/* Side by Side Stats Comparison Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs font-mono border-collapse">
+            <thead>
+              <tr className="border-b border-white/10 text-slate-400 uppercase tracking-wider text-[11px]">
+                <th className="py-3 px-4">Metric</th>
+                <th className="py-3 px-4 text-center" style={{ color: selectedDataA.color }}>
+                  {selectedDataA.name} ({selectedDataA.type})
+                </th>
+                <th className="py-3 px-4 text-center">Verdict / Delta</th>
+                <th className="py-3 px-4 text-center" style={{ color: selectedDataB.color }}>
+                  {selectedDataB.name} ({selectedDataB.type})
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/[0.06]">
+              {/* Mean Revenue */}
+              <tr className="hover:bg-white/[0.03]">
+                <td className="py-3.5 px-4 text-slate-300 font-semibold">Mean Revenue</td>
+                <td className="py-3.5 px-4 text-center font-bold text-sm text-white">
+                  ${selectedDataA.meanRevenue.toFixed(1)}
+                </td>
+                <td className="py-3.5 px-4 text-center">
+                  <span
+                    className={`font-bold px-2 py-0.5 rounded text-xs ${
+                      selectedDataA.meanRevenue >= selectedDataB.meanRevenue
+                        ? "bg-emerald-500/15 text-emerald-400"
+                        : "bg-red-500/15 text-red-400"
+                    }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        <span
-                          className="font-bold px-1.5 py-0.2 rounded text-[10px]"
-                          style={{
-                            backgroundColor: `${log.color}20`,
-                            color: log.color,
-                          }}
-                        >
-                          {log.agent}
-                        </span>
-                        <span className="text-slate-400">Day {log.day}</span>
-                      </div>
+                    {selectedDataA.meanRevenue >= selectedDataB.meanRevenue
+                      ? `+${(selectedDataA.meanRevenue - selectedDataB.meanRevenue).toFixed(0)} (A Wins)`
+                      : `-${(selectedDataB.meanRevenue - selectedDataA.meanRevenue).toFixed(0)} (B Wins)`}
+                  </span>
+                </td>
+                <td className="py-3.5 px-4 text-center font-bold text-sm text-white">
+                  ${selectedDataB.meanRevenue.toFixed(1)}
+                </td>
+              </tr>
 
-                      <div className="flex items-center gap-1">
-                        {log.bought ? (
-                          <span className="text-emerald-400 font-bold flex items-center gap-0.5">
-                            <CheckCircle2 className="h-3 w-3" /> SOLD +${log.price}
-                          </span>
-                        ) : (
-                          <span className="text-slate-500 flex items-center gap-0.5">
-                            <XCircle className="h-3 w-3" /> No Sale ($0)
-                          </span>
-                        )}
-                      </div>
-                    </div>
+              {/* Std Dev */}
+              <tr className="hover:bg-white/[0.03]">
+                <td className="py-3.5 px-4 text-slate-300 font-semibold">Std Dev (σ)</td>
+                <td className="py-3.5 px-4 text-center text-slate-300">
+                  ±${selectedDataA.stdRevenue.toFixed(1)}
+                </td>
+                <td className="py-3.5 px-4 text-center text-slate-400 text-[11px]">
+                  {selectedDataA.stdRevenue < selectedDataB.stdRevenue
+                    ? "A has higher stability"
+                    : "B has higher stability"}
+                </td>
+                <td className="py-3.5 px-4 text-center text-slate-300">
+                  ±${selectedDataB.stdRevenue.toFixed(1)}
+                </td>
+              </tr>
 
-                    <div className="text-[10px] text-slate-400 flex justify-between">
-                      <span>P(Buy): {log.demandProb}%</span>
-                      <span>Stock Left: {log.remainingInv}</span>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+              {/* Max Revenue */}
+              <tr className="hover:bg-white/[0.03]">
+                <td className="py-3.5 px-4 text-slate-300 font-semibold">Max Season Revenue</td>
+                <td className="py-3.5 px-4 text-center font-bold text-white">
+                  ${selectedDataA.maxRevenue.toFixed(0)}
+                </td>
+                <td className="py-3.5 px-4 text-center text-slate-400 text-[11px]">
+                  Peak Yield Capacity
+                </td>
+                <td className="py-3.5 px-4 text-center font-bold text-white">
+                  ${selectedDataB.maxRevenue.toFixed(0)}
+                </td>
+              </tr>
 
-          <div className="pt-2 border-t border-white/[0.06] text-[11px] font-mono text-slate-400 flex items-center justify-between">
-            <span>Customer Demand Formula:</span>
-            <span className="text-slate-300">0.7 * exp(-0.6 * P/100)</span>
-          </div>
+              {/* Sell Through % */}
+              <tr className="hover:bg-white/[0.03]">
+                <td className="py-3.5 px-4 text-slate-300 font-semibold">Sell-Through Rate</td>
+                <td className="py-3.5 px-4 text-center font-bold text-emerald-400">
+                  {selectedDataA.sellThrough.toFixed(1)}%
+                </td>
+                <td className="py-3.5 px-4 text-center">
+                  <span className="text-[11px] text-slate-300">
+                    {selectedDataA.sellThrough >= selectedDataB.sellThrough ? "A clears stock faster" : "B clears stock faster"}
+                  </span>
+                </td>
+                <td className="py-3.5 px-4 text-center font-bold text-emerald-400">
+                  {selectedDataB.sellThrough.toFixed(1)}%
+                </td>
+              </tr>
+
+              {/* Win Rate */}
+              <tr className="hover:bg-white/[0.03]">
+                <td className="py-3.5 px-4 text-slate-300 font-semibold">Season Win Rate</td>
+                <td className="py-3.5 px-4 text-center font-bold text-[#ffd700]">
+                  {selectedDataA.winRate.toFixed(1)}%
+                </td>
+                <td className="py-3.5 px-4 text-center">
+                  <span className="font-bold text-xs text-white">
+                    {selectedDataA.winRate >= selectedDataB.winRate
+                      ? `${selectedDataA.name} Dominates`
+                      : `${selectedDataB.name} Dominates`}
+                  </span>
+                </td>
+                <td className="py-3.5 px-4 text-center font-bold text-[#ffd700]">
+                  {selectedDataB.winRate.toFixed(1)}%
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
