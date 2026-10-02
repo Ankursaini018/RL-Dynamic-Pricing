@@ -15,8 +15,13 @@ import {
   TrendingUp,
   Flame,
   ArrowUpRight,
+  Download,
+  FileSpreadsheet,
 } from "lucide-react";
 import { LEADERBOARD_DATA, AGENT_COLORS } from "../data/simulationData";
+import ChampionAnnouncement from "../components/ChampionAnnouncement";
+import AgentTooltip from "../components/AgentTooltip";
+import { exportDataAsCSV } from "../utils/exportUtils";
 
 export default function DashboardPage() {
   // ── Top Header Band State ──
@@ -113,6 +118,9 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 pb-12 animate-fadeIn font-sans">
+      {/* PPO Champion Announcement on Load */}
+      <ChampionAnnouncement />
+
       {/* ────────────────────────────────────────────────────────── */}
       {/* TOP HEADER BAND                                            */}
       {/* ────────────────────────────────────────────────────────── */}
@@ -333,9 +341,11 @@ export default function DashboardPage() {
 
                       {/* X-Axis Agent Name & Medal */}
                       <div className="mt-3 text-center">
-                        <div className="text-xs font-mono font-semibold text-slate-200 truncate max-w-[65px] group-hover:text-white">
-                          {agent.name}
-                        </div>
+                        <AgentTooltip agentName={agent.name}>
+                          <div className="text-xs font-mono font-semibold text-slate-200 truncate max-w-[65px] group-hover:text-[#ffd700] hover:underline cursor-pointer">
+                            {agent.name}
+                          </div>
+                        </AgentTooltip>
                         <div className="text-[10px] text-slate-400 font-mono">
                           {agent.medal}
                         </div>
@@ -482,9 +492,19 @@ export default function DashboardPage() {
               Clean benchmark table comparing all 7 reinforcement learning and heuristic agents
             </p>
           </div>
-          <span className="text-xs font-mono text-slate-400 bg-white/5 px-2.5 py-1 rounded-lg border border-white/10">
-            N = 1,000 Seasons
-          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => exportDataAsCSV(LEADERBOARD_DATA, "rl-pricing-rankings.csv")}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs font-mono transition-all"
+              title="Download CSV"
+            >
+              <FileSpreadsheet className="h-3.5 w-3.5 text-[#00e676]" />
+              <span>Export CSV</span>
+            </button>
+            <span className="text-xs font-mono text-slate-400 bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/10">
+              N = 1,000 Seasons
+            </span>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
@@ -516,19 +536,21 @@ export default function DashboardPage() {
                       <span className="text-slate-400">#{row.rank}</span>
                     </td>
 
-                    {/* Agent Name with color indicator */}
+                    {/* Agent Name with color indicator & Tooltip */}
                     <td className="py-3.5 px-4 flex items-center gap-2">
                       <span
                         className="h-2.5 w-2.5 rounded-full shrink-0"
                         style={{ backgroundColor: row.color }}
                       />
-                      <span
-                        className={`text-sm ${
-                          isPPO ? "text-[#ffd700] font-bold" : "text-white"
-                        }`}
-                      >
-                        {row.name}
-                      </span>
+                      <AgentTooltip agentName={row.name}>
+                        <span
+                          className={`text-sm cursor-pointer hover:underline ${
+                            isPPO ? "text-[#ffd700] font-bold" : "text-white"
+                          }`}
+                        >
+                          {row.name}
+                        </span>
+                      </AgentTooltip>
                       {isPPO && (
                         <span className="rounded bg-[#ffd700]/20 px-1.5 py-0.5 text-[9px] font-mono font-bold text-[#ffd700] border border-[#ffd700]/40 ml-1">
                           DEPLOYED

@@ -57,7 +57,7 @@ export default function Sidebar({ activePage, setActivePage }) {
   ];
 
   return (
-    <aside className="w-64 shrink-0 flex flex-col justify-between border-r border-white/[0.08] bg-[#0d0d1a]/90 backdrop-blur-xl min-h-[calc(100vh-6.5rem)] p-4 select-none">
+    <aside className="hidden md:flex w-64 shrink-0 flex-col justify-between border-r border-white/[0.08] bg-[#0d0d1a]/90 backdrop-blur-xl min-h-[calc(100vh-6.5rem)] p-4 select-none">
       {/* Navigation Links */}
       <div className="space-y-6">
         <div>

@@ -14,7 +14,11 @@ import {
   TrendingUp,
   ShieldCheck,
   Zap,
+  Download,
+  FileSpreadsheet,
 } from "lucide-react";
+import AgentTooltip from "../components/AgentTooltip";
+import { exportChartAsPNG, exportDataAsCSV } from "../utils/exportUtils";
 
 // Generate 61 data points from Episode 0 to 3000 (every 50 episodes)
 const DETAILED_TRAINING_CURVES = Array.from({ length: 61 }, (_, i) => {
@@ -238,12 +242,34 @@ export default function TrainingProgressPage() {
             >
               Raw Noise: {showRaw ? "ON" : "OFF"}
             </button>
+
+            <span className="text-slate-600 hidden sm:inline">|</span>
+
+            {/* PNG Export */}
+            <button
+              onClick={() => exportChartAsPNG("training-curves-svg", "rl-training-curves-3000eps.png")}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all text-xs font-mono"
+              title="Download High-Res PNG Chart"
+            >
+              <Download className="h-3 w-3 text-[#ffd700]" />
+              <span>PNG</span>
+            </button>
+
+            {/* CSV Export */}
+            <button
+              onClick={() => exportDataAsCSV(DETAILED_TRAINING_CURVES, "rl-training-curves-3000eps.csv")}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all text-xs font-mono"
+              title="Export 3000-Episode Curve Data as CSV"
+            >
+              <FileSpreadsheet className="h-3 w-3 text-emerald-400" />
+              <span>CSV</span>
+            </button>
           </div>
         </div>
 
         {/* Large Multi-Line SVG Chart */}
         <div className="relative h-80 sm:h-96 w-full pt-4">
-          <svg className="w-full h-full overflow-visible" viewBox="0 0 780 320">
+          <svg id="training-curves-svg" className="w-full h-full overflow-visible" viewBox="0 0 780 320">
             {/* Horizontal Grid lines (Revenue $1,000 to $5,000) */}
             {[1000, 2000, 3000, 4000, 5000].map((rev) => {
               const y = 280 - ((rev - 1000) / 4200) * 240;
@@ -424,10 +450,12 @@ export default function TrainingProgressPage() {
           <div className="glass-panel glass-panel-gold rounded-2xl p-6 border-t-4 border-t-[#ffd700] shadow-glow-gold flex flex-col justify-between space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-mono font-bold text-[#ffd700] flex items-center gap-1.5 uppercase tracking-wider">
-                  <Trophy className="h-4 w-4" />
-                  PPO (CHAMPION)
-                </span>
+                <AgentTooltip agentName="PPO">
+                  <span className="text-xs font-mono font-bold text-[#ffd700] flex items-center gap-1.5 uppercase tracking-wider hover:underline cursor-pointer">
+                    <Trophy className="h-4 w-4" />
+                    PPO (CHAMPION)
+                  </span>
+                </AgentTooltip>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#ffd700]/20 text-[#ffd700] border border-[#ffd700]/30 font-bold">
                   Rank #1
                 </span>
@@ -490,10 +518,12 @@ export default function TrainingProgressPage() {
           <div className="glass-panel rounded-2xl p-6 border-t-4 border-t-[#ff6b6b] flex flex-col justify-between space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-mono font-bold text-[#ff6b6b] flex items-center gap-1.5 uppercase tracking-wider">
-                  <Cpu className="h-4 w-4" />
-                  DQN (RUNNER UP)
-                </span>
+                <AgentTooltip agentName="DQN">
+                  <span className="text-xs font-mono font-bold text-[#ff6b6b] flex items-center gap-1.5 uppercase tracking-wider hover:underline cursor-pointer">
+                    <Cpu className="h-4 w-4" />
+                    DQN (RUNNER UP)
+                  </span>
+                </AgentTooltip>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#ff6b6b]/20 text-[#ff6b6b] border border-[#ff6b6b]/30 font-bold">
                   Rank #2
                 </span>
@@ -556,10 +586,12 @@ export default function TrainingProgressPage() {
           <div className="glass-panel rounded-2xl p-6 border-t-4 border-t-[#00e676] flex flex-col justify-between space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-mono font-bold text-[#00e676] flex items-center gap-1.5 uppercase tracking-wider">
-                  <Layers className="h-4 w-4" />
-                  Q-LEARNING (TABULAR)
-                </span>
+                <AgentTooltip agentName="Q-Learning">
+                  <span className="text-xs font-mono font-bold text-[#00e676] flex items-center gap-1.5 uppercase tracking-wider hover:underline cursor-pointer">
+                    <Layers className="h-4 w-4" />
+                    Q-LEARNING (TABULAR)
+                  </span>
+                </AgentTooltip>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#00e676]/20 text-[#00e676] border border-[#00e676]/30 font-bold">
                   Rank #3
                 </span>
@@ -635,8 +667,18 @@ export default function TrainingProgressPage() {
             </p>
           </div>
 
-          <div className="text-xs font-mono text-slate-300 bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg">
-            Optimum: LR = 0.0005 | Clip = 0.20 | Epochs = 15
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => exportDataAsCSV(PPO_HYPERPARAM_TUNING, "ppo-hyperparameter-tuning-results.csv")}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-slate-300 hover:text-white transition-all"
+            >
+              <FileSpreadsheet className="h-3.5 w-3.5 text-[#ffd700]" />
+              <span>Export Sweeps (CSV)</span>
+            </button>
+
+            <div className="text-xs font-mono text-slate-300 bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg hidden lg:block">
+              Optimum: LR = 0.0005 | Clip = 0.20 | Epochs = 15
+            </div>
           </div>
         </div>
 

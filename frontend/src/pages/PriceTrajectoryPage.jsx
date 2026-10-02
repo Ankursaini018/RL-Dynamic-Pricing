@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TrendingDown,
   TrendingUp,
@@ -14,7 +14,14 @@ import {
   Info,
   Layers,
   BarChart2,
+  Play,
+  Pause,
+  RotateCcw,
+  Download,
+  FileSpreadsheet,
 } from "lucide-react";
+import AgentTooltip from "../components/AgentTooltip";
+import { exportChartAsPNG, exportDataAsCSV } from "../utils/exportUtils";
 
 // 5 Representative PPO Episode trajectories across 30 days
 const PPO_5_EPISODES = [
@@ -100,6 +107,57 @@ export default function PriceTrajectoryPage() {
   const [hoveredEpisode, setHoveredEpisode] = useState(null);
   const [hoveredScarcityPoint, setHoveredScarcityPoint] = useState(null);
 
+  // Season Replay Feature State
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [replayDay, setReplayDay] = useState(30); // 1 to 30
+  const [replaySpeed, setReplaySpeed] = useState(2); // 1x, 2x, 5x, 10x
+
+  // Replay playback ticker
+  useEffect(() => {
+    let timer;
+    if (isPlaying) {
+      timer = setInterval(() => {
+        setReplayDay((prev) => {
+          if (prev >= 30) {
+            setIsPlaying(false);
+            return 30;
+          }
+          return prev + 1;
+        });
+      }, Math.max(80, Math.floor(650 / replaySpeed)));
+    }
+    return () => clearInterval(timer);
+  }, [isPlaying, replaySpeed]);
+
+  const togglePlay = () => {
+    if (!isPlaying && replayDay >= 30) {
+      setReplayDay(1);
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleResetReplay = () => {
+    setIsPlaying(false);
+    setReplayDay(1);
+  };
+
+  // Trajectory CSV Dataset
+  const handleExportTrajectoriesCSV = () => {
+    const data = Array.from({ length: 30 }, (_, idx) => {
+      const day = idx + 1;
+      return {
+        Day: day,
+        Phase: day >= 25 ? "Deadline Zone" : day <= 10 ? "Early Phase" : "Mid Phase",
+        "Episode 1 ($)": PPO_5_EPISODES[0].prices[idx],
+        "Episode 2 ($)": PPO_5_EPISODES[1].prices[idx],
+        "Episode 3 ($)": PPO_5_EPISODES[2].prices[idx],
+        "Episode 4 ($)": PPO_5_EPISODES[3].prices[idx],
+        "Episode 5 ($)": PPO_5_EPISODES[4].prices[idx],
+      };
+    });
+    exportDataAsCSV(data, "ppo-deadline-trajectories-30d.csv");
+  };
+
   return (
     <div className="space-y-8 pb-16 animate-fadeIn font-sans">
       {/* ────────────────────────────────────────────────────────── */}
@@ -133,7 +191,7 @@ export default function PriceTrajectoryPage() {
       {/* SECTION 1: BEHAVIOR 1 — DEADLINE DISCOUNTING               */}
       {/* ────────────────────────────────────────────────────────── */}
       <div className="glass-panel rounded-2xl p-6 space-y-6 border-t-2 border-t-[#ffd700]">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div>
             <div className="flex items-center gap-2 text-xs font-mono text-[#ffd700] uppercase tracking-wider mb-1">
               <span>Behavior 1</span>
@@ -149,8 +207,9 @@ export default function PriceTrajectoryPage() {
             </p>
           </div>
 
-          {/* Episode color pills legend */}
+          {/* Action Toolbar: Legend & Export Controls */}
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+            {/* Episode color pills legend */}
             {PPO_5_EPISODES.map((ep) => (
               <div
                 key={ep.id}
@@ -166,12 +225,96 @@ export default function PriceTrajectoryPage() {
                 <span>{ep.id}</span>
               </div>
             ))}
+
+            <span className="text-slate-600 hidden sm:inline">|</span>
+
+            {/* PNG Export */}
+            <button
+              onClick={() => exportChartAsPNG("deadline-svg-chart", "ppo-deadline-discounting-trajectories.png")}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all"
+              title="Download High-Res PNG"
+            >
+              <Download className="h-3 w-3 text-[#ffd700]" />
+              <span>PNG</span>
+            </button>
+
+            {/* CSV Export */}
+            <button
+              onClick={handleExportTrajectoriesCSV}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all"
+              title="Export 30-Day Data as CSV"
+            >
+              <FileSpreadsheet className="h-3 w-3 text-emerald-400" />
+              <span>CSV</span>
+            </button>
+          </div>
+        </div>
+
+        {/* ── SEASON REPLAY CONTROL BAR ── */}
+        <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 rounded-xl border border-[#ffd700]/25 bg-gradient-to-r from-[#ffd700]/10 via-black/40 to-black/30 backdrop-blur-md">
+          {/* Left: Play / Pause / Reset buttons */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={togglePlay}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                isPlaying
+                  ? "bg-amber-500/25 border border-amber-400 text-[#ffd700] shadow-glow-gold"
+                  : "bg-[#ffd700] text-black hover:bg-[#ffe234] shadow-[0_0_15px_rgba(255,215,0,0.35)]"
+              }`}
+            >
+              {isPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 fill-black" />}
+              <span>{isPlaying ? "Pause Replay" : replayDay >= 30 ? "Play Replay" : "Resume Replay"}</span>
+            </button>
+
+            <button
+              onClick={handleResetReplay}
+              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-colors"
+              title="Reset Replay to Day 1"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          {/* Middle: Scrubber slider and Day counter */}
+          <div className="flex items-center gap-3 flex-1 min-w-[240px] max-w-md">
+            <span className="text-[11px] font-mono text-slate-400 shrink-0">Day 1</span>
+            <input
+              type="range"
+              min="1"
+              max="30"
+              value={replayDay}
+              onChange={(e) => setReplayDay(Number(e.target.value))}
+              className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
+            />
+            <span className="text-[11px] font-mono text-slate-400 shrink-0">Day 30</span>
+
+            <div className="px-2.5 py-1 rounded-md bg-black/60 border border-[#ffd700]/30 text-xs font-mono text-[#ffd700] font-bold shrink-0">
+              Day {replayDay}/30
+            </div>
+          </div>
+
+          {/* Right: Speed controls (1x, 2x, 5x, 10x) */}
+          <div className="flex items-center gap-1.5 text-xs font-mono">
+            <span className="text-slate-400 text-[10px] uppercase tracking-wider mr-1 hidden sm:inline">Speed:</span>
+            {[1, 2, 5, 10].map((spd) => (
+              <button
+                key={spd}
+                onClick={() => setReplaySpeed(spd)}
+                className={`px-2 py-0.5 rounded text-[11px] font-mono transition-all ${
+                  replaySpeed === spd
+                    ? "bg-[#ffd700] text-black font-bold shadow-sm"
+                    : "bg-white/5 border border-white/10 text-slate-400 hover:text-white"
+                }`}
+              >
+                {spd}x
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Large Line Chart Showing Price Trajectory Over 30 Days */}
         <div className="relative h-80 sm:h-96 w-full pt-4">
-          <svg className="w-full h-full overflow-visible" viewBox="0 0 760 300">
+          <svg id="deadline-svg-chart" className="w-full h-full overflow-visible" viewBox="0 0 760 300">
             {/* Horizontal Grid lines ($50 to $300) */}
             {[50, 100, 150, 200, 250, 300].map((p) => {
               const y = 250 - ((p - 50) / 250) * 210;
@@ -233,9 +376,20 @@ export default function PriceTrajectoryPage() {
               );
             })}
 
-            {/* Multiple Overlaid Episode Lines (5 episodes) */}
+            {/* Multiple Overlaid Episode Lines (5 episodes) with Replay animation */}
             {PPO_5_EPISODES.map((ep) => {
-              const points = ep.prices
+              // Full line (faint if replay is before day 30)
+              const fullPoints = ep.prices
+                .map((price, idx) => {
+                  const x = 50 + (idx / 29) * 690;
+                  const y = 250 - ((price - 50) / 250) * 210;
+                  return `${x},${y}`;
+                })
+                .join(" ");
+
+              // Active replay line up to replayDay
+              const activePrices = ep.prices.slice(0, replayDay);
+              const activePoints = activePrices
                 .map((price, idx) => {
                   const x = 50 + (idx / 29) * 690;
                   const y = 250 - ((price - 50) / 250) * 210;
@@ -244,38 +398,69 @@ export default function PriceTrajectoryPage() {
                 .join(" ");
 
               const isHighlighted = hoveredEpisode === ep.id;
+              const currentPrice = ep.prices[replayDay - 1];
+              const curX = 50 + ((replayDay - 1) / 29) * 690;
+              const curY = 250 - ((currentPrice - 50) / 250) * 210;
 
               return (
                 <g key={ep.id}>
+                  {/* Background full ghost path */}
                   <polyline
                     fill="none"
                     stroke={ep.color}
-                    strokeWidth={isHighlighted ? "3.5" : "2"}
-                    strokeOpacity={hoveredEpisode && !isHighlighted ? "0.2" : "0.85"}
+                    strokeWidth="1.5"
+                    strokeOpacity={replayDay < 30 ? "0.2" : hoveredEpisode && !isHighlighted ? "0.2" : "0.75"}
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    points={points}
-                    className="transition-all duration-200"
+                    points={fullPoints}
                   />
-                  {/* Subtle dots at key intervals */}
-                  {[0, 5, 10, 15, 20, 24, 27, 29].map((idx) => {
-                    const x = 50 + (idx / 29) * 690;
-                    const y = 250 - ((ep.prices[idx] - 50) / 250) * 210;
-                    return (
-                      <circle
-                        key={idx}
-                        cx={x}
-                        cy={y}
-                        r={isHighlighted ? 3.5 : 2}
-                        fill={ep.color}
-                        stroke="#0d0d1a"
-                        strokeWidth="1"
-                      />
-                    );
-                  })}
+
+                  {/* Active Replay Polyline */}
+                  <polyline
+                    fill="none"
+                    stroke={ep.color}
+                    strokeWidth={isHighlighted ? "4" : "2.5"}
+                    strokeOpacity={hoveredEpisode && !isHighlighted ? "0.3" : "0.95"}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    points={activePoints}
+                    className="transition-all duration-100"
+                  />
+
+                  {/* Tracking head circle at active replay day */}
+                  <circle
+                    cx={curX}
+                    cy={curY}
+                    r={isHighlighted ? 5.5 : 4}
+                    fill={ep.color}
+                    stroke="#0d0d1a"
+                    strokeWidth="1.5"
+                    className="animate-pulse"
+                  />
                 </g>
               );
             })}
+
+            {/* Vertical Replay Cursor / Active Day Indicator */}
+            {replayDay > 0 && (
+              <g>
+                <line
+                  x1={50 + ((replayDay - 1) / 29) * 690}
+                  y1="25"
+                  x2={50 + ((replayDay - 1) / 29) * 690}
+                  y2="250"
+                  stroke="#ffd700"
+                  strokeWidth="1.8"
+                  strokeDasharray="4 3"
+                />
+                <g transform={`translate(${50 + ((replayDay - 1) / 29) * 690}, 15)`}>
+                  <rect x="-32" y="-12" width="64" height="18" rx="4" fill="#ffd700" />
+                  <text x="0" y="1" fill="#000" fontSize="9" fontFamily="JetBrains Mono" textAnchor="middle" fontWeight="bold">
+                    DAY {replayDay}
+                  </text>
+                </g>
+              </g>
+            )}
           </svg>
         </div>
 
@@ -327,7 +512,7 @@ export default function PriceTrajectoryPage() {
       {/* SECTION 2: BEHAVIOR 2 — SCARCITY PRICING                   */}
       {/* ────────────────────────────────────────────────────────── */}
       <div className="glass-panel rounded-2xl p-6 space-y-6 border-t-2 border-t-[#9c27b0]">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div>
             <div className="flex items-center gap-2 text-xs font-mono text-purple-400 uppercase tracking-wider mb-1">
               <span>Behavior 2</span>
@@ -343,15 +528,35 @@ export default function PriceTrajectoryPage() {
             </p>
           </div>
 
-          <div className="text-xs font-mono text-purple-300 bg-purple-500/15 border border-purple-500/30 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-            <Package className="h-3.5 w-3.5" />
-            Inverse Price-Inventory Elasticity
+          <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+            <div className="text-xs font-mono text-purple-300 bg-purple-500/15 border border-purple-500/30 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+              <Package className="h-3.5 w-3.5" />
+              Inverse Price-Inventory Elasticity
+            </div>
+
+            <button
+              onClick={() => exportChartAsPNG("scarcity-svg-chart", "ppo-scarcity-pricing.png")}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all"
+              title="Download High-Res PNG"
+            >
+              <Download className="h-3 w-3 text-[#ffd700]" />
+              <span>PNG</span>
+            </button>
+
+            <button
+              onClick={() => exportDataAsCSV(SCARCITY_DATA, "scarcity-pricing-curve.csv")}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all"
+              title="Export Scarcity Data as CSV"
+            >
+              <FileSpreadsheet className="h-3 w-3 text-purple-400" />
+              <span>CSV</span>
+            </button>
           </div>
         </div>
 
         {/* Scatter Plot / Trend Curve Chart */}
         <div className="relative h-72 sm:h-80 w-full pt-4">
-          <svg className="w-full h-full overflow-visible" viewBox="0 0 760 260">
+          <svg id="scarcity-svg-chart" className="w-full h-full overflow-visible" viewBox="0 0 760 260">
             {/* Horizontal Grid lines (Price $100 to $300) */}
             {[100, 150, 200, 250, 300].map((p) => {
               const y = 220 - ((p - 100) / 200) * 180;
@@ -480,18 +685,37 @@ export default function PriceTrajectoryPage() {
       {/* SECTION 3: AGENT COMPARISON TRAJECTORIES (2x2 GRID)        */}
       {/* ────────────────────────────────────────────────────────── */}
       <div className="space-y-4">
-        <div className="border-b border-white/10 pb-3">
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">
-            <span>Section 3</span>
-            <span>•</span>
-            <span>Comparative Trajectory Analysis</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">
+              <span>Section 3</span>
+              <span>•</span>
+              <span>Comparative Trajectory Analysis</span>
+            </div>
+            <h2 className="text-lg sm:text-xl font-bold text-white">
+              Agent Comparison Trajectories
+            </h2>
+            <p className="text-xs font-mono text-slate-400">
+              Side-by-side behavioral profiles: Notice the stark difference between PPO's adaptive intelligence and naive baselines
+            </p>
           </div>
-          <h2 className="text-lg sm:text-xl font-bold text-white">
-            Agent Comparison Trajectories
-          </h2>
-          <p className="text-xs font-mono text-slate-400">
-            Side-by-side behavioral profiles: Notice the stark difference between PPO's adaptive intelligence and naive baselines
-          </p>
+
+          <button
+            onClick={() => {
+              const compData = Array.from({ length: 30 }, (_, idx) => ({
+                Day: idx + 1,
+                "PPO ($)": AGENT_4_TRAJECTORIES.PPO.prices[idx],
+                "DQN ($)": AGENT_4_TRAJECTORIES.DQN.prices[idx],
+                "Time Based ($)": AGENT_4_TRAJECTORIES.TimeBased.prices[idx],
+                "Fixed Price ($)": AGENT_4_TRAJECTORIES.FixedPrice.prices[idx],
+              }));
+              exportDataAsCSV(compData, "agent-comparison-trajectories-4agents.csv");
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-slate-300 hover:text-white transition-all shrink-0"
+          >
+            <FileSpreadsheet className="h-3.5 w-3.5 text-blue-400" />
+            <span>Export 4-Agent Trajectories (CSV)</span>
+          </button>
         </div>
 
         {/* 2x2 Grid of Individual Agent Trajectories */}
@@ -510,10 +734,12 @@ export default function PriceTrajectoryPage() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <div>
-                      <h3 className="font-bold text-base text-white flex items-center gap-2">
-                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: agent.color }} />
-                        {agent.name}
-                      </h3>
+                      <AgentTooltip agentName={key === "TimeBased" ? "Time Based" : key === "FixedPrice" ? "Fixed Price" : key}>
+                        <h3 className="font-bold text-base text-white flex items-center gap-2 hover:underline cursor-pointer">
+                          <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: agent.color }} />
+                          {agent.name}
+                        </h3>
+                      </AgentTooltip>
                       <span className="text-xs font-mono text-[#ffd700]" style={{ color: agent.color }}>
                         {agent.subtitle}
                       </span>

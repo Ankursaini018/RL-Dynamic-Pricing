@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from "react";
+import {
+  LayoutDashboard,
+  Swords,
+  TrendingDown,
+  LineChart,
+  Calculator,
+} from "lucide-react";
 import ParticleBackground from "./components/ParticleBackground";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -7,6 +14,14 @@ import AgentArenaPage from "./pages/AgentArenaPage";
 import PriceTrajectoryPage from "./pages/PriceTrajectoryPage";
 import TrainingProgressPage from "./pages/TrainingProgressPage";
 import BusinessValuePage from "./pages/BusinessValuePage";
+
+const NAV_ITEMS = [
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "arena", label: "Arena", icon: Swords },
+  { id: "trajectory", label: "Trajectory", icon: TrendingDown },
+  { id: "training", label: "Training", icon: LineChart },
+  { id: "calculator", label: "Calculator", icon: Calculator },
+];
 
 export default function App() {
   const [activePage, setActivePage] = useState("dashboard");
@@ -44,14 +59,14 @@ export default function App() {
 
         {/* Content Body: Sidebar + Main Content Area */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Left Sidebar Navigation */}
+          {/* Left Sidebar Navigation (Desktop) */}
           <Sidebar
             activePage={activePage}
             setActivePage={setActivePage}
           />
 
           {/* Main Page Viewport */}
-          <main className="flex-1 overflow-y-auto px-6 py-6 lg:px-8 max-w-[1700px] w-full mx-auto">
+          <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 lg:px-8 max-w-[1700px] w-full mx-auto pb-20 md:pb-6">
             {activePage === "dashboard" && (
               <DashboardPage onNavigate={setActivePage} />
             )}
@@ -61,6 +76,28 @@ export default function App() {
             {activePage === "calculator" && <BusinessValuePage />}
           </main>
         </div>
+
+        {/* Mobile Bottom Navigation Bar */}
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0d0d1a]/95 backdrop-blur-xl border-t border-white/10 px-2 py-2 flex justify-around items-center shadow-2xl">
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const isActive = activePage === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActivePage(item.id)}
+                className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg transition-all ${
+                  isActive
+                    ? "text-[#ffd700] font-bold"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                <Icon className={`h-4 w-4 ${isActive ? "text-[#ffd700]" : "text-slate-400"}`} />
+                <span className="text-[10px] font-mono tracking-tight">{item.label}</span>
+              </button>
+            );
+          })}
+        </nav>
       </div>
     </div>
   );

@@ -19,21 +19,33 @@ export default function ParticleBackground() {
     };
     window.addEventListener("resize", handleResize);
 
-    // Generate subtle particles: mix of gold (#ffd700) and purple (#9c27b0)
-    const particleCount = Math.min(65, Math.floor((width * height) / 22000));
+    // Deep dark purple/navy colors with occasional gold specks
+    const palette = [
+      "#24184a", // Deep purple
+      "#1b1b3a", // Deep navy
+      "#2d1b69", // Rich dark purple
+      "#15102a", // Dark midnight
+      "#381e72", // Muted violet
+      "#ffd700", // Subtle gold speck
+    ];
+
+    // Subtle floating particles
+    const particleCount = Math.min(55, Math.floor((width * height) / 26000));
     const particles = [];
 
     for (let i = 0; i < particleCount; i++) {
-      const isGold = Math.random() > 0.45;
+      const color = palette[Math.floor(Math.random() * palette.length)];
+      const isGold = color === "#ffd700";
+
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: Math.random() * 1.8 + 0.8,
-        color: isGold ? "#ffd700" : "#9c27b0",
-        alpha: Math.random() * 0.4 + 0.15,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        pulseSpeed: Math.random() * 0.02 + 0.005,
+        radius: isGold ? Math.random() * 1.4 + 0.6 : Math.random() * 2.2 + 1.0,
+        color,
+        alpha: isGold ? Math.random() * 0.25 + 0.12 : Math.random() * 0.3 + 0.12,
+        vx: (Math.random() - 0.5) * 0.14, // slow moving
+        vy: (Math.random() - 0.5) * 0.14,
+        pulseSpeed: Math.random() * 0.015 + 0.004,
       });
     }
 
@@ -47,20 +59,20 @@ export default function ParticleBackground() {
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Draw faint connections between close particles
+      // Draw occasional subtle connecting lines
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 110) {
-            const lineAlpha = (1 - dist / 110) * 0.12;
+          if (dist < 95) {
+            const lineAlpha = (1 - dist / 95) * 0.06;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(255, 215, 0, ${lineAlpha})`;
-            ctx.lineWidth = 0.6;
+            ctx.strokeStyle = `rgba(156, 39, 176, ${lineAlpha})`;
+            ctx.lineWidth = 0.5;
             ctx.stroke();
           }
         }
@@ -71,31 +83,31 @@ export default function ParticleBackground() {
         p.x += p.vx;
         p.y += p.vy;
 
-        // Wrap around boundaries
+        // Wrap around boundaries smoothly
         if (p.x < 0) p.x = width;
         if (p.x > width) p.x = 0;
         if (p.y < 0) p.y = height;
         if (p.y > height) p.y = 0;
 
-        // Subtle mouse repulsion
+        // Very gentle mouse avoidance
         const mdx = p.x - mouse.x;
         const mdy = p.y - mouse.y;
         const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
-        if (mDist < 120 && mDist > 0) {
-          const force = (120 - mDist) / 120;
-          p.x += (mdx / mDist) * force * 1.2;
-          p.y += (mdy / mDist) * force * 1.2;
+        if (mDist < 100 && mDist > 0) {
+          const force = (100 - mDist) / 100;
+          p.x += (mdx / mDist) * force * 0.6;
+          p.y += (mdy / mDist) * force * 0.6;
         }
 
-        // Pulse alpha
-        p.alpha += Math.sin(Date.now() * p.pulseSpeed) * 0.003;
-        const currentAlpha = Math.max(0.1, Math.min(0.65, p.alpha));
+        // Pulse alpha gently
+        p.alpha += Math.sin(Date.now() * p.pulseSpeed) * 0.002;
+        const currentAlpha = Math.max(0.08, Math.min(0.4, p.alpha));
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.globalAlpha = currentAlpha;
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = p.color === "#ffd700" ? 6 : 4;
         ctx.shadowColor = p.color;
         ctx.fill();
         ctx.globalAlpha = 1.0;
@@ -117,7 +129,7 @@ export default function ParticleBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0 opacity-80"
+      className="fixed inset-0 pointer-events-none z-0 opacity-70"
       style={{ background: "transparent" }}
     />
   );
