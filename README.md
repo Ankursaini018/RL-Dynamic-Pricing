@@ -1,100 +1,21 @@
 # 🎯 RL Dynamic Pricing
-## Infotact DS/ML Technical Internship 2026
+### Infotact DS/ML Internship 2026 | Ankur Saini
 
 ![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
-![RL](https://img.shields.io/badge/RL-PPO%20%7C%20DQN%20%7C%20Q--Learning-gold)
-![Python](https://img.shields.io/badge/Python-3.11-yellow)
+![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.0-red)
-![Issues](https://img.shields.io/badge/Issues-21%2F21%20Closed-success)
-![Commits](https://img.shields.io/badge/Commits-30%2B%20Daily-orange)
-![Tests](https://img.shields.io/badge/Tests-26%20Passing-green)
+![Best](https://img.shields.io/badge/Best_Agent-PPO-gold)
+![Tests](https://img.shields.io/badge/Tests-26_Passing-success)
+![Issues](https://img.shields.io/badge/Issues-21%2F21_Closed-success)
+![Commits](https://img.shields.io/badge/Daily_Commits-30%2B-yellow)
 
 ---
 
-## 🎯 Problem Statement
+## 🎯 Overview
 
-Airlines and hotels must sell finite
-inventory over limited time. Traditional
-fixed pricing leaves significant revenue
-on the table because it cannot adapt to
-changing demand and time pressure.
+A complete Reinforcement Learning system that trains an AI agent to learn optimal dynamic pricing for travel and hospitality through thousands of simulated booking seasons — **without any labeled data!**
 
-**Solution:** Train a Reinforcement
-Learning agent that discovers optimal
-dynamic pricing through thousands of
-simulated booking seasons — without
-any labeled data!
-
----
-
-## 🏗️ Project Architecture
-RL-Dynamic-Pricing/
-│
-├── src/
-│ ├── config.py
-│ ├── project_runner.py
-│ ├── project_summary.py
-│ ├── final_verification.py
-│ ├── run_all_checks.py
-│ │
-│ ├── environment/
-│ │ ├── pricing_env.py
-│ │ ├── env_config.py
-│ │ └── env_validator.py
-│ │
-│ ├── agents/
-│ │ ├── baseline_agents.py
-│ │ ├── q_learning_agent.py
-│ │ ├── agent_registry.py
-│ │ ├── dqn/
-│ │ │ ├── dqn_network.py
-│ │ │ ├── dqn_agent.py
-│ │ │ ├── replay_buffer.py
-│ │ │ └── dqn_utils.py
-│ │ └── ppo/
-│ │ ├── ppo_network.py
-│ │ ├── ppo_agent.py
-│ │ └── ppo_utils.py
-│ │
-│ ├── training/
-│ │ ├── q_learning_trainer.py
-│ │ ├── dqn_trainer.py
-│ │ ├── ppo_trainer.py
-│ │ ├── ppo_hypertuner.py
-│ │ └── config_manager.py
-│ │
-│ ├── simulation/
-│ │ ├── final_simulation.py
-│ │ ├── season_simulator.py
-│ │ └── business_value.py
-│ │
-│ ├── analysis/
-│ │ ├── final_comparison.py
-│ │ ├── final_proof.py
-│ │ └── week3_analyzer.py
-│ │
-│ ├── visualization/
-│ │ ├── business_dashboard.py
-│ │ └── price_dashboard.py
-│ │
-│ └── tests/
-│ ├── test_environment.py
-│ ├── test_agents.py
-│ └── test_ppo.py
-│
-├── notebooks/
-│ ├── week1/ (7 notebooks)
-│ ├── week2/ (7 notebooks)
-│ ├── week3/ (7 notebooks)
-│ └── week4/ (7 notebooks)
-│
-├── results/
-├── models/ (gitignored)
-├── data/ (gitignored)
-├── requirements.txt
-├── PROJECT_COMPLETE.md
-└── README.md
-
+> **Fun Fact:** PPO (the winning algorithm) is the **same algorithm used to train ChatGPT** through RLHF!
 
 ---
 
@@ -102,51 +23,33 @@ RL-Dynamic-Pricing/
 
 | Component | Value |
 |---|---|
-| **State** | (remaining_inventory, days_left) |
-| **Actions** | 6 prices: $50/$100/$150/$200/$250/$300 |
-| **Reward** | Revenue from each sale |
-| **Penalty** | -10 per unsold ticket |
-| **State Space** | 1,581 discrete states |
-| **Max Inventory** | 50 tickets/rooms |
-| **Max Days** | 30 days per season |
+| State | (remaining_inventory, days_left) |
+| Actions | 6 prices: $50 · $100 · $150 · $200 · $250 · $300 |
+| Reward | Revenue earned per sale |
+| Penalty | -10 per unsold ticket |
+| State Space | 1,581 discrete states |
+| Max Inventory | 50 tickets / rooms |
+| Max Days | 30 days per season |
 
 ---
 
-## 🧠 Algorithms Implemented
+## 🧠 Algorithms
 
-### Week 1 — Q-Learning
-Type : Tabular Value-based RL
-Q-Table : 51 × 31 × 6 = 9,486 entries
-Episodes : 5,000
-Alpha : 0.10 (learning rate)
-Gamma : 0.99 (discount factor)
-Epsilon : 1.0 → 0.01 (decay)
-Result : Beats all 5 baselines!
+| Algorithm | Type | Architecture | Result |
+|---|---|---|---|
+| Q-Learning | Tabular RL | Q-table (9,486 entries) | Beats all baselines |
+| DQN | Value-based RL | 2 → 128 → 64 → 6 | Beats Q-Learning |
+| **PPO** | **Policy-based RL** | **Actor-Critic** | **🥇 WINNER** |
 
+### Best PPO Config
 
-### Week 2 — DQN (Deep Q-Network)
-Type : Neural Network Value-based
-Architecture : 2 → 128 → 64 → 6
-Parameters : ~10,000
-Episodes : 2,000
-Buffer : 10,000 experiences
-Batch Size : 64
-Target Update: Every 10 episodes
-Result : Outperforms Q-Learning!
-
-
-### Week 3 — PPO (WINNER! 🏆)
-Type : Actor-Critic Policy-based
-Architecture : Shared 2→128→64
-Actor → 6 (Softmax)
-Critic → 1 (Linear)
-Fun Fact : Same algo as ChatGPT!
-Best LR : 0.0005
-Clip Range : 0.2
-N Epochs : 15
-Configs Tested: 8 hyperparameter configs
-Result : BEST revenue! Beats all!
-
+| Parameter | Value |
+|---|---|
+| Learning Rate | 0.0005 |
+| Clip Range | 0.2 |
+| N Epochs | 15 |
+| Entropy Coef | 0.02 |
+| GAE Lambda | 0.95 |
 
 ---
 
@@ -154,7 +57,7 @@ Result : BEST revenue! Beats all!
 
 | Rank | Agent | Type |
 |---|---|---|
-| 🥇 | **PPO** | Actor-Critic RL |
+| 🥇 | PPO | Actor-Critic RL |
 | 🥈 | DQN | Value-based RL |
 | 🥉 | Q-Learning | Tabular RL |
 | 4️⃣ | Time Based | Heuristic |
@@ -166,91 +69,135 @@ Result : BEST revenue! Beats all!
 
 ## ✅ Proven Behaviors
 
-### 1. Deadline Discounting
-PPO drops prices near departure
-to clear remaining inventory!
+**PPO discovered these strategies completely on its own!**
 
-Early avg (20-30 days): ~$250
-Urgent avg (0-5 days) : ~$100
-Price Drop : ~60% ✅
+| Behavior | Description | Proof |
+|---|---|---|
+| Deadline Discounting | Drops prices near departure to clear inventory | ~60% price drop |
+| Scarcity Premium | Raises prices for low inventory | +67% premium |
 
+Both proved with **t-test p < 0.05** over 200 episodes.
 
-### 2. Scarcity Premium Pricing
-PPO raises prices when inventory low!
+---
 
-High inventory (>40): ~$150
-Low inventory (<10): ~$250
-Price Premium : +67% ✅
+## 📁 Project Structure
 
-
-Both proved with t-test p < 0.05
-over 200 episodes!
+```
+RL-Dynamic-Pricing/
+├── src/
+│   ├── config.py
+│   ├── project_runner.py
+│   ├── run_all_checks.py
+│   ├── final_verification.py
+│   ├── project_summary.py
+│   ├── environment/
+│   │   ├── pricing_env.py
+│   │   ├── env_config.py
+│   │   └── env_validator.py
+│   ├── agents/
+│   │   ├── baseline_agents.py
+│   │   ├── q_learning_agent.py
+│   │   ├── agent_registry.py
+│   │   ├── dqn/
+│   │   │   ├── dqn_network.py
+│   │   │   ├── dqn_agent.py
+│   │   │   ├── replay_buffer.py
+│   │   │   └── dqn_utils.py
+│   │   └── ppo/
+│   │       ├── ppo_network.py
+│   │       ├── ppo_agent.py
+│   │       └── ppo_utils.py
+│   ├── training/
+│   │   ├── dqn_trainer.py
+│   │   ├── ppo_trainer.py
+│   │   ├── ppo_hypertuner.py
+│   │   └── config_manager.py
+│   ├── simulation/
+│   │   ├── final_simulation.py
+│   │   ├── season_simulator.py
+│   │   └── business_value.py
+│   ├── analysis/
+│   │   ├── final_comparison.py
+│   │   ├── final_proof.py
+│   │   └── week3_analyzer.py
+│   ├── visualization/
+│   │   ├── business_dashboard.py
+│   │   └── price_dashboard.py
+│   └── tests/
+│       ├── test_environment.py
+│       ├── test_agents.py
+│       └── test_ppo.py
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── index.html
+├── notebooks/
+│   ├── week1/
+│   ├── week2/
+│   ├── week3/
+│   └── week4/
+├── results/
+├── models/             ← gitignored
+├── data/               ← gitignored
+├── requirements.txt
+├── PROJECT_COMPLETE.md
+└── README.md
+```
 
 ---
 
 ## 🚀 How to Run
 
-### 1. Clone Repository
+### Backend (ML Pipeline)
+
 ```bash
-git clone https://github.com/Ankursaini018/
-RL-Dynamic-Pricing.git
+# Clone repo
+git clone https://github.com/Ankursaini018/RL-Dynamic-Pricing.git
 cd RL-Dynamic-Pricing
-```
 
-### 2. Install Dependencies
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-### 3. Run All Checks (Recommended First)
-```bash
+# Run all checks first
 python src/run_all_checks.py
-```
 
-### 4. Quick Pipeline Test
-```bash
+# Quick test (5 minutes)
 python src/project_runner.py --quick
-```
 
-### 5. Full Pipeline
-```bash
+# Full pipeline (30 minutes)
 python src/project_runner.py
 ```
 
-### 6. Run Individual Agents
+### Run Individual Agents
+
 ```bash
 # Environment test
 python src/environment/pricing_env.py
 
-# Q-Learning
-python src/agents/q_learning_agent.py
+# PPO — Best agent
+python src/agents/ppo/ppo_agent.py
 
 # DQN
 python src/agents/dqn/dqn_agent.py
 
-# PPO (Best Agent!)
-python src/agents/ppo/ppo_agent.py
+# Q-Learning
+python src/agents/q_learning_agent.py
+
+# Final 1000-season simulation
+python src/simulation/final_simulation.py
 ```
 
-### 7. Run All Tests
+### Run All Tests
+
 ```bash
 python src/tests/test_environment.py
 python src/tests/test_agents.py
 python src/tests/test_ppo.py
 ```
 
-### 8. Final 1000-Season Simulation
-```bash
-python src/simulation/final_simulation.py
-```
+### Frontend (Dashboard)
 
-### 9. Open Key Notebook
-```bash
-jupyter notebook notebooks/week4/
-week4_day2_business_dashboard.ipynb
-```
-
-### 10. Run Frontend Dashboard
 ```bash
 # Go to frontend folder
 cd frontend
@@ -265,34 +212,26 @@ npm run dev
 # http://localhost:5173
 ```
 
+### Run Both Together
+
+```bash
+# Terminal 1 — Backend
+python src/project_runner.py --quick
+
+# Terminal 2 — Frontend
+cd frontend
+npm run dev
+```
+
 ---
 
 ## 🛠️ Tech Stack
 
-| Category | Tool |
-|---|---|
-| Language | Python 3.11 |
-| RL Framework | Custom (from scratch!) |
-| DL Framework | PyTorch 2.0 |
-| Environment | Gymnasium (OpenAI Gym) |
-| Analysis | NumPy, Pandas, SciPy |
-| Visualization | Matplotlib, Seaborn |
-| Frontend | React + Tailwind CSS |
-| Version Control | Git + GitHub |
+**Backend:** Python 3.11 · PyTorch 2.0 · Gymnasium · NumPy · Pandas · SciPy · Matplotlib
 
----
+**Frontend:** React · Tailwind CSS · Recharts · Vite
 
-## 📊 Hyperparameter Tuning
-
-### Best PPO Config (from 8-config search)
-| Parameter | Value |
-|---|---|
-| Learning Rate | 0.0005 |
-| Clip Range | 0.2 |
-| N Epochs | 15 |
-| Entropy Coef | 0.02 |
-| GAE Lambda | 0.95 |
-| Gamma | 0.99 |
+**DevOps:** Git · GitHub · Vercel
 
 ---
 
@@ -300,9 +239,9 @@ npm run dev
 
 | Module | Tests | Status |
 |---|---|---|
-| Environment | 8 | ✅ All Pass |
-| Agents | 11 | ✅ All Pass |
-| PPO | 7 | ✅ All Pass |
+| Environment | 8 | ✅ |
+| Agents | 11 | ✅ |
+| PPO | 7 | ✅ |
 | **Total** | **26** | **✅ All Pass** |
 
 ---
@@ -311,19 +250,21 @@ npm run dev
 
 | Metric | Value |
 |---|---|
-| Issues Closed | 21/21 ✅ |
-| Daily Commits | 30+ consecutive ✅ |
-| Python Scripts | 50+ ✅ |
-| Notebooks | 26 ✅ |
-| Unit Tests | 26 passing ✅ |
+| Issues Closed | 21 / 21 |
+| Consecutive Commits | 30+ days |
+| Python Scripts | 50+ |
+| Unit Tests | 26 passing |
+| Notebooks | 26 |
 
 ---
 
 ## 🔗 Links
 
-- **GitHub:** github.com/Ankursaini018/RL-Dynamic-Pricing
-- **Live Demo:** [your vercel link here]
-- **Intern:** Ankur Saini
-- **Program:** Infotact DS/ML Internship 2026
-- **Duration:** 5th July - 4th August 2026
-- **Certificate:** IF475373
+| Resource | Link |
+|---|---|
+| GitHub | [RL-Dynamic-Pricing](https://github.com/Ankursaini018/RL-Dynamic-Pricing) |
+| Certificate | IF475373 |
+
+---
+
+*Ankur Saini · Infotact DS/ML Internship 2026 · 5th July - 4th August 2026*
